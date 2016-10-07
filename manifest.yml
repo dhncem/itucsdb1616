@@ -3,6 +3,6 @@ applications:
   host: itucsdb1616
   name: itucsdb1616
   path: .
-  domain: mybluemix.net
+  domain: itucsdb1616.mybluemix.net
   instances: 1
   memory: 128M
