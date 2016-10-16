@@ -1,23 +1,37 @@
+from flask import Flask
 import datetime
 import os
+from handlers import site
+from flask import Blueprint, render_template
+from store import Store
+from twit import Twit
 
 from flask import Flask
-from flask import render_template
+
+from handlers import site
 
 
-app = Flask(__name__)
+def create_app():
+    app = Flask(__name__)
+    app.config.from_object('settings')
+    app.register_blueprint(site)
+
+    app.store = Store()
+    app.store.add_twit(Twit('The Shining', 'Hello Darkness My Dear Friends'))
+    app.store.add_twit(Twit('Barton Fink', 'Hello Barton Long Time No See'))
 
 
-@app.route('/')
-def home_page():
-    now = datetime.datetime.now()
-    return render_template('home.html', current_time=now.ctime())
+
+
+    return app
+
+
+def main():
+    app = create_app()
+    debug = app.config['DEBUG']
+    port = app.config.get('PORT', 5000)
+    app.run(host='0.0.0.0', port=5000, debug=True)
 
 
 if __name__ == '__main__':
-    VCAP_APP_PORT = os.getenv('VCAP_APP_PORT')
-    if VCAP_APP_PORT is not None:
-        port, debug = int(VCAP_APP_PORT), False
-    else:
-        port, debug = 5000, True
-    app.run(host='0.0.0.0', port=port, debug=debug)
+    main()

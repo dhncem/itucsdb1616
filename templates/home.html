@@ -1,15 +1,20 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8" />
-    <title>Home</title>
+	{% extends "layout.html" %}
+   {% block title %}Feed{% endblock %}
+
+   {% block content %}
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
   </head>
   <body>
-    <h1>Hello, Flask! It's me! I was wondering if after all these years..</h1>
+
+    <h1>My Twitter Feed..</h1>
 
     <footer>
       <div id="datetime">{{ current_time }}</div>
     </footer>
+{% endblock %}
+
   </body>
 </html>
