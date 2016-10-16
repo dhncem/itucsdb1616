@@ -17,8 +17,7 @@ def create_app():
     app.register_blueprint(site)
 
     app.store = Store()
-    app.store.add_twit(Twit('The Shining', 'Hello Darkness My Dear Friends'))
-    app.store.add_twit(Twit('Barton Fink', 'Hello Barton Long Time No See'))
+    app.store.add_twit(Twit('Mr First Tweet', 'Just so you don\'t get tired we posted your first tweet'))
 
 
 
