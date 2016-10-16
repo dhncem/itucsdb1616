@@ -31,7 +31,10 @@ def twit_add_page():
         return redirect(url_for('site.twit_page', movie_id=movie._id))
 
 
-
+@site.route('/settings')
+def settings_page():
+    now = datetime.datetime.now()
+    return render_template('settings.html', current_time=now.ctime())
 
 
 

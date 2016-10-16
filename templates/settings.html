@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  {% extends "layout.html" %}
+  {% block title %}Settings{% endblock %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+    {% block content %}
+  </head>
+  <body>
+
+    <h1>Main Settings</h1>
+
+
+
+
+
+    <footer>
+      <div id="datetime">{{ current_time }}</div>
+    </footer>
+    {% endblock %}
+  </body>
+</html>
