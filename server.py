@@ -5,6 +5,8 @@ from handlers import site
 from flask import Blueprint, render_template
 from store import Store
 from twit import Twit
+from message import Message
+from messageList import MessageList
 
 from flask import Flask
 
@@ -19,8 +21,11 @@ def create_app():
     app.store = Store()
     app.store.add_twit(Twit('Mr First Tweet', 'Just so you don\'t get tired we posted your first tweet'))
 
-
-
+    app.messageList = MessageList()
+    app.messageList.add_message(Message('Emre Cetiner', 'Serkan Bekir', 'merhaba'))
+    app.messageList.add_message(Message('Yusuf Ekiz', 'Serkan Bekir', 'gunaydin'))
+    app.messageList.add_message(Message('Mert Kurtcan', 'Serkan Bekir', 'selam'))
+    app.messageList.add_message(Message('Cem Karagoz', 'Serkan Bekir', 'iyi gunler'))
 
     return app
 

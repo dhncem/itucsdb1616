@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+{% block title %}Messages{% endblock %}
+{% block content %}
+      <div class="page-header">
+        <h1>Direct Messages</h1>
+      </div>
+
+      <p align="left">
+        {% for message_id, message in messages %}
+       	<p align="left">
+       	<b><a href="{{ url_for('site.message_page', message_id=message_id) }}">
+		{{ message.sender }}</a></b><br>
+		{{ message.content }} <hr>
+		</p>
+         {% endfor %}
+     </p>
+
+{% endblock %}
+
+
+
