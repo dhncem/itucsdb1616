@@ -1,9 +1,7 @@
 applications:
--services
-  -ElephantSQL-jk
-  -disk_quota: 1024M
-  host: itucsdb1616
-  name: itucsdb1616
+- disk_quota: 1024M
+  host: itucsdb15
+  name: itucsdb15
   path: .
   domain: mybluemix.net
   instances: 1
