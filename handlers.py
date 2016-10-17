@@ -48,6 +48,13 @@ def settings_page():
     now = datetime.datetime.now()
     return render_template('settings.html', current_time=now.ctime())
 
+@site.route('/subscribelists')
+def subscribelists_page():
+    return render_template('subscribelists.html')
+
+@site.route('/memberlists')
+def memberlists_page():
+    return render_template('memberlist.html')
 
 
 
