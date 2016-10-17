@@ -1,20 +1,22 @@
 <!DOCTYPE html>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
 <html>
   <head>
 	{% extends "layout.html" %}
    {% block title %}Feed{% endblock %}
-
+ 	 </head>
    {% block content %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
-  </head>
-  <body>
+
+	<body>
+
 
     <h1>My Twitter Feed..</h1>
 
     <footer>
       <div id="datetime">{{ current_time }}</div>
     </footer>
+	</body>
 {% endblock %}
 
-  </body>
+
 </html>
