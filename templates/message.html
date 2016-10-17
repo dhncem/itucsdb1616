@@ -1,16 +1,12 @@
 {% extends "layout.html" %}
-{% block title %}Movie{% endblock %}
+{% block title %}Message{% endblock %}
 {% block content %}
       <div class="page-header">
         <h1>{{ message.sender }}</h1>
       </div>
       <body>
-      <textarea rows="5" cols="30" placeholder="write your message here"></textarea>
-        <div class="form-group">
-          <div class="col-sm-offset-2 col-sm-10">
+      <textarea rows="5" cols="50" placeholder="write your message here"></textarea>
             <button type="submit" name="send"
-                    class="btn btn-primary">Send</button>
-          </div>
-        </div>
+                    class="sendButton">Send</button>
         </body>
 {% endblock %}
