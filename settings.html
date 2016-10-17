@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  {% extends "layout.html" %}
+  {% block title %}Settings{% endblock %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+    {% block content %}
+  </head>
+  <body>
+
+  <form >
+<fieldset>
+
+<legend>Main Settings</legend>
+
+
+
+<div class="form-group">
+  <label class="col-md-4 control-label" >E-mail</label>
+  <div class="col-md-5">
+  <input id="email" name="email" type="text" placeholder="example@mail.com" class="form-control input-md">
+
+  </div>
+</div>
+
+
+
+<div class="form-group">
+  <label class="col-md-4 control-label">Language</label>
+  <div class="col-md-5">
+    <select  name="Country" class="form-control">
+      <option value="1">Turkiye</option>
+      <option value="2">US</option>
+      <option value="">UK</option>
+      <option value="">Sweden</option>
+      <option value="">Morocco</option>
+    </select>
+  </div>
+</div>
+
+<div class="form-group">
+  <label class="col-md-4 control-label" for="FeaturesThree">Update Password</label>
+  <div class="col-md-5">
+  <input  name="password" type="password" placeholder="password" class="form-control input-md">
+  <input  name="password2" type="password" placeholder="again" class="form-control input-md">
+  <button  name="btn_register" class="btn btn-lg btn-primary btn-block" type="submit"> Update </button>
+
+  </div>
+</div>
+
+
+
+
+</fieldset>
+</form>
+
+
+    <footer>
+      <div id="datetime">{{ current_time }}</div>
+    </footer>
+    {% endblock %}
+  </body>
+</html>
