@@ -19,7 +19,7 @@ def create_app():
     app.register_blueprint(site)
 
     app.store = Store()
-    app.store.add_twit(Twit('Mr First Tweet', 'Just so you don\'t get tired we posted your first tweet'))
+    app.store.add_twit(Twit('Mr First Tweet'	, 'Just so you don\'t get tired we posted your first tweet'))
 
     app.messageList = MessageList()
     app.messageList.add_message(Message('Emre Cetiner', 'Serkan Bekir', 'hello', sent = False))
@@ -30,12 +30,10 @@ def create_app():
     return app
 
 
-def main():
-    app = create_app()
-    debug = app.config['DEBUG']
-    port = app.config.get('PORT', 5000)
-    app.run(host='0.0.0.0', port=5000, debug=True)
-
-
 if __name__ == '__main__':
-    main()
+    VCAP_APP_PORT = os.getenv('VCAP_APP_PORT')
+    if VCAP_APP_PORT is not None:
+    	port, debug = int(VCAP_APP_PORT), False
+    else:
+    	port, debug = 5000, True
+ 	app.run(host='0.0.0.0', port=port, debug=debug)
