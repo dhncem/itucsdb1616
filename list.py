@@ -11,7 +11,7 @@ class List:
         self.members[self.lastMemberID] = member
 
     def deleteMember(self, memberID):
-        del self.messages[message_id]
+        del self.members[memberID]
 
     def getPosts(self):
         return sorted(self.posts.items())
