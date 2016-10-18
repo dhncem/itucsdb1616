@@ -9,10 +9,10 @@ class ListOfLists:
         self.lists[self.lastListID] = list
 
     def deleteList(self, listID):
-        del self.messages[message_id]
+        del self.lists[listID]
 
     def getList(self, listID):
-        return self.messages[listID]
+        return self.lists[listID]
 
     def getLists(self):
         return sorted(self.lists.items())
