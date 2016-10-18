@@ -4,6 +4,8 @@ from flask import current_app
 from flask import Blueprint, redirect, render_template, url_for
 from flask import current_app, request
 from message import Message
+from list import List
+from listoflist import ListOfLists
 
 site = Blueprint('site', __name__)
 
@@ -50,14 +52,16 @@ def settings_page():
     now = datetime.datetime.now()
     return render_template('settings.html', current_time=now.ctime())
 
-@site.route('/subscribelists')
+@site.route('/subscribedlists')
 def subscribelists_page():
-    return render_template('subscribelists.html')
+    subscribedlist=current_app.subscribedList.getLists()
+    return render_template('subscribedlists.html',subscribedlist=subscribedlist)
 
-@site.route('/memberlists')
-def memberlists_page():
-    return render_template('memberlist.html')
 
+@site.route('/memberoflists')
+def memberoflists_page():
+    memberoflist=current_app.memberOfList.getLists()
+    return render_template('memberoflist.html',memberoflist=memberoflist)
 
 
 

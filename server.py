@@ -7,6 +7,8 @@ from store import Store
 from twit import Twit
 from message import Message
 from messageList import MessageList
+from list import List
+from listoflist import ListOfLists
 
 from flask import Flask
 
@@ -26,6 +28,13 @@ def create_app():
 	app.messageList.add_message(Message('Yusuf Ekiz', 'Serkan Bekir', 'good morning', sent = True))
 	app.messageList.add_message(Message('Mert Kurtcan', 'Serkan Bekir', 'hi!'))
 	app.messageList.add_message(Message('Cem Karagoz', 'Serkan Bekir', 'good afternoon'))
+
+	app.subscribedList=ListOfLists('Subscribed to')
+	app.memberOfList=ListOfLists('Member Of')
+	app.subscribedList.addList(List('NBA Fans'))
+	app.subscribedList.addList(List('Informatik'))
+	app.memberOfList.addList(List('Basketball Games'))
+	app.memberOfList.addList(List('History Of Science'))
 
 	return app
 

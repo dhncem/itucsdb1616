@@ -11,20 +11,23 @@
 
    <div>
    <ul id="listoflisttitles">
-   	<li><a href="{{ url_for('site.subscribelists_page') }}">Subscribed to</a></li>
-   	<li style:"color:#FFFF;">Member of </li>
+   	<li>Subscribed to</li>
+   	<li style:"color:#FFFF;"><a href="{{ url_for('site.memberoflists_page') }}">Member of </a></li>
 
    </ul>
    </div>
 <br>
 <br>
 
-
-<ul id="all_of_the_lists_subscribed_or_member_of">
-<li>First list</li>
-<li> Second list</li>
-<li> Third list</li>
-</ul>
+<p align="middle">
+        {% for list_id, list in subscribedlist %}
+		<p align="middle">
+       	<b style="text-decoration:none">
+		{{ list.name }}</b><br>
+		<hr>
+		</p>
+         {% endfor %}
+     </p>
 <br>
 <br>
 </div>
