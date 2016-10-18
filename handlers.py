@@ -7,6 +7,8 @@ from message import Message
 
 site = Blueprint('site', __name__)
 
+
+
 @site.route('/')
 def home_page():
     now = datetime.datetime.now()

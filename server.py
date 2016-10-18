@@ -22,10 +22,10 @@ def create_app():
     app.store.add_twit(Twit('Mr First Tweet', 'Just so you don\'t get tired we posted your first tweet'))
 
     app.messageList = MessageList()
-    app.messageList.add_message(Message('Emre Cetiner', 'Serkan Bekir', 'merhaba'))
-    app.messageList.add_message(Message('Yusuf Ekiz', 'Serkan Bekir', 'gunaydin'))
-    app.messageList.add_message(Message('Mert Kurtcan', 'Serkan Bekir', 'selam'))
-    app.messageList.add_message(Message('Cem Karagoz', 'Serkan Bekir', 'iyi gunler'))
+    app.messageList.add_message(Message('Emre Cetiner', 'Serkan Bekir', 'hello', sent = False))
+    app.messageList.add_message(Message('Yusuf Ekiz', 'Serkan Bekir', 'good morning', sent = True))
+    app.messageList.add_message(Message('Mert Kurtcan', 'Serkan Bekir', 'hi!'))
+    app.messageList.add_message(Message('Cem Karagoz', 'Serkan Bekir', 'good afternoon'))
 
     return app
 

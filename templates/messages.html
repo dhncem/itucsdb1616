@@ -8,9 +8,10 @@
       <p align="left">
         {% for message_id, message in messages %}
        	<p align="left">
-       	<b><a href="{{ url_for('site.message_page', message_id=message_id) }}">
+
+       	<b><a href="{{ url_for('site.message_page', message_id=message_id) }}"style="text-decoration:none">
 		{{ message.sender }}</a></b><br>
-		{{ message.content }} <hr>
+		{% if message.sent %}&#x21E1;{% endif %}{{message.content }}<hr>
 		</p>
          {% endfor %}
      </p>
