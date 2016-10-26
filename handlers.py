@@ -12,17 +12,28 @@ site = Blueprint('site', __name__)
 
 
 @site.route('/')
+def root_page():
+	return redirect(url_for('site.login_page'))
+
+@site.route('/login', methods=['GET', 'POST'])
+def login_page():
+	if request.method == 'GET':
+		return render_template('login.html')
+	else:
+		username = request.form['inputEmail']
+		return redirect(url_for('site.home_page', username=username))
+
+@site.route('/home', methods=['GET'])
 def home_page():
-    now = datetime.datetime.now()
-    return render_template('home.html', current_time=now.ctime())
+	now = datetime.datetime.now()
+	if	request.method == 'GET':
+		return render_template('home.html', username=request.args.get('username'), current_time=now.ctime())
 
 @site.route('/twits')
 def twit_page():
     now = datetime.datetime.now()
     twits = current_app.store.get_twit()
     return render_template('twits.html', twits=sorted(twits.items()), current_time=now.ctime())
-
-
 
 @site.route('/twits/add', methods=['GET', 'POST'])
 def twit_add_page():
@@ -62,9 +73,6 @@ def subscribelists_page():
 def memberoflists_page():
     memberoflist=current_app.memberOfList.getLists()
     return render_template('memberoflist.html',memberoflist=memberoflist)
-
-
-
 
 #@site.route('/twits/<int:twit_id>')
 #def twit_page(twit_id):
