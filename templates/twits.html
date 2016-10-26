@@ -1,11 +1,6 @@
-<!DOCTYPE html>
-<html>
-  <head>
   {% extends "layout.html" %}
   {% block title %}My twits{% endblock %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
     {% block content %}
-  </head>
   <body>
 
     <h1>Welcome to My Tweets</h1>
@@ -19,16 +14,9 @@
 		{{ twit.content }}
 		</p>
          {% endfor %}
-     </p>
       {% endif %}
-
-
-
-
-
     <footer>
       <div id="datetime">{{ current_time }}</div>
     </footer>
-    {% endblock %}
   </body>
-</html>
+  {% endblock %}
