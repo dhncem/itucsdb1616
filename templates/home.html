@@ -1,11 +1,6 @@
-<!DOCTYPE html>
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
-<html>
-  <head>
-	{% extends "layout.html" %}
-   {% block title %}Feed{% endblock %}
- 	 </head>
-   {% block content %}
+{% extends "layout.html" %}
+{% block title %}Feed{% endblock %}
+{% block content %}
 
 	<body>
 
@@ -18,5 +13,3 @@
 	</body>
 {% endblock %}
 
-
-</html>

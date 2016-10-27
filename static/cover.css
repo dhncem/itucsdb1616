@@ -26,18 +26,18 @@ a:hover {
 
 html,
 body {
-  height: 100%;
-  background-color: #333;
+  height: 33%;
+  background-color: #DDD;
 }
 body {
-  color: #fff;
-  text-align: center;
+  color: #000;
   text-shadow: 0 1px 3px rgba(0,0,0,.5);
 }
 
 /* Extra markup and styles for table-esque vertical and horizontal centering */
 .site-wrapper {
   display: table;
+  background-color: #333;
   width: 100%;
   height: 100%; /* For at least Firefox */
   min-height: 100%;
@@ -46,7 +46,7 @@ body {
 }
 .site-wrapper-inner {
   display: table-cell;
-  
+
 }
 .cover-container {
   margin-right: auto;
@@ -160,4 +160,36 @@ body {
   .cover-container {
     width: 700px;
   }
+}
+
+#listoflisttitles
+{
+	list-style-type:none;
+	text-align:center;
+}
+
+
+#listoflisttitles li
+{
+ 	display:inline;
+ 	font-weight:bold;
+ 	font-size:24px;
+ 	padding:10px;
+}
+
+#listoflisttitles li a
+{
+	text-decoration:none;
+}
+
+#all_of_the_lists_subscribed_or_member_of
+{
+	text-align:center;
+	list-style-type:none;
+}
+
+#all_of_the_lists_subscribed_or_member_of li
+
+{
+	margin:10px 0;
 }

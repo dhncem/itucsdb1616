@@ -2,28 +2,78 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Itucsdb1616 -{% block title %}{% endblock %}</title>
-    <link rel="stylesheet"  href="{{ url_for('static', filename='style.css') }}"  />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+   	<title>Itucsdb1616 -{% block title %}{% endblock %}</title>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+
+    <!-- Bootstrap core CSS -->
+    <link href="{{ url_for('static', filename='bootstrap.min.css') }}" rel="stylesheet">
+
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <link href="{{ url_for('static', filename='ie10-viewport-bug-workaround.css') }}" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="{{ url_for('static', filename='cover.css') }}" rel="stylesheet">
+
+    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+    <script src="../static/ie-emulation-modes-warning.js"></script>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
   </head>
-  <body id="#layout">
-	<header>
-      <nav>
-      <ul id="layout">
-  		<li><a class="active" href="{{ url_for('site.home_page') }}">Home</a></li>
-  		<li><a href="{{ url_for('site.twit_page') }}">My Tweets</a></li>
-  		<li><a href="{{ url_for('site.twit_add_page') }}">Post a Tweet</a></li>
-  		<li><a href="{{ url_for('site.messages_page') }}">Messages</a></li>
-  		<li><a href="{{ url_for('site.subscribelists_page') }}">Lists</a></li>
-  		<li><a href="{{ url_for('site.settings_page') }}">Settings</a></li>
-  		<li><a href="#contact">Contact</a></li>
- 	 	<li style="float:right"><a href="#about">About</a></li>
-	</ul>
-	   </nav>
-    </header>
 
+  <body>
 
+    <div class="site-wrapper">
 
+      <div class="site-wrapper-inner">
+
+        <div class="cover-container">
+
+          <div class="masthead clearfix">
+            <div class="inner">
+              <nav>
+                <ul class="nav masthead-nav">
+			  		<li><a class="active" href="{{ url_for('site.home_page') }}">Home</a></li>
+			  		<li><a href="{{ url_for('site.twit_page') }}">My Tweets</a></li>
+			  		<li><a href="{{ url_for('site.twit_add_page') }}">Post a Tweet</a></li>
+			  		<li><a href="{{ url_for('site.messages_page') }}">Messages</a></li>
+			  		<li><a href="{{ url_for('site.subscribelists_page') }}">Lists</a></li>
+			  		<li><a href="{{ url_for('site.settings_page') }}">Settings</a></li>
+			  		<li><a href="#contact">Contact</a></li>
+                </ul>
+              </nav>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+    <div class="inner">
     {% block content %}{% endblock %}
+    </div>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../static/jquery.min.js"><\/script>')</script>
+    <script src="../static/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="../static/ie10-viewport-bug-workaround.js"></script>
+  </body>
+
 
     <footer id="layout" align="middle">
       &copy; 2016, itucsdb1616

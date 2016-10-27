@@ -1,12 +1,7 @@
-<!DOCTYPE html>
-<html>
-  <head>
-  {% extends "layout.html" %}
-  {% block title %}Settings{% endblock %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
-    {% block content %}
-  </head>
-  <body>
+{% extends "layout.html" %}
+{% block title %}Settings{% endblock %}
+{% block content %}
+<body>
 
   <form >
 <fieldset>
@@ -14,15 +9,12 @@
 <legend>Main Settings</legend>
   <div >
     <label>E-mail</label>
-    <div class="col-md-5">
     <input id="email" name="email" type="text" placeholder="example@mail.com" >
 
-    </div>
   </div>
-  
+
   <div>
     <label>Language</label>
-    <div>
       <select  name="Country">
         <option value="1">Turkiye</option>
         <option value="2">US</option>
@@ -30,9 +22,8 @@
         <option value="">Sweden</option>
         <option value="">Morocco</option>
       </select>
-    </div>
   </div>
-  
+
   <div>
     <label>Update Password</label>
     <div>
@@ -41,7 +32,7 @@
     <button  name="btn_register" type="submit"> Update </button>
     </div>
   </div>
-  
+
 </fieldset>
 </form>
 
@@ -50,5 +41,4 @@
       <div id="datetime">{{ current_time }}</div>
     </footer>
     {% endblock %}
-  </body>
-</html>
+</body>
