@@ -134,18 +134,14 @@ def main():
 
     app.run(host='0.0.0.0', port=port, debug=debug)
 
+@app.route('/initdb')
 def initialize_database():
     try:
         connection = dbapi2.connect(app.config['dsn'])
         cursor = connection.cursor()
 
-        cursor.execute("""CREATE TABLE TWEETS(TWEETID SERIAL PRIMARY KEY NOT NULL, USERID INT NOT NULL, TITLE CHAR(20) NOT NULL, CONTEXT CHAR(140) NOT NULL)""")
-
-
-        cursor.execute("""INSERT INTO TWEETS (USERID, TITLE, CONTEXT)
-                            VALUES
-                            (1, 'Admin Tweets', 'First Tweet By Adminssss')""")
-
+        cursor.execute(open("script.sql", "r").read())
+        cursor.close()
 
         connection.commit()
         connection.close()
