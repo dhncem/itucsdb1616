@@ -134,6 +134,7 @@ def main():
 
     app.run(host='0.0.0.0', port=port, debug=debug)
 
+@app.route('/initdb')
 def initialize_database():
     try:
         connection = dbapi2.connect(app.config['dsn'])
