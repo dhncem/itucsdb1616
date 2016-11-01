@@ -5,8 +5,10 @@ import json
 import re
 import psycopg2 as dbapi2
 
-from flask import Flask
-from flask import Blueprint, render_template, redirect, url_for
+from flask_login import LoginManager
+from flask import Flask, abort, flash, redirect, render_template, url_for
+from flask_login import current_user, login_required, login_user, logout_user
+from passlib.apps import custom_app_context as pwd_context
 from twitlist import Twitlist
 from twit import Twit
 from message import Message
@@ -14,7 +16,11 @@ from messageList import MessageList
 from list import List
 from listoflist import ListOfLists
 from flask import current_app, request
+from user import get_user
+from forms import LoginForm
+from forms import RegisterForm
 
+lm = LoginManager()
 app = Flask(__name__)
 
 def get_elephantsql_dsn(vcap_services):
@@ -27,6 +33,9 @@ def get_elephantsql_dsn(vcap_services):
             dbname='{}'""".format(user, password, host, port, dbname)
     return dsn
 
+@lm.user_loader
+def load_user(user_id):
+    return get_user(user_id)
 
 def create_app():
     app.config.from_object('settings')
@@ -47,34 +56,73 @@ def create_app():
     app.memberOfList.addList(List('Basketball Games'))
     app.memberOfList.addList(List('History Of Science'))
 
+    lm.init_app(app)
+    lm.login_view='login_page'
+
     return app
 
 
 @app.route('/')
 def root_page():
-    return redirect(url_for('login_page'))
+    return redirect(url_for('home_page'))
 
 @app.route('/login', methods=['GET', 'POST'])
 def login_page():
-    if request.method == 'GET':
-        return render_template('login.html')
-    else:
-        username = request.form['inputEmail']
-        return redirect(url_for('home_page', username=username))
+    form=LoginForm(request.form)
+    if request.method == 'POST' and form.validate():
+        username = form.username.data
+        user = get_user(username)
+        if user is not None:
+            password = form.password.data
+            if pwd_context.verify(password, user.password):
+                login_user(user)
+                flash('You have logged in.')
+                next_page = request.args.get('next', url_for('home_page'))
+                return redirect(next_page)
+        flash('Invalid credentials.')
+    return render_template('login.html', form=form)
+
+@app.route('/register', methods=['GET', 'POST'])
+def register_page():
+    try:
+        form = RegisterForm(request.form)
+        if request.method == 'POST' and form.validate():
+            username = form.username.data
+            password = pwd_context.encrypt(form.password.data)
+
+            connection = dbapi2.connect(app.config['dsn'])
+            cursor = connection.cursor()
+            cursor.execute("""INSERT INTO USERS (USERNAME, PASSWORD) VALUES (%s, %s)""", (username, password))
+            cursor.execute("""INSERT INTO USERPROFILE (NICKNAME, BIO) VALUES(%s, %s)""", ('nickname', 'bio'))
+            connection.commit()
+            login_user(get_user(username))
+            cursor.close()
+            connection.close()
+            return redirect(url_for('home_page'))
+
+        return render_template('register.html', form=form)
+    except:
+        flash("Username is already taken!")
+
+    return render_template('register.html', form=form)
+
 
 @app.route('/home', methods=['GET'])
+@login_required
 def home_page():
     now = datetime.datetime.now()
     if    request.method == 'GET':
         return render_template('home.html', username=request.args.get('username'), current_time=now.ctime())
 
 @app.route('/twits')
+@login_required
 def twit_page():
     now = datetime.datetime.now()
     twits = current_app.Twitlist.get_twit()
     return render_template('twits.html', twits=sorted(twits.items()), current_time=now.ctime())
 
 @app.route('/twits/add', methods=['GET', 'POST'])
+@login_required
 def twit_add_page():
     if request.method == 'GET':
         return render_template('add_twit.html')
@@ -86,29 +134,34 @@ def twit_add_page():
         return redirect(url_for('twit_page'))
 
 @app.route('/messages')
+@login_required
 def messages_page():
     messages = current_app.messageList.get_messages()
     return render_template('messages.html', messages=messages)
 
 
 @app.route('/message/<int:message_id>')
+@login_required
 def message_page(message_id):
     message = current_app.messageList.get_message(message_id)
     return render_template('message.html', message=message)
 
 
 @app.route('/settings')
+@login_required
 def settings_page():
     now = datetime.datetime.now()
     return render_template('settings.html', current_time=now.ctime())
 
 @app.route('/subscribedlists')
+@login_required
 def subscribelists_page():
     subscribedlist=current_app.subscribedList.getLists()
     return render_template('subscribedlists.html',subscribedlist=subscribedlist)
 
 
 @app.route('/memberoflists')
+@login_required
 def memberoflists_page():
     memberoflist=current_app.memberOfList.getLists()
     return render_template('memberoflist.html',memberoflist=memberoflist)
@@ -117,6 +170,12 @@ def memberoflists_page():
 #def twit_page(twit_id):
   #twits = current_app.Twitlist.get_twit(twit_id)
   #return render_template('twit.html', twit=twit, current_time=now.ctime())
+
+@app.route('/logout')
+def logout_page():
+    logout_user()
+    flash('You have logged out.')
+    return redirect(url_for('home_page'))
 
 def main():
     app = create_app()
