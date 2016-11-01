@@ -4,3 +4,4 @@ Sphinx
 flask-login
 passlib
 flask-wtf
+wtforms-components
