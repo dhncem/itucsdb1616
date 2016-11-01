@@ -5,9 +5,9 @@ import json
 import re
 import psycopg2 as dbapi2
 
-from flask.ext.login import LoginManager
+from flask_login import LoginManager
 from flask import Flask, abort, flash, redirect, render_template, url_for
-from flask.ext.login import current_user, login_required, login_user, logout_user
+from flask_login import current_user, login_required, login_user, logout_user
 from passlib.apps import custom_app_context as pwd_context
 from twitlist import Twitlist
 from twit import Twit
