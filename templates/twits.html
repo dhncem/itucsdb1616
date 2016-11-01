@@ -9,14 +9,11 @@
       <p align="left">
         {% for twit_id, twit in twits %}
        	<p align="left">
-       	<a href="{{ url_for('twit_page', twit_id=twit_id) }}">
+       	<a href="{{ url_for('twit_page', twit_id=twit_id) }}" style="color:blue;">
 		{{ twit.title }}</a><br>
 		{{ twit.content }}
 		</p>
          {% endfor %}
       {% endif %}
-    <footer>
-      <div id="datetime">{{ current_time }}</div>
-    </footer>
   </body>
   {% endblock %}

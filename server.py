@@ -7,7 +7,7 @@ import psycopg2 as dbapi2
 
 from flask import Flask
 from flask import Blueprint, render_template, redirect, url_for
-from store import Store
+from twitlist import Twitlist
 from twit import Twit
 from message import Message
 from messageList import MessageList
@@ -31,8 +31,8 @@ def get_elephantsql_dsn(vcap_services):
 def create_app():
     app.config.from_object('settings')
 
-    app.store = Store()
-    app.store.add_twit(Twit('Mr First Tweet', 'Just so you don\'t get tired we posted your first tweet'))
+    app.Twitlist = Twitlist()
+    app.Twitlist.add_twit(Twit('Mr First Tweet', 'Just so you don\'t get tired we posted your first tweet'))
 
     app.messageList = MessageList()
     app.messageList.add_message(Message('Emre Cetiner', 'Serkan Bekir', 'hello', sent = False))
@@ -71,7 +71,7 @@ def home_page():
 @app.route('/twits')
 def twit_page():
     now = datetime.datetime.now()
-    twits = current_app.store.get_twit()
+    twits = current_app.Twitlist.get_twit()
     return render_template('twits.html', twits=sorted(twits.items()), current_time=now.ctime())
 
 @app.route('/twits/add', methods=['GET', 'POST'])
@@ -82,8 +82,8 @@ def twit_add_page():
         title = request.form['title']
         content = request.form['content']
         twit = Twit(title, content)
-        current_app.store.add_twit(twit)
-        return redirect(url_for('app.twit_page', movie_id=movie._id))
+        current_app.Twitlist.add_twit(twit)
+        return redirect(url_for('twit_page'))
 
 @app.route('/messages')
 def messages_page():
@@ -115,7 +115,7 @@ def memberoflists_page():
 
 #@app.route('/twits/<int:twit_id>')
 #def twit_page(twit_id):
-  #twits = current_app.store.get_twit(twit_id)
+  #twits = current_app.Twitlist.get_twit(twit_id)
   #return render_template('twit.html', twit=twit, current_time=now.ctime())
 
 def main():
