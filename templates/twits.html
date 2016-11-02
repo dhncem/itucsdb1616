@@ -7,9 +7,9 @@
 
     {% if twits %}
       <p align="left">
-        {% for twit_id, twit in twits %}
+        {% for twitid, twit in twits %}
        	<p align="left">
-       	<a href="{{ url_for('twit_page', twit_id=twit_id) }}" style="color:blue;">
+       	<a href="{{ url_for('twit_page', twitid=twitid) }}" style="color:blue;">
 		{{ twit.title }}</a><br>
 		{{ twit.content }}
 		</p>

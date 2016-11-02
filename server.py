@@ -42,7 +42,6 @@ def create_app():
     app.config.from_object('settings')
 
     app.Twitlist = Twitlist()
-    app.Twitlist.add_twit(Twit('Mr First Tweet', 'Just so you don\'t get tired we posted your first tweet'))
 
     app.messageList = MessageList()
     app.messageList.add_message(Message('Emre Cetiner', 'Serkan Bekir', 'hello', sent = False))
@@ -115,12 +114,31 @@ def home_page():
     if    request.method == 'GET':
         return render_template('home.html', username=request.args.get('username'), current_time=now.ctime())
 
+@app.route('/twits/<int:twit_id>')
+@login_required
+def twits_page(twit_id):
+  twits = current_app.Twitlist.get_twit(twit_id)
+  return render_template('twit.html', twit=twit, current_time=now.ctime())
+
 @app.route('/twits')
 @login_required
 def twit_page():
     now = datetime.datetime.now()
     twits = current_app.Twitlist.get_twit()
-    return render_template('twits.html', twits=sorted(twits.items()), current_time=now.ctime())
+    return render_template('twits.html', twits=twits)
+
+@app.route('/twits/add', methods=['GET', 'POST'])
+@login_required
+def twit_add_page():
+    if request.method == 'GET':
+        return render_template('add_twit.html')
+    else:
+        title = request.form['title']
+        content = request.form['content']
+        twitid=0
+        twit = Twit(title, content, twitid)
+        current_app.Twitlist.add_twit(twit)
+        return render_template('add_twit.html')
 
 @app.route('/followuser', methods=['GET', 'POST'])
 @login_required
@@ -140,18 +158,6 @@ def follow_page():
         return render_template('followuser.html')
     else:
         return render_template('followuser.html')
-
-@app.route('/twits/add', methods=['GET', 'POST'])
-@login_required
-def twit_add_page():
-    if request.method == 'GET':
-        return render_template('add_twit.html')
-    else:
-        title = request.form['title']
-        content = request.form['content']
-        twit = Twit(title, content)
-        current_app.Twitlist.add_twit(twit)
-        return redirect(url_for('twit_page'))
 
 @app.route('/messages')
 @login_required
@@ -185,11 +191,6 @@ def subscribelists_page():
 def memberoflists_page():
     memberoflist=current_app.memberOfList.getLists()
     return render_template('memberoflist.html',memberoflist=memberoflist)
-
-#@app.route('/twits/<int:twit_id>')
-#def twit_page(twit_id):
-  #twits = current_app.Twitlist.get_twit(twit_id)
-  #return render_template('twit.html', twit=twit, current_time=now.ctime())
 
 @app.route('/logout')
 def logout_page():
