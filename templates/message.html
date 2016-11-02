@@ -5,9 +5,13 @@
         <h1>{{ message.sender }}</h1>
       </div>
       <body>
+		{{message.content }}<br><br>
 
-      <textarea rows="5" cols="50" placeholder="write your message here"></textarea>
+		<form role="form" action="" method="post" name="message-form">
+
+      <input type="text" name="content" size ="25" placeholder="write your message here" required autofocus/>
             <button type="submit" name="send"
                     class="sendButton">Send</button>
         </body>
+        </form>
 {% endblock %}

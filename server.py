@@ -44,10 +44,6 @@ def create_app():
     app.Twitlist = Twitlist()
 
     app.messageList = MessageList()
-    app.messageList.add_message(Message('Emre Cetiner', 'Serkan Bekir', 'hello', sent = False))
-    app.messageList.add_message(Message('Yusuf Ekiz', 'Serkan Bekir', 'good morning', sent = True))
-    app.messageList.add_message(Message('Mert Kurtcan', 'Serkan Bekir', 'hi!'))
-    app.messageList.add_message(Message('Cem Karagoz', 'Serkan Bekir', 'good afternoon'))
 
     app.subscribedList=ListOfLists('Subscribed to')
     app.memberOfList=ListOfLists('Member Of')
@@ -166,12 +162,11 @@ def messages_page():
     return render_template('messages.html', messages=messages)
 
 
-@app.route('/message/<int:message_id>')
+@app.route('/message/<int:message_id>', methods=['GET', 'POST'])
 @login_required
 def message_page(message_id):
     message = current_app.messageList.get_message(message_id)
     return render_template('message.html', message=message)
-
 
 @app.route('/settings')
 @login_required
