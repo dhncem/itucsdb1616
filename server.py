@@ -5,8 +5,8 @@ import json
 import re
 import psycopg2 as dbapi2
 
-from flask_login import LoginManager
 from flask import Flask, abort, flash, redirect, render_template, url_for
+from flask_login import LoginManager
 from flask_login import current_user, login_required, login_user, logout_user
 from passlib.apps import custom_app_context as pwd_context
 from twitlist import Twitlist
@@ -19,6 +19,7 @@ from flask import current_app, request
 from user import get_user
 from forms import LoginForm
 from forms import RegisterForm
+from followoperations import follow, unfollow
 
 lm = LoginManager()
 app = Flask(__name__)
@@ -93,10 +94,10 @@ def register_page():
             connection = dbapi2.connect(app.config['dsn'])
             cursor = connection.cursor()
             cursor.execute("""INSERT INTO USERS (USERNAME, PASSWORD) VALUES (%s, %s)""", (username, password))
-            cursor.execute("""INSERT INTO USERPROFILE (NICKNAME, BIO) VALUES(%s, %s)""", ('nickname', 'bio'))
+            cursor.execute("""INSERT INTO USERPROFILE (NICKNAME, USERNAME, BIO) VALUES(%s, %s, %s)""", ('nickname', username, 'bio'))
+            cursor.close()
             connection.commit()
             login_user(get_user(username))
-            cursor.close()
             connection.close()
             return redirect(url_for('home_page'))
 
@@ -120,6 +121,25 @@ def twit_page():
     now = datetime.datetime.now()
     twits = current_app.Twitlist.get_twit()
     return render_template('twits.html', twits=sorted(twits.items()), current_time=now.ctime())
+
+@app.route('/followuser', methods=['GET', 'POST'])
+@login_required
+def follow_page():
+    if request.method == 'POST':
+        username = request.form['follow-username']
+        if request.form['followbutton']=='Follow':
+            if follow(username):
+                flash('%s is followed' % username)
+            else:
+                flash('%s cannot be followed' % username)
+        else:
+            if unfollow(username):
+                flash('%s is unfollowed' % username)
+            else:
+                flash('%s cannot be unfollowed' % username)
+        return render_template('followuser.html')
+    else:
+        return render_template('followuser.html')
 
 @app.route('/twits/add', methods=['GET', 'POST'])
 @login_required
