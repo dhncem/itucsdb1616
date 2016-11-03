@@ -19,7 +19,7 @@ from flask import current_app, request
 from user import get_user
 from forms import LoginForm
 from forms import RegisterForm
-from followoperations import follow, unfollow
+from followoperations import *
 
 lm = LoginManager()
 app = Flask(__name__)
@@ -89,7 +89,7 @@ def register_page():
             connection = dbapi2.connect(app.config['dsn'])
             cursor = connection.cursor()
             cursor.execute("""INSERT INTO USERS (USERNAME, PASSWORD) VALUES (%s, %s)""", (username, password))
-            cursor.execute("""INSERT INTO USERPROFILE (NICKNAME, USERNAME, BIO) VALUES(%s, %s, %s)""", ('nickname', username, 'bio'))
+            cursor.execute("""INSERT INTO USERPROFILE (NICKNAME, USERNAME, BIO) VALUES(%s, %s, %s)""", (username, username, 'bio'))
             cursor.close()
             connection.commit()
             login_user(get_user(username))
@@ -143,12 +143,14 @@ def follow_page():
         username = request.form['follow-username']
         if request.form['followbutton']=='Follow':
             if follow(username):
-                flash('%s is followed' % username)
+                flash('%s is followed. %s is followed by %s user(s). You are following %s user(s).'
+                      % (username, username, get_followercount(username), get_followingcount(current_user.username)))
             else:
                 flash('%s cannot be followed' % username)
         else:
             if unfollow(username):
-                flash('%s is unfollowed' % username)
+                flash('%s is unfollowed. %s is followed by %s user(s). You are following %s user(s).'
+                      % (username, username, get_followercount(username), get_followingcount(current_user.username)))
             else:
                 flash('%s cannot be unfollowed' % username)
         return render_template('followuser.html')

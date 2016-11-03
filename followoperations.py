@@ -14,6 +14,8 @@ def follow(followed):
         followedid=values[0]
         if followerid and followedid:
             cursor.execute("""INSERT INTO FOLLOWS (FOLLOWERID, FOLLOWEDUSER) VALUES (%s, %s)""",(followerid,followedid))
+            cursor.execute("""UPDATE USERPROFILE SET FOLLOWING = FOLLOWING +1 WHERE (ID = %s) """,(followerid,))
+            cursor.execute("""UPDATE USERPROFILE SET FOLLOWERS = FOLLOWERS +1 WHERE (ID = %s) """,(followedid,))
         else:
             connection.commit()
             cursor.close()
@@ -38,6 +40,9 @@ def unfollow(followed):
         followedid=values[0]
         if followerid and followedid:
             cursor.execute("""DELETE FROM FOLLOWS WHERE (FOLLOWERID = %s) AND (FOLLOWEDUSER = %s)""",(followerid,followedid))
+            cursor.execute("""UPDATE USERPROFILE SET FOLLOWING = FOLLOWING -1 WHERE (ID = %s)""",(followerid,))
+            cursor.execute("""UPDATE USERPROFILE SET FOLLOWERS = FOLLOWERS -1 WHERE (ID = %s)""",(followedid,))
+
         else:
             connection.commit()
             cursor.close()
@@ -50,3 +55,30 @@ def unfollow(followed):
     except:
         return False
 
+def get_followercount(username):
+    try:
+        connection = dbapi2.connect(current_app.config['dsn'])
+        cursor = connection.cursor()
+        cursor.execute("""SELECT FOLLOWERS FROM USERPROFILE WHERE USERNAME = %s""", (username,))
+        values=cursor.fetchone()
+        followercount=values[0]
+        connection.commit()
+        cursor.close()
+        connection.close()
+        return followercount
+    except:
+        return False
+
+def get_followingcount(username):
+    try:
+        connection = dbapi2.connect(current_app.config['dsn'])
+        cursor = connection.cursor()
+        cursor.execute("""SELECT FOLLOWING FROM USERPROFILE WHERE USERNAME = %s""", (username,))
+        values=cursor.fetchone()
+        followingcount=values[0]
+        connection.commit()
+        cursor.close()
+        connection.close()
+        return followingcount
+    except:
+        return False
