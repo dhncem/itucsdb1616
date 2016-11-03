@@ -9,11 +9,20 @@
         {% for message_id, message in messages %}
        	<p align="left">
 
-       	<b><a href="{{ url_for('message_page', message_id=message_id) }}"style="text-decoration:none">
+       	<b><a type="radio" href="{{ url_for('message_page') }}"style="text-decoration:none">
 		{{ message.sender }}</a></b><br>
 		{% if message.sent %}&#x21E1;{% endif %}{{message.content }}<hr>
 		</p>
          {% endfor %}
+
+		 <a href="{{ url_for('new_message_page') }}"style="text-decoration:none">
+		 <button type="submit"
+                class="btn btn-lg btn-primary btn-block">New Message</button></a>
+                <br>
+                <form <a href="{{ url_for('messages_page') }}role="form" method="post" name="delete-message">
+		 <button type="submit"
+                class="btn btn-lg btn-primary btn-block">Clear Inbox</button></a>
+				</form>
      </p>
 
 {% endblock %}

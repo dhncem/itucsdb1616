@@ -11,27 +11,35 @@ class MessageList:
     def add_message(self, message):
         connection = dbapi2.connect(current_app.config['dsn'])
         cursor = connection.cursor()
+        cursor.execute("""SELECT ID FROM USERS WHERE USERNAME=%s""", (message.reciever,))
+        recieverid = cursor.fetchone()
         cursor.execute("""SELECT ID FROM USERS WHERE USERNAME=%s""", (current_user.username,))
         senderid = cursor.fetchone()
-        cursor.execute("""INSERT INTO MESSAGES (SENDERID, RECIEVERID, CONTENT, SENT) VALUES (%s, %s, %s, %s)""", (senderid, message.reciever, message.content, message.sent))
+        cursor.execute("""INSERT INTO MESSAGES (SENDERID, RECIEVERID, CONTENT, SENT) VALUES (%s, %s, %s, %s)""", (senderid, recieverid, message.content, message.sent))
         connection.commit()
 
-    def delete_message(self, key):
-        del self.messages[key]
-
-    def get_message(self, key):
+    def delete_message(self):
         connection = dbapi2.connect(current_app.config['dsn'])
         cursor = connection.cursor()
-        query = "SELECT MESSAGES.SENDERID, MESSAGES.RECIEVERID, MESSAGES.CONTENT, USERPROFILE.NICKNAME FROM MESSAGES INNER JOIN USERPROFILE ON MESSAGES.SENDERID = USERPROFILE.ID WHERE (MESSAGEID = MESSAGEID)"
-        cursor.execute(query, (key,))
+        cursor.execute("""SELECT ID FROM USERS WHERE USERNAME=%s""", (current_user.username,))
+        userid = cursor.fetchone()
+        cursor.execute("DELETE FROM MESSAGES WHERE SENDERID = %s""", (userid,))
+        connection.commit()
+
+    def get_message(self):
+        connection = dbapi2.connect(current_app.config['dsn'])
+        cursor = connection.cursor()
+        query = "SELECT MESSAGES.SENDERID, MESSAGES.RECIEVERID, MESSAGES.CONTENT, USERPROFILE.NICKNAME FROM MESSAGES INNER JOIN USERPROFILE ON MESSAGES.SENDERID = USERPROFILE.ID"
+        cursor.execute(query)
         senderid, recieverid, content, nickname = cursor.fetchone()
         return Message(nickname, recieverid, content)
 
     def get_messages(self):
         connection = dbapi2.connect(current_app.config['dsn'])
         cursor = connection.cursor()
-        query = "SELECT MESSAGES.MESSAGEID, MESSAGES.SENDERID, MESSAGES.RECIEVERID, MESSAGES.CONTENT, USERPROFILE.NICKNAME FROM MESSAGES INNER JOIN USERPROFILE ON MESSAGES.SENDERID = USERPROFILE.ID"
-        cursor.execute(query)
+        cursor.execute("""SELECT ID FROM USERS WHERE USERNAME=%s""", (current_user.username,))
+        userid = cursor.fetchone()
+        cursor.execute("SELECT MESSAGES.MESSAGEID, MESSAGES.SENDERID, MESSAGES.RECIEVERID, MESSAGES.CONTENT, USERPROFILE.NICKNAME FROM MESSAGES INNER JOIN USERPROFILE ON MESSAGES.SENDERID = USERPROFILE.ID WHERE SENDERID = %s""",(userid,))
         messages = [(key, Message(nickname, reciever, content))
                     for key, sender, reciever, content, nickname in cursor]
         return messages

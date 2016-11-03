@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+{% block title %}Message{% endblock %}
+{% block content %}
+
+	<form role="form" action="" method="post" name="message-form">
+      <input type="text" name="reciever" size ="25" placeholder="send message to..." required autofocus/>
+		<br><br>
+      <input type="text" name="content" size ="25" placeholder="write your message here" required autofocus/>
+            <button type="submit" name="send"
+                    class="sendButton">Send</button>
+        </form>
+{% endblock %}

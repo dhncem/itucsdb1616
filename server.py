@@ -157,26 +157,39 @@ def follow_page():
     else:
         return render_template('followuser.html')
 
-@app.route('/messages')
+@app.route('/messages', methods=['GET', 'POST'])
 @login_required
 def messages_page():
     messages = current_app.messageList.get_messages()
+    if request.method == 'POST':
+        current_app.messageList.delete_message()
     return render_template('messages.html', messages=messages)
 
 
-@app.route('/message/<int:message_id>', methods=['GET', 'POST'])
+@app.route('/message', methods=['GET', 'POST'])
 @login_required
-def message_page(message_id):
-    message = current_app.messageList.get_message(message_id)
+def message_page():
+    message = current_app.messageList.get_message()
     if request.method == 'POST':
         content = request.form['content']
         sender = 1
-        reciever = 2
+        reciever = current_user.username
         sent = True
         messagesend = Message(sender, reciever, content, sent)
         current_app.messageList.add_message(messagesend)
     return render_template('message.html', message=message)
 
+@app.route('/newmessage', methods=['GET', 'POST'])
+@login_required
+def new_message_page():
+    if request.method == 'POST':
+        content = request.form['content']
+        sender = 1
+        reciever = request.form['reciever']
+        sent = True
+        messagesend = Message(sender, reciever, content, sent)
+        current_app.messageList.add_message(messagesend)
+    return render_template('new_message.html')
 
 @app.route('/settings')
 @login_required
