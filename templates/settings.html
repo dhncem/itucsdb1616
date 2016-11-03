@@ -3,9 +3,9 @@
 {% block content %}
 <body>
 
-  <form >
-<fieldset>
+<form role="form" action="" method="post">
 
+<fieldset>
 <legend>Main Settings</legend>
   <div >
     <label>E-mail</label>
@@ -15,27 +15,41 @@
 
   <div>
     <label>Language</label>
-      <select  name="Country">
-        <option value="1">Turkiye</option>
-        <option value="2">US</option>
-        <option value="">UK</option>
-        <option value="">Sweden</option>
-        <option value="">Morocco</option>
+      <select  name="Language">
+        <option value="Turkiye">Turkish</option>
+        <option value="US">English</option>
+        <option value="Italiano">Italiano</option>
+        <option value="Hrvatski">Hrvatski</option>
+        <option value="Espanol">Espanol</option>
       </select>
   </div>
-
   <div>
     <label>Update Password</label>
     <div>
-    <input  name="password" type="password" placeholder="password">
-    <input  name="password2" type="password" placeholder="again">
-    <button  name="btn_register" type="submit"> Update </button>
+    <input  name="nickname" type="text" placeholder="nickname">
+    <input  name="name" type="text" placeholder="name">
+    <input  name="surname" type="text" placeholder="surname">
+    <button  name="btn" value="update" type="submit"> Update </button>
     </div>
   </div>
 
 </fieldset>
-</form>
 
+
+
+    <button  name="btn" value="show" type="submit"> Show Settings </button>
+    <button  name="btn" value="delete" type="submit"> Reset Settings </button>
+
+<table class="table table-bordered" border='1'>
+
+<tr>
+	{% for line in table %}
+			<td> {{ line }} </td>
+	{% endfor %}
+	</tr>
+
+</table>
+</form>
 
     <footer>
       <div id="datetime">{{ current_time }}</div>

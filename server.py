@@ -20,6 +20,8 @@ from user import get_user
 from forms import LoginForm
 from forms import RegisterForm
 from followoperations import *
+from usersettings import *
+
 
 lm = LoginManager()
 app = Flask(__name__)
@@ -83,6 +85,8 @@ def register_page():
             cursor = connection.cursor()
             cursor.execute("""INSERT INTO USERS (USERNAME, PASSWORD) VALUES (%s, %s)""", (username, password))
             cursor.execute("""INSERT INTO USERPROFILE (NICKNAME, USERNAME, BIO) VALUES(%s, %s, %s)""", (username, username, 'bio'))
+            cursor.execute("""INSERT INTO USERINFO (NAME, SURNAME, NICKNAME, EMAIL, LANGUAGE) VALUES(%s, %s, %s, %s, %s)""",
+                           ('', '', '', '', ''))
             cursor.close()
             connection.commit()
             login_user(get_user(username))
@@ -184,11 +188,41 @@ def new_message_page():
         current_app.messageList.add_message(messagesend)
     return render_template('new_message.html')
 
-@app.route('/settings')
+@app.route('/settings', methods=['GET', 'POST'])
 @login_required
 def settings_page():
-    now = datetime.datetime.now()
-    return render_template('settings.html', current_time=now.ctime())
+    try:
+        if request.method == 'POST' and request.form['btn']=="update":
+            name = request.form['name']
+            surname = request.form['surname']
+            email = request.form['email']
+            language = request.form['Language']
+            nickname = request.form['nickname']
+            username = current_user.username
+            if change_settings(email,language,nickname,username, name, surname):
+                flash("Updated")
+            else:
+                flash("Could not update")
+                return render_template('settings.html')
+
+        elif request.method == 'POST' and request.form['btn']=="show":
+            username = current_user.username
+            values=show_settings(username)
+            return render_template('settings.html', table=values)
+
+        elif request.method == 'POST' and request.form['btn']=="delete":
+            username = current_user.username
+            if delete_settings(username):
+                flash("Deleted")
+            else:
+                flash("Could not delete")
+                return render_template('settings.html')
+
+        return render_template('settings.html')
+    except:
+        pass
+    return render_template('home.html')
+
 @app.route('/list/<string:listname>',methods=['GET','POST'])
 @login_required
 def list_page(listname):
