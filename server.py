@@ -45,13 +45,6 @@ def create_app():
 
     app.messageList = MessageList()
 
-    app.subscribedList=ListOfLists('Subscribed to')
-    app.memberOfList=ListOfLists('Member Of')
-    app.subscribedList.addList(List('NBA Fans'))
-    app.subscribedList.addList(List('Informatik'))
-    app.memberOfList.addList(List('Basketball Games'))
-    app.memberOfList.addList(List('History Of Science'))
-
     lm.init_app(app)
     lm.login_view='login_page'
 
@@ -196,19 +189,56 @@ def new_message_page():
 def settings_page():
     now = datetime.datetime.now()
     return render_template('settings.html', current_time=now.ctime())
+@app.route('/list/<string:listname>',methods=['GET','POST'])
+@login_required
+def list_page(listname):
+    if request.method=='POST':
+        if request.form['submit']=='update':
+            newlistname=request.form['listname']
+            list= List(listname,current_user.username)
+            list.updateName(newlistname)
+            return render_template('list.html',listname=newlistname)
+    else:
+        return render_template('list.html',listname=listname)
 
-@app.route('/subscribedlists')
+@app.route('/subscribedlists',methods=['GET','POST'])
 @login_required
 def subscribelists_page():
-    subscribedlist=current_app.subscribedList.getLists()
-    return render_template('subscribedlists.html',subscribedlist=subscribedlist)
+    if request.method=='POST':
+        if request.form['submit']=='add':
+            listname=request.form['listname']
+            app.subscribedList.addList(List(listname,current_user.username))
+            subscribedlist=app.subscribedList.getLists()
+            return render_template('subscribedlists.html',subscribedlist=subscribedlist)
+        elif request.form['submit']=='delete':
+            listname=request.form['listname']
+            app.subscribedList.deleteList(listname,current_user.username)
+            subscribedlist=app.subscribedList.getLists()
+            return render_template('subscribedlists.html',subscribedlist=subscribedlist)
+    else:
+            app.subscribedList=ListOfLists('Subscribed to')
+            subscribedlist=app.subscribedList.getLists()
+            return render_template('subscribedlists.html',subscribedlist=subscribedlist)
 
 
-@app.route('/memberoflists')
+@app.route('/memberoflists',methods=['GET','POST'])
 @login_required
 def memberoflists_page():
-    memberoflist=current_app.memberOfList.getLists()
-    return render_template('memberoflist.html',memberoflist=memberoflist)
+    if request.method=='POST':
+        if request.form['submit']=='add':
+            listname=request.form['listname']
+            app.memberOfList.addList(List(listname,current_user.username))
+            memberlist=app.memberOfList.getLists()
+            return render_template('memberoflist.html',memberoflist=memberlist)
+        elif request.form['submit']=='delete':
+            listname=request.form['listname']
+            app.memberOfList.deleteList(listname,current_user.username)
+            memberoflists=app.memberOfList.getLists()
+            return render_template('memberoflist.html',memberoflist=memberoflists)
+    else:
+            app.memberOfList=ListOfLists('memberOfList')
+            memberoflist=app.memberOfList.getLists()
+            return render_template('memberoflist.html',memberoflist=memberoflist)
 
 @app.route('/logout')
 def logout_page():

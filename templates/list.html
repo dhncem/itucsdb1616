@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+{% block title %}List{% endblock %}
+{% block content %}
+<body>
+<p align="center"> {{listname}}  </p>
+
+	<form align="center" role="form" action="" method="post" name="list-form">
+
+      <input type="text" name="listname" size ="15" placeholder="Write the name of the list" required autofocus/>
+            <button type="submit" name="submit" value="update">Change Name</button>
+        </form>
+        <br>
+        <br>
+        <br>
+      <p align="center"> There are no zweets in this list. </p>
+</body>
+
+ {% endblock %}

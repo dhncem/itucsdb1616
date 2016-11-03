@@ -4,25 +4,37 @@
   <body>
 	<br>
 	<br>
+	<form align="center" role="form" action="" method="post" name="list-form">
+
+      <input type="text" name="listname" size ="15" placeholder="Write the name of the list" required autofocus/>
+            <button  type="submit" name="submit" value="add">Add List</button>
+            <button type="submit" name="submit" value="delete">Delete List</button>
+        </body>
+        </form>
+    <br>
+    <br>
 
    <div>
    <ul id="listoflisttitles">
    	<li><a href="{{ url_for('subscribelists_page') }}">Subscribed to</a></li>
    	<li style:"color:#FFFF;">Member of </li>
-
    </ul>
    </div>
 <br>
 <br>
 
 <p align="middle">
-        {% for list_id, list in memberoflist %}
+       {% if memberoflist %}
+       {% for List in memberoflist %}
 		<p align="middle">
        	<b style="text-decoration:none">
-		{{ list.name }}</b><br>
+		{{ List}}</b><br>
 		<hr>
 		</p>
          {% endfor %}
+         {%else%}
+         <p align="middle">You aren't listed yet.</p>
+         {% endif%}
      </p>
 <br>
 <br>
