@@ -1,6 +1,7 @@
 import psycopg2 as dbapi2
 from flask import current_app
 from message import Message
+from flask_login import current_user
 
 class MessageList:
     def __init__(self):
@@ -12,7 +13,7 @@ class MessageList:
         cursor = connection.cursor()
         cursor.execute("""SELECT ID FROM USERS WHERE USERNAME=%s""", (current_user.username,))
         senderid = cursor.fetchone()
-        cursor.execute("""INSERT INTO MESSAGES (SENDERID, RECIEVERID, CONTENT) VALUES (%s, %s, %s)""", (senderid, 1, message.content))
+        cursor.execute("""INSERT INTO MESSAGES (SENDERID, RECIEVERID, CONTENT, SENT) VALUES (%s, %s, %s, %s)""", (senderid, message.reciever, message.content, message.sent))
         connection.commit()
 
     def delete_message(self, key):

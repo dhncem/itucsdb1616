@@ -166,7 +166,15 @@ def messages_page():
 @login_required
 def message_page(message_id):
     message = current_app.messageList.get_message(message_id)
+    if request.method == 'POST':
+        content = request.form['content']
+        sender = 1
+        reciever = 2
+        sent = True
+        messagesend = Message(sender, reciever, content, sent)
+        current_app.messageList.add_message(messagesend)
     return render_template('message.html', message=message)
+
 
 @app.route('/settings')
 @login_required
