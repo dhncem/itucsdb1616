@@ -107,17 +107,32 @@ def home_page():
     if    request.method == 'GET':
         return render_template('home.html', username=request.args.get('username'), current_time=now.ctime())
 
-@app.route('/twits/<int:twit_id>')
+@app.route('/twits/<int:twit_id>', methods=['GET', 'POST'])
 @login_required
 def twits_page(twit_id):
-  twits = current_app.Twitlist.get_twit(twit_id)
-  return render_template('twit.html', twit=twit, current_time=now.ctime())
+    if request.method == 'GET':
+        twits = current_app.Twitlist.get_twit(twit_id)
+        return render_template('twit.html', twits=twits)
+    else:
+        if request.form['submit'] == 'delete':
+            tweetid=request.form['tweetid']
+            current_app.Twitlist.delete_twit(tweetid)
+            return redirect(url_for('home_page'))
+
+        elif request.form['submit'] == 'update':
+            tweetid=request.form['tweetid']
+            title=request.form['title']
+            context=request.form['context']
+            twits = Twit(title, context, tweetid)
+            current_app.Twitlist.update_twit(tweetid, twits)
+
+            return redirect(url_for('home_page'))
 
 @app.route('/twits')
 @login_required
 def twit_page():
     now = datetime.datetime.now()
-    twits = current_app.Twitlist.get_twit()
+    twits = current_app.Twitlist.get_twits()
     return render_template('twits.html', twits=twits)
 
 @app.route('/twits/add', methods=['GET', 'POST'])

@@ -26,27 +26,27 @@ class Twitlist:
     def update_twit(self, twitid, twit):
         connection = dbapi2.connect(current_app.config['dsn'])
         cursor = connection.cursor()
-        cursor.execute("""UPDATE TWEETS SET TITLE=%s, CONTEXT=v%s WHERE TWEETID=%s""", (twit.title, twit.contex, twitid))
+        cursor.execute("""UPDATE TWEETS SET TITLE=%s, CONTEXT=%s WHERE TWEETID=%s""", (twit.title, twit.context, twitid))
         connection.commit()
         connection.close()
 
     def get_twit(self, twitid):
         connection = dbapi2.connect(current_app.config['dsn'])
         cursor = connection.cursor()
-        cursor.execute("""SELECT ID FROM USERS WHERE USERNAME=%s""", (current_user.username,))
-        userid=cursor.fetchone()
-        twit=cursor.execute("""SELECT TITLE, CONTEXT, TWITID FROM TWEETS WHERE USERID=%s""", [userid])
+        cursor.execute("""SELECT TITLE, CONTEXT FROM TWEETS WHERE TWEETID=%s""", [twitid],)
+        twit=cursor.fetchone()
         print (twit)
         connection.commit()
         connection.close()
         return twit
 
-    def get_twit(self):
+    def get_twits(self):
         connection = dbapi2.connect(current_app.config['dsn'])
         cursor = connection.cursor()
         cursor.execute("""SELECT ID FROM USERS WHERE USERNAME=%s""", (current_user.username,))
         userid=cursor.fetchone()
-        twit=cursor.execute("""SELECT TITLE, CONTEXT, TWEETID FROM TWEETS WHERE USERID=%s""", [userid])
+        print (userid)
+        twit=cursor.execute("""SELECT TITLE, CONTEXT, TWEETID FROM TWEETS WHERE USERID=%s""", userid,)
         print (twit)
         connection.commit()
         connection.close()
