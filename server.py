@@ -108,6 +108,7 @@ def home_page():
         return render_template('home.html', username=request.args.get('username'), current_time=now.ctime())
 
 @app.route('/twits/<int:twit_id>', methods=['GET', 'POST'])
+@login_required
 def twits_page(twit_id):
     if request.method == 'GET':
         twits = current_app.Twitlist.get_twit(twit_id)
