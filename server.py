@@ -108,7 +108,6 @@ def home_page():
         return render_template('home.html', username=request.args.get('username'), current_time=now.ctime())
 
 @app.route('/twits/<int:twit_id>', methods=['GET', 'POST'])
-@login_required
 def twits_page(twit_id):
     if request.method == 'GET':
         twits = current_app.Twitlist.get_twit(twit_id)
@@ -125,6 +124,27 @@ def twits_page(twit_id):
             context=request.form['context']
             twits = Twit(title, context, tweetid)
             current_app.Twitlist.update_twit(tweetid, twits)
+
+        elif request.form['submit'] == 'addlink':
+            tweetid=request.form['tweetid']
+            linked=request.form['linked']
+            current_app.Twitlist.add_link(tweetid, linked)
+            return redirect(url_for('home_page'))
+
+        elif request.form['submit'] == 'updatelink':
+            tweetid=request.form['tweetid']
+            linked=request.form['linked']
+            current_app.Twitlist.update_link(tweetid, linked)
+            return redirect(url_for('home_page'))
+
+        elif request.form['submit'] == 'deletelink':
+            tweetid=request.form['tweetid']
+            current_app.Twitlist.delete_link(tweetid)
+            return redirect(url_for('home_page'))
+
+
+
+
 
             return redirect(url_for('home_page'))
 
