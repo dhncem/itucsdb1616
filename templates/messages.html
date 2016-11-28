@@ -10,8 +10,10 @@
        	<p align="left">
 
        	<b><a type="radio" href="{{ url_for('message_page') }}"style="text-decoration:none">
-		{{ message.sender }}</a></b><br>
-		{% if message.sent %}&#x21E1;{% endif %}{{message.content }}<hr>
+		{% if message.sender == current_user.username %}
+		 {{message.reciever}} </a></b><br>&#x21E1;{% endif %}
+		 {% if message.sender != current_user.username %}  {{message.sender}} </a></b><br>{% endif %}
+		  {{message.content }}<hr>
 		</p>
          {% endfor %}
 

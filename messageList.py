@@ -39,7 +39,7 @@ class MessageList:
         cursor = connection.cursor()
         cursor.execute("""SELECT ID FROM USERS WHERE USERNAME=%s""", (current_user.username,))
         userid = cursor.fetchone()
-        cursor.execute("SELECT MESSAGES.MESSAGEID, MESSAGES.SENDERID, MESSAGES.RECIEVERID, MESSAGES.CONTENT, USERPROFILE.NICKNAME FROM MESSAGES INNER JOIN USERPROFILE ON MESSAGES.SENDERID = USERPROFILE.ID WHERE SENDERID = %s""",(userid,))
-        messages = [(key, Message(nickname, reciever, content))
-                    for key, sender, reciever, content, nickname in cursor]
+        cursor.execute("SELECT T1.MESSAGEID, T1.SENDERID, T1.RECIEVERID, T1.CONTENT, T2.NICKNAME AS SENDERNICK, T3.NICKNAME AS RECIEVERNICK FROM MESSAGES AS T1 INNER JOIN USERPROFILE AS T2 ON T1.SENDERID = T2.ID INNER JOIN USERPROFILE AS T3 ON T1.RECIEVERID = T3.ID WHERE SENDERID = %s OR RECIEVERID = %s""",(userid,userid))
+        messages = [(key, Message(sendernick, recievernick, content))
+                    for key, sender, reciever, content, sendernick, recievernick in cursor]
         return messages

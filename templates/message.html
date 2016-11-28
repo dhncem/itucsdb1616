@@ -2,10 +2,14 @@
 {% block title %}Message{% endblock %}
 {% block content %}
       <div class="page-header">
+
+      {% for message_id, message in messages %}
         <h1>{{ message.sender }}</h1>
       </div>
       <body>
 		{{message.content }}<br><br>
+
+		{% endfor %}
 
 		<form role="form" action="" method="post" name="message-form">
 
