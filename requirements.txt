@@ -5,3 +5,4 @@ flask-login
 passlib
 flask-wtf
 wtforms-components
+pycrypto
