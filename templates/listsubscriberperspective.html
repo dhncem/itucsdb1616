@@ -6,8 +6,11 @@
 
 	<form align="center" role="form" action="" method="post" name="list-form">
 
-      <input type="text" name="listname" size ="15" placeholder="Write the name of the list" required autofocus/>
-            <button type="submit" name="submit" value="update">Change Name</button>
+		{% if isSubscriber == 1%}
+       <button type="submit" name="submit" value="unsubscribe">Unsubscribe</button>
+        {%else %}
+        <button type="submit" name="submit" value="subscribe">Subscribe</button>
+        {%endif%}
         </form>
         <br>
         <br>

@@ -8,7 +8,6 @@
 
       <input type="text" name="listname" size ="15" placeholder="Write the name of the list" required autofocus/>
             <button  type="submit" name="submit" value="add">Add List</button>
-            <button type="submit" name="submit" value="delete">Delete List</button>
         </body>
         </form>
     <br>
@@ -18,6 +17,7 @@
    <ul id="listoflisttitles">
    	<li><a href="{{ url_for('subscribelists_page') }}">Subscribed to</a></li>
    	<li style:"color:#FFFF;">Member of </li>
+     <li style:"color:#FFFF;"><a href="{{ url_for('createdlists_page') }}">Created</a></li>
    </ul>
    </div>
 <br>
