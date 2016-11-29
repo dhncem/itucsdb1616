@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+{% block title %}Application settings{% endblock %}
+{% block content %}
+      <div class="page-header">
+        <h1>Application Settings</h1>
+      </div>
+      <form role="form" action="/appsettings" method="POST" name="add_app"
+            class="form-horizontal">
+	{% for (value,) in values %}
+		<div>
+			<h5> {{ value }} </h5>
+			<label>
+			    <input type="checkbox" {% if value in apps %} checked="true" {% endif %} name="selections" value="{{value}}">
+			    Enabled/Disabled
+			</label>
+			<hr>
+		</div>
+	{% endfor %}
+	<div class="form-group">
+          <div class="col-sm-2">
+            <button type="submit" name="btn" value="add"
+                    class="btn btn-primary">Apply changes</button>
+          </div>
+    </div>
+	</form>
+
+{% endblock %}

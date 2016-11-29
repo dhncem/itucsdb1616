@@ -54,6 +54,7 @@
 			  		{% if current_user.is_admin %}
 			  		<li><a href="{{ url_for('admin_manageapps') }}">Manage applications</a></li>
 			  		{% endif %}
+			  		<li><a href="{{ url_for('user_manageapps') }}">Application settings</a></li>
 			  		{% if current_user.is_authenticated %}
 			  		<li><a href="{{ url_for('logout_page') }}">Logout</a></li>
 			  		{% else %}

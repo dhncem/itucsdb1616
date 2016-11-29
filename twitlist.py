@@ -69,7 +69,7 @@ class Twitlist:
         cursor.execute("""SELECT ID FROM USERS WHERE USERNAME=%s""", (current_user.username,))
         userid=cursor.fetchone()
         print (userid)
-        twit=cursor.execute("""SELECT TITLE, CONTEXT, TWEETID FROM TWEETS WHERE USERID=%s""", userid,)
+        twit=cursor.execute("""SELECT TITLE, CONTEXT, TWEETID FROM TWEETS WHERE USERID=%s""", (userid,))
         print (twit)
         connection.commit()
         connection.close()

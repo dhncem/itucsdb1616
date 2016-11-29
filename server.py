@@ -16,7 +16,8 @@ from messageList import MessageList
 from list import List
 from listoflist import ListOfLists
 from flask import current_app, request
-from user import get_user
+from user import get_user, get_userid
+from applications import *
 from forms import *
 from followoperations import *
 from usersettings import *
@@ -454,6 +455,24 @@ def admin_manageapps():
         for (appname,) in d_values:
             form3.deactiveapps.choices+=[(appname,appname)]
     return render_template('manageapps.html', form=form, form2=form2, form3=form3)
+
+@app.route('/appsettings', methods = ['GET', 'POST'])
+@login_required
+def user_manageapps():
+    if request.method=='GET':
+        with dbapi2.connect(app.config['dsn']) as connection:
+            with connection.cursor() as cursor:
+                cursor.execute("""SELECT APPNAME FROM APPS WHERE ACTIVE=TRUE""")
+                values=cursor.fetchall()
+                applications = getapplications()
+                apps = []
+                for (appname,) in applications:
+                    apps += [appname]
+    else:
+        activeapps = request.form.getlist('selections')
+        updateapps(activeapps)
+        return redirect(url_for('user_manageapps'))
+    return render_template('appsettings.html', values=values, apps=apps)
 
 @app.route('/logout')
 def logout_page():
