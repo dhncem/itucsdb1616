@@ -52,3 +52,19 @@ def delete_settings(username):
         return values
     except:
         return False
+
+def notif_settings(username, notif):
+    try:
+        connection = dbapi2.connect(current_app.config['dsn'])
+        cursor = connection.cursor()
+        cursor.execute("""SELECT ID FROM USERS WHERE USERNAME=%s""", (username,))
+        values=cursor.fetchone()
+        id=values[0]
+        cursor.execute("""UPDATE NOTIFS SET PERM=%s WHERE USERID=%s""",(notif, id))
+
+        connection.commit()
+        cursor.close()
+        connection.close()
+        return True
+    except:
+        return False

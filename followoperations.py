@@ -16,6 +16,8 @@ def follow(followed):
             cursor.execute("""INSERT INTO FOLLOWS (FOLLOWERID, FOLLOWEDUSER) VALUES (%s, %s)""",(followerid,followedid))
             cursor.execute("""UPDATE USERPROFILE SET FOLLOWING = FOLLOWING +1 WHERE (ID = %s) """,(followerid,))
             cursor.execute("""UPDATE USERPROFILE SET FOLLOWERS = FOLLOWERS +1 WHERE (ID = %s) """,(followedid,))
+
+            cursor.execute("""INSERT INTO NOTIFS (USERID, FOLLOWERID, PERM) VALUES (%s, %s,%s)""",(followedid,followerid, '1'))
         else:
             connection.commit()
             cursor.close()

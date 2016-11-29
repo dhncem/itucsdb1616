@@ -23,6 +23,7 @@ from applications import *
 from forms import *
 from followoperations import *
 from usersettings import *
+from notifications import *
 from poll import Poll
 from listofpolls import ListOfPolls
 
@@ -306,6 +307,26 @@ def settings_page():
     except:
         pass
     return render_template('home.html')
+
+@app.route('/notifications',methods=['GET','POST'])
+@login_required
+def notifs_page():
+    if request.method=='POST' and request.form['btn']=="notif":
+        username = current_user.username
+        follower=show_set(username)
+        return render_template('notifications.html', person=follower)
+
+    elif request.method == 'POST' and request.form['btn']=="notif_update":
+        case = request.form['notif']
+        username = current_user.username
+        if notif_settings(username, case):
+            flash("Updated")
+        else:
+            flash("Could not update")
+            return render_template('home.html')
+    else:
+        return render_template('home.html')
+
 
 @app.route('/list/owner/<string:listname>',methods=['GET','POST'])
 @login_required
