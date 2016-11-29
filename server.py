@@ -325,7 +325,7 @@ def notifs_page():
             flash("Could not update")
             return render_template('home.html')
     else:
-        return render_template('home.html')
+        return render_template('notifications.html')
 
 
 @app.route('/list/owner/<string:listname>',methods=['GET','POST'])
