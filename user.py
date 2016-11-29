@@ -19,6 +19,10 @@ class User(UserMixin):
 
 
 def get_user(username):
+    if (username=='admin'):
+        user = User(username, current_app.config['ADMINPASS'])
+        user.is_admin = True
+        return user
     try:
         connection = dbapi2.connect(current_app.config['dsn'])
         cursor = connection.cursor()
@@ -32,3 +36,13 @@ def get_user(username):
         return user
     except:
         pass
+
+def get_userid(username):
+    with dbapi2.connect(current_app.config['dsn']) as connection:
+        with connection.cursor() as cursor:
+            cursor.execute("""SELECT ID FROM USERS WHERE USERNAME = %s""", (username,))
+            values=cursor.fetchone()
+            print(values)
+            userid=values[0]
+            print(userid)
+            return userid

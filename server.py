@@ -17,8 +17,7 @@ from list import List
 from listoflist import ListOfLists
 from flask import current_app, request
 from user import get_user
-from forms import LoginForm
-from forms import RegisterForm
+from forms import *
 from followoperations import *
 from usersettings import *
 from poll import Poll
@@ -77,27 +76,25 @@ def login_page():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register_page():
-    try:
-        form = RegisterForm(request.form)
-        if request.method == 'POST' and form.validate():
-            username = form.username.data
-            password = pwd_context.encrypt(form.password.data)
+    form = RegisterForm(request.form)
+    if request.method == 'POST' and form.validate():
+        username = form.username.data
+        password = pwd_context.encrypt(form.password.data)
+        try:
+            with dbapi2.connect(app.config['dsn']) as connection:
+                with connection.cursor() as cursor:
+                    cursor.execute("""INSERT INTO USERS (USERNAME, PASSWORD) VALUES (%s, %s)""", (username, password))
 
-            connection = dbapi2.connect(app.config['dsn'])
-            cursor = connection.cursor()
-            cursor.execute("""INSERT INTO USERS (USERNAME, PASSWORD) VALUES (%s, %s)""", (username, password))
-            cursor.execute("""INSERT INTO USERPROFILE (NICKNAME, USERNAME, BIO) VALUES(%s, %s, %s)""", (username, username, 'bio'))
-            cursor.execute("""INSERT INTO USERINFO (NAME, SURNAME, NICKNAME, EMAIL, LANGUAGE) VALUES(%s, %s, %s, %s, %s)""",
-                           ('', '', '', '', ''))
-            cursor.close()
-            connection.commit()
-            login_user(get_user(username))
-            connection.close()
-            return redirect(url_for('home_page'))
-
-        return render_template('register.html', form=form)
-    except:
-        flash("Username is already taken!")
+            with dbapi2.connect(app.config['dsn']) as connection:
+                with connection.cursor() as cursor:
+                    userid = get_userid(username)
+                    cursor.execute("""INSERT INTO USERPROFILE (ID, NICKNAME, USERNAME, BIO) VALUES(%s, %s, %s, %s)""", (userid, username, username, 'bio'))
+                    cursor.execute("""INSERT INTO USERINFO (USERID, NAME, SURNAME, NICKNAME, EMAIL, LANGUAGE) VALUES(%s, %s, %s, %s, %s, %s)""",
+                                   (userid, '', '', '', '', ''))
+                    login_user(get_user(username))
+                    return redirect(url_for('home_page'))
+        except:
+            flash('Username is already taken')
 
     return render_template('register.html', form=form)
 
@@ -404,6 +401,59 @@ def poll_page(pollquestion,creatorname):
         choices=poll.getChoices()
         return render_template('poll.html',pollquestion=pollquestion,choices=choices)
 
+@app.route('/manageapps', methods = ['GET','POST'])
+@login_required
+def admin_manageapps():
+    if not current_user.is_admin:
+        abort(401)
+    form = AddAppForm(request.form)
+    form2 = UpdateAppForm(request.form)
+    form3 = UpdateAppForm(request.form)
+    form2.activeapps.choices=[]
+    form3.deactiveapps.choices=[]
+    if request.method == 'POST':
+        if request.form['btn'] == 'add' or request.form['btn'] == 'add_act':
+            if form.validate():
+                appname = form.appname.data
+                with dbapi2.connect(app.config['dsn']) as connection:
+                    with connection.cursor() as cursor:
+                        cursor.execute("""INSERT INTO APPS (APPNAME) VALUES (%s)""", (appname,))
+                        if request.form['btn'] == 'add_act':
+                            cursor.execute("""UPDATE APPS SET ACTIVE=TRUE WHERE APPNAME=(%s)""", (appname,))
+            else:
+                flash('App name cannot be empty')
+        elif request.form['btn'] == 'update' or request.form['btn'] == 'update2':
+            appname = ''
+            selection = ''
+            if request.form['btn'] == 'update':
+                appname = form2.activeapps.data
+                selection = form2.activeradio.data
+            else:
+                appname = form3.deactiveapps.data
+                selection = form3.deactiveradio.data
+            with dbapi2.connect(app.config['dsn']) as connection:
+                with connection.cursor() as cursor:
+                    if selection == 'Delete':
+                        cursor.execute("""DELETE FROM APPS WHERE APPNAME=(%s)""", (appname,))
+                    if selection == 'Deactivate' or selection == 'Activate':
+                        if selection == 'Deactivate':
+                            cursor.execute("""UPDATE APPS SET ACTIVE=FALSE WHERE APPNAME=(%s)""", (appname,))
+                        else:
+                            cursor.execute("""UPDATE APPS SET ACTIVE=TRUE WHERE APPNAME=(%s)""", (appname,))
+
+        return redirect(url_for('admin_manageapps'))
+    else:
+        with dbapi2.connect(app.config['dsn']) as connection:
+            with connection.cursor() as cursor:
+                cursor.execute("""SELECT APPNAME FROM APPS WHERE ACTIVE=TRUE""")
+                a_values=cursor.fetchall()
+                cursor.execute("""SELECT APPNAME FROM APPS WHERE ACTIVE=FALSE""")
+                d_values=cursor.fetchall()
+        for (appname,) in a_values:
+            form2.activeapps.choices+=[(appname,appname)]
+        for (appname,) in d_values:
+            form3.deactiveapps.choices+=[(appname,appname)]
+    return render_template('manageapps.html', form=form, form2=form2, form3=form3)
 
 @app.route('/logout')
 def logout_page():
