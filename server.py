@@ -545,7 +545,10 @@ def main():
     app.run(host='0.0.0.0', port=port, debug=debug)
 
 @app.route('/initdb')
+@login_required
 def initialize_database():
+    if not current_user.is_admin:
+        abort(401)
     try:
         connection = dbapi2.connect(app.config['dsn'])
         cursor = connection.cursor()
