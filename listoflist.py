@@ -14,7 +14,14 @@ class ListOfLists:
         cursor.execute("""SELECT ID FROM USERS WHERE USERNAME=%s""",(username,))
         temp=cursor.fetchone()
         userid=temp[0]
+        cursor.close()
+        cursor=connection.cursor()
         cursor.execute("""INSERT INTO LISTS (NAME,CREATORID) VALUES (%s, %s)""", (list.name,userid))
+        cursor.execute("""SELECT LISTID FROM LISTS WHERE NAME=%s AND CreatorID =%s """,(list.name,userid))
+        temp2=cursor.fetchone()
+        listid=temp2[0]
+        cursor.execute("""INSERT INTO LISTMEMBERS (LISTID,USERID,USERTYPE) VALUES (%s,%s,%s)""",(listid,userid,'Owner'))
+        cursor.execute("""UPDATE LISTS SET MEMBERS=MEMBERS+1 WHERE LISTID =%s""",(listid,))
         connection.commit()
         cursor.close()
         connection.close()
@@ -25,31 +32,69 @@ class ListOfLists:
         cursor.execute("""SELECT ID FROM USERS WHERE USERNAME=%s""",(creatorname,))
         temp=cursor.fetchone()
         creatorid=temp[0]
+        cursor.close()
+        cursor=connection.cursor()
         cursor.execute("""DELETE FROM LISTS WHERE NAME=%s AND CreatorID=%s """,(listname,creatorid))
         connection.commit()
         cursor.close()
         connection.close()
+        return
 
-    def getList(self, list):
+    def getList(self, listname):
         connection = dbapi2.connect(current_app.config['dsn'])
         cursor = connection.cursor()
-        cursor.execute("""SELECT * FROM LISTS WHERE NAME=%s ANDCreatorID::varchar=%s """,(list.name,list.creatorID))
+        cursor.execute("""SELECT USERNAME FROM LISTS JOIN USERPROFILE ON LISTS.CREATORID = USERPROFILE.ID WHERE NAME=%s""",(listname,))
         temp=cursor.fetchone()
+        username=temp[0]
+        list=List(listname,username)
         connection.commit()
         cursor.close()
         connection.close()
+        return list
 
     def updateNameOfAList(self,listname,newName):
         list=List(listname,current_user.username)
         list.updateName(newName)
+        return
 
-
-    def getLists(self):
+    def getSubscribeLists(self):
         connection = dbapi2.connect(current_app.config['dsn'])
         cursor = connection.cursor()
-        cursor.execute("""SELECT NAME FROM LISTS""")
+        username=current_user.username
+        cursor.execute("""SELECT ID FROM USERS WHERE USERNAME=%s""",(username,))
+        tempid=cursor.fetchone()
+        userid=tempid[0]
+        cursor.execute("""SELECT NAME FROM LISTS JOIN LISTMEMBERS ON LISTS.LISTID=LISTMEMBERS.LISTID WHERE USERTYPE=%s  AND USERID=%s""",('Subscriber',userid))
         lists=[temp[0] for temp in cursor.fetchall()]
         connection.commit()
         cursor.close()
         connection.close()
-        return lists;
+        return lists
+
+    def getInsiderLists(self):
+        connection = dbapi2.connect(current_app.config['dsn'])
+        cursor = connection.cursor()
+        username=current_user.username
+        cursor.execute("""SELECT ID FROM USERS WHERE USERNAME=%s""",(username,))
+        tempid=cursor.fetchone()
+        userid=tempid[0]
+        cursor.execute("""SELECT NAME FROM LISTS JOIN LISTMEMBERS ON LISTS.LISTID=LISTMEMBERS.LISTID WHERE USERTYPE=%s AND USERID=%s""",('Insider',userid))
+        lists=[temp[0] for temp in cursor.fetchall()]
+        connection.commit()
+        cursor.close()
+        connection.close()
+        return lists
+
+    def getCreatedLists(self):
+        connection = dbapi2.connect(current_app.config['dsn'])
+        cursor = connection.cursor()
+        username=current_user.username
+        cursor.execute("""SELECT ID FROM USERS WHERE USERNAME=%s""",(username,))
+        tempid=cursor.fetchone()
+        userid=tempid[0]
+        cursor.execute("""SELECT NAME FROM LISTS JOIN LISTMEMBERS ON LISTS.LISTID=LISTMEMBERS.LISTID WHERE USERTYPE=%s  AND USERID=%s""",('Owner',userid))
+        lists=[temp[0] for temp in cursor.fetchall()]
+        connection.commit()
+        cursor.close()
+        connection.close()
+        return lists
