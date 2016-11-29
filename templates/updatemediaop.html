@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+{% block title %}Update{% endblock %}
+{% block content %}
+
+	<form role="form" action="" method="post" name="update">
+      <input type="text" name="content" size ="25" placeholder="write a description for photo" required autofocus/>
+		<br><br>
+            <div class ="col-sm-2">
+      <button type="submit"
+                class="btn btn-lg btn-primary btn-block">Update</button>
+      </div>
+        </form>
+        <br>
+{% endblock %}

@@ -12,7 +12,9 @@ from passlib.apps import custom_app_context as pwd_context
 from twitlist import Twitlist
 from twit import Twit
 from message import Message
+from media import Media
 from messageList import MessageList
+from mediaList import MediaList
 from list import List
 from listoflist import ListOfLists
 from flask import current_app, request
@@ -48,6 +50,8 @@ def create_app():
     app.Twitlist = Twitlist()
 
     app.messageList = MessageList()
+
+    app.mediaList = MediaList()
 
     lm.init_app(app)
     lm.login_view='login_page'
@@ -195,7 +199,9 @@ def follow_page():
 def messages_page():
     messages = current_app.messageList.get_messages()
     if request.method == 'POST':
-        current_app.messageList.delete_message()
+        value = request.form.getlist('message')
+        for i in value:
+            current_app.messageList.delete_message(i)
     return render_template('messages.html', messages=messages)
 
 
@@ -223,6 +229,48 @@ def new_message_page():
         messagesend = Message(sender, reciever, content, sent)
         current_app.messageList.add_message(messagesend)
     return render_template('new_message.html')
+
+@app.route('/media', methods=['GET', 'POST'])
+@login_required
+def media_page():
+    media = current_app.mediaList.get_photos()
+    if request.method == 'POST':
+        if request.form['operation'] == 'delete':
+            value = request.form.getlist('media')
+            for i in value:
+                current_app.mediaList.delete_photo(i)
+            return redirect(url_for('media_page'))
+        if request.form['operation'] == 'update':
+            print('avel')
+            value = request.form.getlist('media')
+            print(value)
+    return render_template('media.html', media = media)
+
+@app.route('/newphoto', methods=['GET', 'POST'])
+@login_required
+def newphoto_page():
+    if request.method == 'POST':
+        content = request.form['content']
+        url = request.form['url']
+        ownerid = 1
+        media = Media(ownerid, content, url)
+        current_app.mediaList.add_photo(media)
+        return redirect(url_for('media_page'))
+    return render_template('newphoto.html')
+
+@app.route('/updatemedia', methods=['GET', 'POST'])
+@login_required
+def updatemedia_page():
+    media = current_app.mediaList.get_photos()
+    if request.method == 'POST':
+        value = request.form.getlist('media')
+        description = request.form['newdes']
+        print(value)
+        print(description)
+        for i in value:
+                current_app.mediaList.update_photo(description,i)
+        return redirect(url_for('media_page'))
+    return render_template('updatemedia.html', media = media)
 
 @app.route('/settings', methods=['GET', 'POST'])
 @login_required

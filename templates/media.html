@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+{% block title %}Media{% endblock %}
+{% block content %}
+      <div class="page-header">
+        <h1>Media</h1>
+      </div>
+      <div class ="col-sm-2" action="/media" role="form" action="" method="post" name="addmedia">
+	  <a href="{{ url_for('newphoto_page') }}"style="text-decoration:none">
+      <button type="submit" name="add"
+                class="btn btn-lg btn-primary btn-block">Add Photo</button>
+      </div></a>
+
+      <div class ="col-sm-2" role="form" action="" method="post">
+      <a href="{{ url_for('updatemedia_page') }}"style="text-decoration:none">
+      <button type="submit" name ="operation" value="update"
+                class="btn btn-lg btn-primary btn-block">Update Photo</button>
+      </div>
+      <form role="form" action="/media" method="post">
+      <div class ="col-sm-2" role="form" action="" method="post">
+      <button type="submit" name ="operation" value="delete"
+                class="btn btn-lg btn-primary btn-block">Delete</button>
+      </div>
+
+      {% for photo_id, media in media %}
+       <br><br><hr>
+      <input type="checkbox" name="media" value="{{photo_id}}">
+		{{media.description}} <br>
+		<a href="{{media.url}}">
+		<img src="{{media.url}}" style="width:200px;height:200px;"></a>
+
+      {% endfor %}
+      </form>
+
+
+{% endblock %}

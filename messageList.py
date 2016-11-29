@@ -18,12 +18,10 @@ class MessageList:
         cursor.execute("""INSERT INTO MESSAGES (SENDERID, RECIEVERID, CONTENT, SENT) VALUES (%s, %s, %s, %s)""", (senderid, recieverid, message.content, message.sent))
         connection.commit()
 
-    def delete_message(self):
+    def delete_message(self, messageid):
         connection = dbapi2.connect(current_app.config['dsn'])
         cursor = connection.cursor()
-        cursor.execute("""SELECT ID FROM USERS WHERE USERNAME=%s""", (current_user.username,))
-        userid = cursor.fetchone()
-        cursor.execute("DELETE FROM MESSAGES WHERE SENDERID = %s""", (userid,))
+        cursor.execute("DELETE FROM MESSAGES WHERE MESSAGEID = %s""", (messageid,))
         connection.commit()
 
     def get_message(self):
