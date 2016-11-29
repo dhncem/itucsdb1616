@@ -37,14 +37,15 @@ class ListOfPolls:
         cursor=connection.cursor()
         cursor.execute("""SELECT ID FROM USERS WHERE USERNAME=%s""",(creatorname,))
         temp=cursor.fetchone()
-        creatorid=temp[0]
+        creatorid=temp
         cursor.execute("""SELECT VOTENUMBER,CHOICENUMBER FROM POLLS WHERE POLLQUESTION=%s AND CREATORID=%s""",(pollquestion,creatorid))
-        temp2=cursor.fetchone()
-        votenumber=temp2[0]
-        choicenumber=temp2[1]
         poll=Poll(pollquestion,creatorname)
-        poll.votenumber=votenumber
-        poll.choicenumber=choicenumber
+        array=[(temp2[0],temp2[1]) for temp2 in cursor]
+        for votenumber,choicenumber in array:
+            poll.votenumber=votenumber
+            poll.choicenumber=choicenumber
+        cursor.close()
+        connection.close()
         return poll
 
     def getAPoll(self,pollquestion):

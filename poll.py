@@ -1,7 +1,6 @@
 from flask import current_app
 import psycopg2 as dbapi2
 from flask_login import current_user
-from Crypto.Random.random import choice
 
 class Poll():
     def __init__(self,question,creatorname):
@@ -12,7 +11,7 @@ class Poll():
         cursor=connection.cursor()
         cursor.execute("""SELECT ID FROM USERS WHERE USERNAME=%s""",(creatorname,))
         temp=cursor.fetchone()
-        self.creatorid=temp[0]
+        self.creatorid=temp
         cursor.close()
         connection.close()
         return
@@ -73,7 +72,7 @@ class Poll():
         cursor=connection.cursor()
         cursor.execute("""SELECT POLLID FROM POLLS WHERE CREATORID=%s AND POLLQUESTION =%s """,(self.creatorid,self.question))
         temp=cursor.fetchone()
-        pollid=temp[0]
+        pollid=temp
         cursor.execute("""SELECT CONTENT FROM CHOICES WHERE POLLID=%s""",(pollid,))
         choices=[temp[0] for temp in cursor.fetchall()]
         connection.commit()
