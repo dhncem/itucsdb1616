@@ -21,6 +21,8 @@ from forms import LoginForm
 from forms import RegisterForm
 from followoperations import *
 from usersettings import *
+from poll import Poll
+from listofpolls import ListOfPolls
 
 
 lm = LoginManager()
@@ -259,17 +261,49 @@ def settings_page():
         pass
     return render_template('home.html')
 
+@app.route('/list/owner/<string:listname>',methods=['GET','POST'])
+@login_required
+def list_page_of_creator(listname):
+    if request.method=='POST':
+            if request.form['submit']=='update':
+                newlistname=request.form['listname']
+                list= List(listname,current_user.username)
+                list.updateName(newlistname)
+                return render_template('listownerperspective.html',listname=newlistname)
+            if request.form['submit']=='delete':
+                app.templistoflist=ListOfLists('temp')
+                app.templistoflist.deleteList(listname,current_user.username)
+                createdlist=app.templistoflist.getCreatedLists()
+                return redirect(url_for('subscribelists_page'))
+            if request.form['submit']=='insider':
+                insidername=request.form['listname']
+                list=List(listname,current_user.username)
+                list.addInsider(insidername)
+                return render_template('listownerperspective.html',listname=listname)
+    else:
+        return render_template('listownerperspective.html',listname=listname)
+
 @app.route('/list/<string:listname>',methods=['GET','POST'])
 @login_required
-def list_page(listname):
+def list_page_of_subscriber(listname):
     if request.method=='POST':
-        if request.form['submit']=='update':
-            newlistname=request.form['listname']
-            list= List(listname,current_user.username)
-            list.updateName(newlistname)
-            return render_template('list.html',listname=newlistname)
+            if request.form['submit']=='unsubscribe':
+                app.templistoflist=ListOfLists('temp')
+                templist=app.templistoflist.getList(listname)
+                templist.deleteSubscriber(current_user.username)
+                return redirect(url_for('subscribelists_page'))
+            if request.form['submit']=='subscribe':
+                app.templistoflist=ListOfLists('temp')
+                templist=app.templistoflist.getList(listname)
+                templist.addSubscriber(current_user.username)
+                return redirect(url_for('subscribelists_page'))
+
     else:
-        return render_template('list.html',listname=listname)
+        app.templistoflist=ListOfLists('temp')
+        templist=app.templistoflist.getList(listname)
+        isSubscriber=templist.isSubscriber(current_user.username)
+        return render_template('listsubscriberperspective.html',listname=listname,isSubscriber=isSubscriber)
+
 
 @app.route('/subscribedlists',methods=['GET','POST'])
 @login_required
@@ -278,16 +312,11 @@ def subscribelists_page():
         if request.form['submit']=='add':
             listname=request.form['listname']
             app.subscribedList.addList(List(listname,current_user.username))
-            subscribedlist=app.subscribedList.getLists()
-            return render_template('subscribedlists.html',subscribedlist=subscribedlist)
-        elif request.form['submit']=='delete':
-            listname=request.form['listname']
-            app.subscribedList.deleteList(listname,current_user.username)
-            subscribedlist=app.subscribedList.getLists()
+            subscribedlist=app.subscribedList.getSubscribeLists()
             return render_template('subscribedlists.html',subscribedlist=subscribedlist)
     else:
             app.subscribedList=ListOfLists('Subscribed to')
-            subscribedlist=app.subscribedList.getLists()
+            subscribedlist=app.subscribedList.getSubscribeLists()
             return render_template('subscribedlists.html',subscribedlist=subscribedlist)
 
 
@@ -298,17 +327,83 @@ def memberoflists_page():
         if request.form['submit']=='add':
             listname=request.form['listname']
             app.memberOfList.addList(List(listname,current_user.username))
-            memberlist=app.memberOfList.getLists()
+            memberlist=app.memberOfList.getInsiderLists()
             return render_template('memberoflist.html',memberoflist=memberlist)
-        elif request.form['submit']=='delete':
-            listname=request.form['listname']
-            app.memberOfList.deleteList(listname,current_user.username)
-            memberoflists=app.memberOfList.getLists()
-            return render_template('memberoflist.html',memberoflist=memberoflists)
     else:
             app.memberOfList=ListOfLists('memberOfList')
-            memberoflist=app.memberOfList.getLists()
+            memberoflist=app.memberOfList.getInsiderLists()
             return render_template('memberoflist.html',memberoflist=memberoflist)
+
+@app.route('/createdlists',methods=['GET','POST'])
+@login_required
+def createdlists_page():
+    if request.method=='POST':
+        if request.form['submit']=='add':
+            listname=request.form['listname']
+            app.createdLists.addList(List(listname,current_user.username))
+            createdlist=app.createdLists.getCreatedLists()
+            return render_template('createdlists.html',createdlist=createdlist)
+    else:
+            app.createdLists=ListOfLists('CreatedLists')
+            createdlist=app.createdLists.getCreatedLists()
+            return render_template('createdlists.html',createdlist=createdlist)
+
+@app.route('/polls',methods=['GET','POST'])
+@login_required
+def polls_page():
+    if request.method=='POST':
+        if request.form['submit']=='add':
+            pollquestion=request.form['pollname']
+            app.polls=ListOfPolls('polls')
+            temppoll=Poll(pollquestion,current_user.username)
+            app.polls.addPoll(temppoll)
+            polllist=app.polls.getAllPolls()
+            pollquestions=[pollquestion for pollquestion,creatorname in polllist]
+            creatornames=[creatorname for pollquestion,creatorname in polllist]
+            return render_template('polls.html',polllist=polllist)
+
+    else:
+        app.polls=ListOfPolls('polls')
+        polllist=app.polls.getAllPolls()
+        if polllist is not None:
+            pollquestions=[pollquestion for pollquestion,creatorname in polllist]
+            creatornames=[creatorname for pollquestion,creatorname in polllist]
+            return render_template('polls.html',polllist=polllist)
+        else:
+            pollquestions=None
+            creatornames=None
+            return render_template('polls.html',polllist=polllist)
+
+
+@app.route('/poll/<string:pollquestion>/<string:creatorname>',methods=['GET','POST'])
+@login_required
+def poll_page(pollquestion,creatorname):
+    if request.method=='POST':
+        if request.form['submit']=='update':
+            app.tempPollList=ListOfPolls('temp')
+            poll=app.tempPollList.getPoll(pollquestion,creatorname)
+            newquestion=request.form['choiceorquestion']
+            poll.updateQuestion(newquestion)
+            choices=poll.getChoices()
+            return render_template('poll.html',pollquestion=newquestion,choices=choices)
+        elif request.form['submit']=='delete':
+            app.tempPollList=ListOfPolls('temp')
+            app.tempPollList.deletePoll(pollquestion,creatorname)
+            return redirect(url_for('polls_page'))
+        elif request.form['submit']=='addchoice':
+            app.tempPollList=ListOfPolls('temp')
+            poll=app.tempPollList.getPoll(pollquestion,creatorname)
+            choiceinfo=request.form['choiceorquestion']
+            poll.addChoice(choiceinfo)
+            choices=poll.getChoices()
+            return render_template('poll.html',pollquestion=pollquestion,choices=choices)
+
+    else:
+        app.templist=ListOfPolls('temp')
+        poll=app.templist.getPoll(pollquestion,creatorname)
+        choices=poll.getChoices()
+        return render_template('poll.html',pollquestion=pollquestion,choices=choices)
+
 
 @app.route('/logout')
 def logout_page():
