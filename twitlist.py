@@ -69,5 +69,4 @@ class Twitlist:
         cursor.execute("""SELECT TITLE, CONTEXT, TWEETID FROM TWEETS WHERE USERID=%s""", (userid,))
         twit = [(Twit(title, context, twitid))
                     for title, context, twitid  in cursor]
-        print(twit)
         return twit
