@@ -5,15 +5,17 @@
 
     <h1>Welcome to My Tweets</h1>
 
-    {% if twits %}
-      <p align="left">
-        {% for twitid, twit in twits %}
+		{% for twit in twits %}
+      	<p align="left">
        	<p align="left">
-       	<a href="{{ url_for('twit_page', twitid=twitid) }}" style="color:blue;">
-		{{ twit.title }}</a><br>
-		{{ twit.content }}
+       	<h4>
+       	<a id="twitlink" style="color: black" STYLE="text-decoration: none" href="{{ url_for('twits_page', twit_id=twit.twitid ) }}">
+		{{ twit.title }}</a></h4>
+		<h4 style="color: grey">
+		{{ twit.context }}
+		</h4>
 		</p>
-         {% endfor %}
-      {% endif %}
+		<br>
+		{% endfor %}
   </body>
   {% endblock %}

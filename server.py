@@ -26,6 +26,7 @@ from usersettings import *
 from notifications import *
 from poll import Poll
 from listofpolls import ListOfPolls
+from nt import lseek
 
 
 lm = LoginManager()
@@ -115,43 +116,41 @@ def home_page():
 @app.route('/twits/<int:twit_id>', methods=['GET', 'POST'])
 @login_required
 def twits_page(twit_id):
+    id_twit=twit_id
     if request.method == 'GET':
         twits = current_app.Twitlist.get_twit(twit_id)
         return render_template('twit.html', twits=twits)
     else:
         if request.form['submit'] == 'delete':
-            tweetid=request.form['tweetid']
-            current_app.Twitlist.delete_twit(tweetid)
+            current_app.Twitlist.delete_twit(id_twit)
             return redirect(url_for('home_page'))
 
         elif request.form['submit'] == 'update':
-            tweetid=request.form['tweetid']
             title=request.form['title']
             context=request.form['context']
-            twits = Twit(title, context, tweetid)
-            current_app.Twitlist.update_twit(tweetid, twits)
+
+            if title == '':
+                title = "IDont Like Emptyness"
+
+            if context == '':
+               context = "Dont Leave This Space Empty Too"
+
+            twits = Twit(title, context, id_twit)
+            current_app.Twitlist.update_twit(id_twit, twits)
+            return render_template('twit.html', twits=twits)
 
         elif request.form['submit'] == 'addlink':
-            tweetid=request.form['tweetid']
             linked=request.form['linked']
-            current_app.Twitlist.add_link(tweetid, linked)
+            current_app.Twitlist.add_link(id_twit, linked)
             return redirect(url_for('home_page'))
 
         elif request.form['submit'] == 'updatelink':
-            tweetid=request.form['tweetid']
             linked=request.form['linked']
-            current_app.Twitlist.update_link(tweetid, linked)
+            current_app.Twitlist.update_link(id_twit, linked)
             return redirect(url_for('home_page'))
 
         elif request.form['submit'] == 'deletelink':
-            tweetid=request.form['tweetid']
-            current_app.Twitlist.delete_link(tweetid)
-            return redirect(url_for('home_page'))
-
-
-
-
-
+            current_app.Twitlist.delete_link(id_twit)
             return redirect(url_for('home_page'))
 
 @app.route('/twits')

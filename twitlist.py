@@ -1,12 +1,13 @@
 from flask_login import current_user
 import psycopg2 as dbapi2
 from flask import current_app, request
-from flask_login import current_user
+from twit import Twit
 
 class Twitlist:
     def __init__(self):
-        self.twit = {}
-        self.list = {}
+        self.twits = {}
+        self.lists = {}
+        self.last_key = 0
 
 
     def add_link(self, twitid, list):
@@ -19,7 +20,7 @@ class Twitlist:
     def delete_link(self, twitid):
         connection = dbapi2.connect(current_app.config['dsn'])
         cursor = connection.cursor()
-        cursor.execute("""DELETE FROM TWEETLINK WHERE TWEETID=%s""", twitid)
+        cursor.execute("""DELETE FROM TWEETLINK WHERE TWEETID=%s""", [twitid],)
         connection.commit()
         connection.close()
 
@@ -42,7 +43,7 @@ class Twitlist:
     def delete_twit(self, twitid):
         connection = dbapi2.connect(current_app.config['dsn'])
         cursor = connection.cursor()
-        cursor.execute("""DELETE FROM TWEETS WHERE TWEETID=%s""", twitid)
+        cursor.execute("""DELETE FROM TWEETS WHERE TWEETID=%s""", [twitid],)
         connection.commit()
         connection.close()
 
@@ -57,20 +58,16 @@ class Twitlist:
         connection = dbapi2.connect(current_app.config['dsn'])
         cursor = connection.cursor()
         cursor.execute("""SELECT TITLE, CONTEXT FROM TWEETS WHERE TWEETID=%s""", [twitid],)
-        twit=cursor.fetchone()
-        print (twit)
-        connection.commit()
-        connection.close()
-        return twit
+        title, context = cursor.fetchone()
+        return Twit(title, context, twitid)
 
     def get_twits(self):
         connection = dbapi2.connect(current_app.config['dsn'])
         cursor = connection.cursor()
         cursor.execute("""SELECT ID FROM USERS WHERE USERNAME=%s""", (current_user.username,))
         userid=cursor.fetchone()
-        print (userid)
-        twit=cursor.execute("""SELECT TITLE, CONTEXT, TWEETID FROM TWEETS WHERE USERID=%s""", (userid,))
-        print (twit)
-        connection.commit()
-        connection.close()
+        cursor.execute("""SELECT TITLE, CONTEXT, TWEETID FROM TWEETS WHERE USERID=%s""", (userid,))
+        twit = [(Twit(title, context, twitid))
+                    for title, context, twitid  in cursor]
+        print(twit)
         return twit

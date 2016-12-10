@@ -2,18 +2,18 @@
 {% block title %}Tweet{% endblock %}
 {% block content %}
       <div class="page-header">
-        <h1>{{ twits.title }}</h1>
+      		{{ twits.twitid }}
+        <h2>{{ twits.title }}</h2>
       </div>
       <body>
-		{{ twits.content }}<br><br>
+		<h3>{{ twits.context }}</h3><br><br>
 
-		<form role="form" action="" method="post" name="twit-form">
+		<form novalidate="novalidate" role="form" action="" method="post" name="twit-form">
 
-      <input type="text" name="title" size ="15" placeholder="Updated Title" required autofocus/>
+      <input type="text" formnovalidate name="title" size ="15" placeholder="Updated Title" required autofocus/>
       <p>
-      <input type="text" name="context" size ="20" placeholder="Context"/>
-      <input type="text" name="linked" size ="20" placeholder="Link"/>
-      <input type="text" name="tweetid" size ="10" placeholder="ID"/>
+      <input type="text" formnovalidate name="context" size ="20" placeholder="Context"/>
+      <input type="text" formnovalidate name="linked" size ="20" placeholder="Link"/>
       </p>
       <p>
             <button type="submit" name="submit" value="update">Update Tweet</button>
