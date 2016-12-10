@@ -6,4 +6,3 @@ passlib
 flask-wtf
 wtforms-components
 pycrypto
-nt

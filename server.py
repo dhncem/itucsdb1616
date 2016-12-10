@@ -26,7 +26,6 @@ from usersettings import *
 from notifications import *
 from poll import Poll
 from listofpolls import ListOfPolls
-from nt import lseek
 
 
 lm = LoginManager()
