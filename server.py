@@ -125,7 +125,7 @@ def twits_page(twit_id):
     id_twit=twit_id
     holderid=current_app.Twitlist.getownerid(twit_id)
     cduserid=get_userid(current_user.username)
-    guest=1;
+    guest=0;
 
     if holderid == cduserid:
         guest=0;
