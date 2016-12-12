@@ -1,18 +1,37 @@
   {% extends "layout.html" %}
   {% block title %}My twits{% endblock %}
     {% block content %}
-  <body>
 
-    <h1>Welcome to My Tweets</h1>
+<style>
+#twittit{
+	padding-top: 15px;
+	padding-bottom: 10px;
+	width: 250px;
+	height: 20px;
+	size="3";
+}
+
+#twitcon{
+	width: 425px;
+	height: 10px;
+	size="2";
+	word-wrap: break-word;
+}
+</style>
+
+
+  <body>
+    <h1	style="padding-bottom: 15px;">Welcome to My Tweets</h1>
 
 		{% for twit in twits %}
       	<p align="left">
        	<p align="left">
        	<h4>
-       	<a id="twitlink" style="color: black" STYLE="text-decoration: none" href="{{ url_for('twits_page', twit_id=twit.twitid ) }}">
+       	<font size="1">{{ twit.twitid }}</font>
+       	<a d="twittit"; style="color: black" style="text-decoration: none" href="{{ url_for('twits_page', twit_id=twit.twitid ) }}">
 		{{ twit.title }}</a></h4>
 		<h4 style="color: grey">
-		{{ twit.context }}
+		<p id="twitcon"> {{ twit.context }}</p>
 		</h4>
 		</p>
 		<br>

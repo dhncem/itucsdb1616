@@ -10,6 +10,13 @@ class Twitlist:
         self.last_key = 0
 
 
+    def getownerid(self, twitid):
+        connection = dbapi2.connect(current_app.config['dsn'])
+        cursor = connection.cursor()
+        cursor.execute("""SELECT USERID FROM TWEETS WHERE TWEETID=%s""", (twitid,))
+        owner = cursor.fetchone()
+        return owner
+
     def add_link(self, twitid, list):
         connection = dbapi2.connect(current_app.config['dsn'])
         cursor = connection.cursor()
@@ -66,7 +73,7 @@ class Twitlist:
         cursor = connection.cursor()
         cursor.execute("""SELECT ID FROM USERS WHERE USERNAME=%s""", (current_user.username,))
         userid=cursor.fetchone()
-        cursor.execute("""SELECT TITLE, CONTEXT, TWEETID FROM TWEETS WHERE USERID=%s""", (userid,))
+        cursor.execute("""SELECT TITLE, CONTEXT, TWEETID FROM TWEETS WHERE USERID=%s ORDER BY TWEETID DESC""", (userid,))
         twit = [(Twit(title, context, twitid))
                     for title, context, twitid  in cursor]
         return twit

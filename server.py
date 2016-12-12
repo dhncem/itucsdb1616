@@ -112,14 +112,35 @@ def home_page():
     if    request.method == 'GET':
         return render_template('home.html', username=request.args.get('username'), current_time=now.ctime())
 
+@app.route('/404', methods=['GET'])
+@login_required
+def error_page():
+    now = datetime.datetime.now()
+    if    request.method == 'GET':
+        return render_template('error.html')
+
 @app.route('/twits/<int:twit_id>', methods=['GET', 'POST'])
 @login_required
 def twits_page(twit_id):
     id_twit=twit_id
+    holderid=current_app.Twitlist.getownerid(twit_id)
+    cduserid=get_userid(current_user.username)
+    guest=1;
+
+    if holderid == cduserid:
+        guest=0;
+    else:
+        guest=1;
+
     if request.method == 'GET':
         twits = current_app.Twitlist.get_twit(twit_id)
         return render_template('twit.html', twits=twits)
+
     else:
+
+        if guest==1:
+            return redirect(url_for('error_page'))
+
         if request.form['submit'] == 'delete':
             current_app.Twitlist.delete_twit(id_twit)
             return redirect(url_for('home_page'))
@@ -170,7 +191,7 @@ def twit_add_page():
         twitid=0
         twit = Twit(title, content, twitid)
         current_app.Twitlist.add_twit(twit)
-        return render_template('add_twit.html')
+        return redirect(url_for('twit_page'))
 
 @app.route('/followuser', methods=['GET', 'POST'])
 @login_required

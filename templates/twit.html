@@ -1,30 +1,41 @@
 {% extends "layout.html" %}
 {% block title %}Tweet{% endblock %}
 {% block content %}
-      <div class="page-header">
-      		{{ twits.twitid }}
-        <h2>{{ twits.title }}</h2>
-      </div>
-      <body>
-		<h3>{{ twits.context }}</h3><br><br>
+<style>
+#twittit{
+	padding-bottom: 10px;
+	width: 150px;
+	height: 20px;
+}
 
+#twitcon{
+	padding-bottom: 24px;
+	width: 425px;
+	height: 20px;
+	word-wrap: break-word;
+}
+
+</style>
+
+		<font size="1">{{ twits.twitid }}</font>
+       	<id="twittit"> <font size="6"> {{ twits.title }}</font></><br><br>
+		<id="twitcon"> <font size="3">{{ twits.context }}</font></>
+		<br><br>
+		<body>
 		<form novalidate="novalidate" role="form" action="" method="post" name="twit-form">
 
       <input type="text" formnovalidate name="title" size ="15" placeholder="Updated Title" required autofocus/>
-      <p>
       <input type="text" formnovalidate name="context" size ="20" placeholder="Context"/>
-      <input type="text" formnovalidate name="linked" size ="20" placeholder="Link"/>
-      </p>
-      <p>
-            <button type="submit" name="submit" value="update">Update Tweet</button>
+  	  <input type="text" formnovalidate name="linked" size ="20" placeholder="Link"/>
+
+
+        <br><button type="submit" name="submit" value="update">Update Tweet</button>
             <button type="submit" name="submit" value="delete">Delete Tweet!</button>
             <button type="submit" name="submit" value="addlink">Add Link</button>
             <button type="submit" name="submit" value="updatelink">Update Link</button>
             <button type="submit" name="submit" value="deletelink">Delete Link!</button>
 			<button type="submit" name="submit" value="retweet">ReTweet</button>
 			<button type="submit" name="submit" value="liketweet">Like</button>
-
-                    </p>
-        </body>
         </form>
+        </body>
 {% endblock %}
