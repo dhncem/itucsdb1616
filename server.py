@@ -124,9 +124,8 @@ def error_page():
 def twits_page(twit_id):
     id_twit=twit_id
     holderid=current_app.Twitlist.getownerid(twit_id)
-    cduserid=get_userid(current_user.username)
+    cduserid=current_app.Twitlist.getid()
     guest=0;
-
     if holderid == cduserid:
         guest=0;
     else:

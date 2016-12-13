@@ -9,6 +9,12 @@ class Twitlist:
         self.lists = {}
         self.last_key = 0
 
+    def getid(self):
+        connection = dbapi2.connect(current_app.config['dsn'])
+        cursor = connection.cursor()
+        cursor.execute("""SELECT ID FROM USERS WHERE USERNAME=%s""", (current_user.username,))
+        usernum=cursor.fetchone()
+        return usernum
 
     def getownerid(self, twitid):
         connection = dbapi2.connect(current_app.config['dsn'])
