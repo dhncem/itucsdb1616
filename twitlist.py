@@ -2,11 +2,12 @@ from flask_login import current_user
 import psycopg2 as dbapi2
 from flask import current_app, request
 from twit import Twit
+from twit import Link
 
 class Twitlist:
     def __init__(self):
         self.twits = {}
-        self.lists = {}
+        self.links = {}
         self.last_key = 0
 
 
@@ -49,24 +50,32 @@ class Twitlist:
         owner = cursor.fetchone()
         return owner
 
-    def add_link(self, twitid, list):
+    def get_link(self, twitid):
         connection = dbapi2.connect(current_app.config['dsn'])
         cursor = connection.cursor()
-        cursor.execute("""INSERT INTO TWEETLINK (TWEETID, CONTEXTL)    VALUES    (%s, %s)""", (twitid, list.contextl))
+        cursor.execute("""SELECT tweetlid, CONTEXTL, TWEETID  FROM TWEETLINK WHERE TWEETID=%s""", (twitid,))
+        link = [(Link(tweetlid, contextl, tweetid))
+                    for tweetlid, contextl, tweetid in cursor]
+        return link
+
+    def add_link(self, twitid, link):
+        connection = dbapi2.connect(current_app.config['dsn'])
+        cursor = connection.cursor()
+        cursor.execute("""INSERT INTO TWEETLINK (TWEETID, CONTEXTL)    VALUES    (%s, %s)""", (twitid, link.contextl))
         connection.commit()
         connection.close()
 
-    def delete_link(self, twitid):
+    def delete_link(self, tweetlid):
         connection = dbapi2.connect(current_app.config['dsn'])
         cursor = connection.cursor()
-        cursor.execute("""DELETE FROM TWEETLINK WHERE TWEETID=%s""", [twitid],)
+        cursor.execute("""DELETE FROM TWEETLINK WHERE tweetlid=%s""", [tweetlid],)
         connection.commit()
         connection.close()
 
-    def update_link(self, twitid, list):
+    def update_link(self, tweetlid, link):
         connection = dbapi2.connect(current_app.config['dsn'])
         cursor = connection.cursor()
-        cursor.execute("""UPDATE TWEETLINK SET CONTEXTL=%s WHERE TWEETID=%s""", (list.contextl, twitid))
+        cursor.execute("""UPDATE TWEETLINK SET CONTEXTL=%s WHERE tweetlid=%s""", (link.contextl, tweetlid))
         connection.commit()
         connection.close()
 
@@ -100,11 +109,12 @@ class Twitlist:
                             tweets.context,
                             tweets.tweetid,
                             users.username
-                            FROM tweets
+                            FROM TWEETS
                             RIGHT JOIN users ON users.id=tweets.userid
-                            WHERE tweets.userid = %s""", [twitid],)
-        title, context = cursor.fetchone()
-        return Twit(title, context, twitid)
+                            WHERE tweets.tweetid = %s""", [twitid],)
+        title, context, twitid, userhandle = cursor.fetchone()
+        twits=Twit(title, context, twitid, userhandle)
+        return twits
 
     def get_twits(self):
         connection = dbapi2.connect(current_app.config['dsn'])

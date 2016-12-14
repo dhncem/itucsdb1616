@@ -1,0 +1,45 @@
+{% extends "layout.html" %}
+{% block title %}Tweet{% endblock %}
+{% block content %}
+<style>
+#twittit{
+	padding-bottom: 10px;
+	width: 150px;
+	height: 20px;
+}
+
+#twitcon{
+	padding-bottom: 24px;
+	width: 425px;
+	height: 20px;
+	word-wrap: break-word;
+}
+
+</style>
+
+	<body>
+
+		{% for link in links %}
+      	<p align="left">
+       	<p align="left">
+       	<h4>
+       	<input type="radio" name="sbutton" value="{{ link.tweetlid }}">
+       	<a style="color: black" style="text-decoration: none" href="{{link.contextl}}">
+		{{ link.contextl }}</a>
+		</h4>
+		</p>
+		<br>
+		{% endfor %}
+
+		<form novalidate="novalidate" role="form" action="" method="post" name="link-form">
+
+      <input type="text" formnovalidate name="linked" size ="20" placeholder="Link" required autofocus/>
+
+
+        <br>
+            <button type="submit" name="submit" value="addlink">Add Link</button>
+            <button type="submit" name="submit" value="updatelink">Update Link</button>
+            <button type="submit" name="submit" value="deletelink">Delete Link!</button>
+        </form>
+        </body>
+{% endblock %}

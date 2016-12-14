@@ -16,24 +16,21 @@
 }
 
 </style>
-
+<body>
 		<font size="1">{{ twits.twitid }}</font>
-       	<id="twittit"> <font size="6"> {{ twits.title }}</font><font size="1">-{{ twit.userhandle }}</font><br><br>
-		<id="twitcon"> <font size="3">{{ twits.context }}</font></>
-		<br><br>
-		<body>
+       	<id="twittit"> <font size="5"> {{ twits.title }}</font><font size="1">-{{ twits.userhandle }}</font><br>
+		<id="twitcon"> <font size="3">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp{{ twits.context }}</font><br><br>
+		<a style="color: black" style="text-decoration: none" href="{{ url_for('links_page', twit_id=twits.twitid ) }}"> Tweet Links </a>
+		<br>
+
+
+
 		<form novalidate="novalidate" role="form" action="" method="post" name="twit-form">
 
       <input type="text" formnovalidate name="title" size ="15" placeholder="Updated Title" required autofocus/>
       <input type="text" formnovalidate name="context" size ="20" placeholder="Context"/>
-  	  <input type="text" formnovalidate name="linked" size ="20" placeholder="Link"/>
-
-
         <br><button type="submit" name="submit" value="update">Update Tweet</button>
             <button type="submit" name="submit" value="delete">Delete Tweet!</button>
-            <button type="submit" name="submit" value="addlink">Add Link</button>
-            <button type="submit" name="submit" value="updatelink">Update Link</button>
-            <button type="submit" name="submit" value="deletelink">Delete Link!</button>
 			<button type="submit" name="submit" value="retweet">ReTweet</button>
 			<button type="submit" name="submit" value="liketweet">Like</button>
         </form>

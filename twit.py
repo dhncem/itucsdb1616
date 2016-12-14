@@ -7,6 +7,7 @@ class Twit:
 
 
 class Link:
-        def __init__(self, contextl, twitid):
+        def __init__(self, tweetlid, contextl, twitid):
+            self.tweetlid = tweetlid
             self.contextl = contextl
             self.twitid = twitid

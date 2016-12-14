@@ -11,6 +11,7 @@ from flask_login import current_user, login_required, login_user, logout_user
 from passlib.apps import custom_app_context as pwd_context
 from twitlist import Twitlist
 from twit import Twit
+from twit import Link
 from message import Message
 from media import Media
 from messageList import MessageList
@@ -128,6 +129,54 @@ def error_page():
     if    request.method == 'GET':
         return render_template('error.html')
 
+
+@app.route('/twits/<int:twit_id>/link', methods=['GET', 'POST'])
+@login_required
+def links_page(twit_id):
+    ids=0;
+    id_twit=twit_id
+    holderid=current_app.Twitlist.getownerid(twit_id)
+    cduserid=current_app.Twitlist.getid()
+    guest=0;
+    if holderid == cduserid:
+        guest=0;
+    else:
+        guest=1;
+
+    if request.method == 'GET':
+        links = current_app.Twitlist.get_link(twit_id)
+        return render_template('link.html', links=links)
+
+    else:
+        if guest==1:
+            return redirect(url_for('error_page'))
+
+        if request.form['submit'] == "updatelink":
+            contextl=request.form['linked']
+
+            if contextl == '':
+               contextl = "Dont Leave This Space Empty UPD"
+
+            links= Link(ids, contextl, twit_id)
+            current_app.Twitlist.update_link(linkid, links)
+            return redirect(url_for('links_page', twit_id=twit_id))
+
+        elif request.form['submit'] == "addlink":
+            contextl=request.form['linked']
+
+            if contextl == '':
+               contextl = "Dont Leave This Space Empty ADD"
+
+            links=Link(ids, contextl, twit_id)
+            current_app.Twitlist.add_link(id_twit, links)
+            return redirect(url_for('links_page', twit_id=twit_id))
+
+        elif request.form['submit'] == "deletelink":
+            print(linkid)
+            current_app.Twitlist.delete_link(linkid)
+            return redirect(url_for('links_page', twit_id=twit_id))
+
+
 @app.route('/twits/<int:twit_id>', methods=['GET', 'POST'])
 @login_required
 def twits_page(twit_id):
@@ -141,8 +190,8 @@ def twits_page(twit_id):
         guest=1;
 
     if request.method == 'GET':
-        twits = current_app.Twitlist.get_twit(twit_id)
-        return render_template('twit.html', twits=twits)
+        twit = current_app.Twitlist.get_twit(twit_id)
+        return render_template('twit.html', twits=twit)
 
     else:
 
