@@ -110,7 +110,9 @@ def register_page():
 def home_page():
     now = datetime.datetime.now()
     if    request.method == 'GET':
-        return render_template('home.html', username=request.args.get('username'), current_time=now.ctime())
+        now = datetime.datetime.now()
+        twits = current_app.Twitlist.get_hometwit()
+        return render_template('home.html', username=request.args.get('username'), twits=twits,  current_time=now.ctime())
 
 @app.route('/404', methods=['GET'])
 @login_required

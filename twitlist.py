@@ -9,6 +9,32 @@ class Twitlist:
         self.lists = {}
         self.last_key = 0
 
+
+    def get_hometwit(self):
+        connection = dbapi2.connect(current_app.config['dsn'])
+        cursor = connection.cursor()
+        cursor.execute("""SELECT ID FROM USERS WHERE USERNAME=%s""", (current_user.username,))
+        userid=cursor.fetchone()
+        cursor.execute("""  SELECT tweets.title,
+                            tweets.context,
+                            tweets.tweetid,
+                            users.username
+                            FROM tweets
+                            RIGHT JOIN follows ON follows.followeduser = tweets.userid
+                            RIGHT JOIN users ON users.id=tweets.userid
+                            WHERE follows.followerid = %s
+                            UNION
+                            SELECT tweets.title,
+                            tweets.context,
+                            tweets.tweetid,
+                            users.username
+                            FROM tweets
+                            RIGHT JOIN users ON users.id=tweets.userid
+                            WHERE tweets.userid = %s ORDER BY TWEETID DESC""", (userid, userid))
+        twit = [(Twit(title, context, twitid, userhandle))
+                    for title, context, twitid, userhandle  in cursor]
+        return twit
+
     def getid(self):
         connection = dbapi2.connect(current_app.config['dsn'])
         cursor = connection.cursor()
@@ -70,7 +96,13 @@ class Twitlist:
     def get_twit(self, twitid):
         connection = dbapi2.connect(current_app.config['dsn'])
         cursor = connection.cursor()
-        cursor.execute("""SELECT TITLE, CONTEXT FROM TWEETS WHERE TWEETID=%s""", [twitid],)
+        cursor.execute("""SELECT tweets.title,
+                            tweets.context,
+                            tweets.tweetid,
+                            users.username
+                            FROM tweets
+                            RIGHT JOIN users ON users.id=tweets.userid
+                            WHERE tweets.userid = %s""", [twitid],)
         title, context = cursor.fetchone()
         return Twit(title, context, twitid)
 
@@ -79,7 +111,13 @@ class Twitlist:
         cursor = connection.cursor()
         cursor.execute("""SELECT ID FROM USERS WHERE USERNAME=%s""", (current_user.username,))
         userid=cursor.fetchone()
-        cursor.execute("""SELECT TITLE, CONTEXT, TWEETID FROM TWEETS WHERE USERID=%s ORDER BY TWEETID DESC""", (userid,))
-        twit = [(Twit(title, context, twitid))
-                    for title, context, twitid  in cursor]
+        cursor.execute("""SELECT tweets.title,
+                            tweets.context,
+                            tweets.tweetid,
+                            users.username
+                            FROM tweets
+                            RIGHT JOIN users ON users.id=tweets.userid
+                            WHERE tweets.userid = %s ORDER BY TWEETID DESC""", (userid,))
+        twit = [(Twit(title, context, twitid, userhandle))
+                    for title, context, twitid, userhandle  in cursor]
         return twit
