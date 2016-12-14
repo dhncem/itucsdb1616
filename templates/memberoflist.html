@@ -26,9 +26,11 @@
 <p align="middle">
        {% if memberoflist %}
        {% for List in memberoflist %}
+
 		<p align="middle">
        	<b style="text-decoration:none">
-		{{ List}}</b><br>
+       	<a href="{{ url_for('list_page_of_subscriber', listname=List) }}">
+		{{ List}}</a></b><br>
 		<hr>
 		</p>
          {% endfor %}

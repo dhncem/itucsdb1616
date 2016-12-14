@@ -73,11 +73,53 @@ class Poll():
         cursor.execute("""SELECT POLLID FROM POLLS WHERE CREATORID=%s AND POLLQUESTION =%s """,(self.creatorid,self.question))
         temp=cursor.fetchone()
         pollid=temp
-        cursor.execute("""SELECT CONTENT FROM CHOICES WHERE POLLID=%s""",(pollid,))
-        choices=[temp[0] for temp in cursor.fetchall()]
+        cursor.execute("""SELECT CONTENT,NUMBEROFVOTES FROM CHOICES WHERE POLLID=%s ORDER BY CHOICEID""",(pollid,))
+        choices=[(temp[0],temp[1]) for temp in cursor.fetchall()]
         connection.commit()
         cursor.close()
         connection.close()
         return choices
 
+    def voteforPoll(self,choiceContent):
+        connection=dbapi2.connect(current_app.config['dsn'])
+        cursor=connection.cursor()
+        cursor.execute("""SELECT POLLID FROM POLLS WHERE CREATORID=%s AND POLLQUESTION =%s """,(self.creatorid,self.question))
+        temp=cursor.fetchone()
+        pollid=temp[0]
+        cursor.close()
+        cursor=connection.cursor()
+        cursor.execute("""SELECT CHOICEID FROM CHOICES WHERE CONTENT=%s AND POLLID =%s """,(choiceContent,pollid))
+        temp=cursor.fetchone()
+        choiceid=temp[0]
+        cursor.close()
+        cursor=connection.cursor()
+        username=current_user.username
+        cursor.execute("""SELECT ID FROM USERS WHERE USERNAME=%s""",(username,))
+        temp=cursor.fetchone()
+        userid=temp[0]
+        cursor.execute("""INSERT INTO VOTES (POLLID,CHOICEID,USERID) VALUES (%s,%s,%s)""",(pollid,choiceid,userid))
+        cursor.execute("""UPDATE CHOICES SET NUMBEROFVOTES=NUMBEROFVOTES+1 WHERE CHOICEID=%s""",(choiceid,))
+        connection.commit()
+        cursor.close()
+        connection.close()
+
+    def isVoted(self,username):
+        connection=dbapi2.connect(current_app.config['dsn'])
+        cursor=connection.cursor()
+        cursor.execute("""SELECT POLLID FROM POLLS WHERE CREATORID=%s AND POLLQUESTION =%s """,(self.creatorid,self.question))
+        temp=cursor.fetchone()
+        pollid=temp
+        cursor.close()
+        cursor=connection.cursor()
+        cursor.execute("""SELECT ID FROM USERS WHERE USERNAME=%s""",(username,))
+        temp=cursor.fetchone()
+        userid=temp[0]
+        cursor.close()
+        cursor=connection.cursor()
+        cursor.execute("""SELECT CHOICEID FROM VOTES WHERE USERID=%s AND POLLID=%s""",(userid,pollid))
+        temp=cursor.fetchone()
+        if temp is None:
+            return 0
+        else:
+            return 1
 

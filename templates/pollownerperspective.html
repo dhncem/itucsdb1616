@@ -1,4 +1,4 @@
-% extends "layout.html" %}
+{% extends "layout.html" %}
 {% block title %}Poll{% endblock %}
 {% block content %}
 <body>
@@ -19,22 +19,37 @@
      </form>
 
         <br>
-        <br>
-        <br>
-      <p align="middle">
-		{%if choices %}
-        {% for choice in choices %}
-		<p align="middle">
-       	<b style="text-decoration:none">
-       	<a href="{{ url_for('list_page_of_subscriber', listname=List) }}">
-		{{ choice}}</a></b><br>
-		<hr>
-		</p>
-         {% endfor %}
-          {%else%}
+{%if choices %}
+<form method="post" align="center" name="vote-form">
+<div>
+<div><strong>Choices</strong></div>
+<div style="clear:both;height:4px;"></div>
+
+        {% for choice,numberofvotes in choices %}
+ {%if isVoted==0%}
+<input type="radio" name="answer" value="{{choice}}">
+<label>{{choice}}</label>
+</input>
+{%else%}
+<label>{{choice}}</label>
+{%endif%}
+<label>({{numberofvotes}} users voted)</label>
+<br>
+{% endfor %}
+<div style="clear:both;height:2px;">
+</div>
+<div style="clear:both;height:2px;"></div>
+<div align="center" style="padding:3px;">
+ {%if isVoted==0%}
+<button type="submit" name="submit"value="vote">Vote</button>
+{%else%}
+<label>You have voted for this poll</label>
+{%endif%}
+</div></div></form>
+ {%else%}
          <p align="middle">There are no choices in this poll</p>
          {%endif%}
-     </p>
+
 </body>
 
  {% endblock %}

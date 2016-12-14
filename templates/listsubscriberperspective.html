@@ -15,7 +15,14 @@
         <br>
         <br>
         <br>
-      <p align="center"> There are no zweets in this list. </p>
+              {%if tweets %}
+        {%for username,tweetcontent,tweettitle in tweets %}
+        <p align="center"> User:{{username}} Context:{{tweetcontent}} Title:{{tweettitle}}</p>
+        <hr>
+        {% endfor %}
+        {%else%}
+      <p align="center"> There are no tweets in this list. </p>
+      {%endif %}
 </body>
 
  {% endblock %}

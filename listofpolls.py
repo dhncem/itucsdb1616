@@ -69,7 +69,7 @@ class ListOfPolls:
     def getAllPolls(self):
         connection=dbapi2.connect(current_app.config['dsn'])
         cursor=connection.cursor()
-        cursor.execute("""SELECT POLLQUESTION,USERNAME FROM POLLS JOIN USERS ON USERS.ID=POLLS.CREATORID""")
+        cursor.execute("""SELECT POLLQUESTION,USERNAME FROM POLLS JOIN USERS ON USERS.ID=POLLS.CREATORID ORDER BY POLLID""")
         polls=[(temp[0],temp[1]) for temp in cursor]
         connection.commit()
         cursor.close()

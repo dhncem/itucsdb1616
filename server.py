@@ -413,7 +413,8 @@ def list_page_of_creator(listname):
                 newlistname=request.form['listname']
                 list= List(listname,current_user.username)
                 list.updateName(newlistname)
-                return render_template('listownerperspective.html',listname=newlistname)
+                tweets=list.getTweets()
+                return render_template('listownerperspective.html',listname=newlistname,tweets=tweets)
             if request.form['submit']=='delete':
                 app.templistoflist=ListOfLists('temp')
                 app.templistoflist.deleteList(listname,current_user.username)
@@ -422,10 +423,18 @@ def list_page_of_creator(listname):
             if request.form['submit']=='insider':
                 insidername=request.form['listname']
                 list=List(listname,current_user.username)
-                list.addInsider(insidername)
-                return render_template('listownerperspective.html',listname=listname)
+                isInsiderAdded=list.addInsider(insidername)
+                tweets=list.getTweets()
+                if isInsiderAdded==1:
+                    flash('%s is added in to the list as a insider' % insidername)
+                    return render_template('listownerperspective.html',listname=listname,tweets=tweets)
+                else:
+                    flash('User can not be added to the list as a insider')
+                    return render_template('listownerperspective.html',listname=listname,tweets=tweets)
     else:
-        return render_template('listownerperspective.html',listname=listname)
+        list=List(listname,current_user.username)
+        tweets=list.getTweets()
+        return render_template('listownerperspective.html',listname=listname,tweets=tweets)
 
 @app.route('/list/<string:listname>',methods=['GET','POST'])
 @login_required
@@ -446,7 +455,8 @@ def list_page_of_subscriber(listname):
         app.templistoflist=ListOfLists('temp')
         templist=app.templistoflist.getList(listname)
         isSubscriber=templist.isSubscriber(current_user.username)
-        return render_template('listsubscriberperspective.html',listname=listname,isSubscriber=isSubscriber)
+        tweets=templist.getTweets()
+        return render_template('listsubscriberperspective.html',listname=listname,isSubscriber=isSubscriber,tweets=tweets)
 
 
 @app.route('/subscribedlists',methods=['GET','POST'])
@@ -502,20 +512,14 @@ def polls_page():
             temppoll=Poll(pollquestion,current_user.username)
             app.polls.addPoll(temppoll)
             polllist=app.polls.getAllPolls()
-            pollquestions=[pollquestion for pollquestion,creatorname in polllist]
-            creatornames=[creatorname for pollquestion,creatorname in polllist]
             return render_template('polls.html',polllist=polllist)
 
     else:
         app.polls=ListOfPolls('polls')
         polllist=app.polls.getAllPolls()
         if polllist is not None:
-            pollquestions=[pollquestion for pollquestion,creatorname in polllist]
-            creatornames=[creatorname for pollquestion,creatorname in polllist]
             return render_template('polls.html',polllist=polllist)
         else:
-            pollquestions=None
-            creatornames=None
             return render_template('polls.html',polllist=polllist)
 
 
@@ -524,29 +528,52 @@ def polls_page():
 def poll_page(pollquestion,creatorname):
     if request.method=='POST':
         if request.form['submit']=='update':
-            app.tempPollList=ListOfPolls('temp')
-            poll=app.tempPollList.getPoll(pollquestion,creatorname)
+            current_app.tempPollList=ListOfPolls('temp')
+            poll=current_app.tempPollList.getPoll(pollquestion,creatorname)
             newquestion=request.form['choiceorquestion']
             poll.updateQuestion(newquestion)
             choices=poll.getChoices()
-            return render_template('poll.html',pollquestion=newquestion,choices=choices)
+            isVoted=poll.isVoted(current_user.username)
+            return render_template('pollownerperspective.html',pollquestion=newquestion,choices=choices,isVoted=isVoted)
         elif request.form['submit']=='delete':
-            app.tempPollList=ListOfPolls('temp')
-            app.tempPollList.deletePoll(pollquestion,creatorname)
-            return redirect(url_for('polls_page'))
+            app.polls=ListOfPolls('polls')
+            polllist=app.polls.getAllPolls()
+            if polllist is not None:
+                return render_template('polls.html',polllist=polllist)
+            else:
+                return render_template('polls.html',polllist=polllist)
         elif request.form['submit']=='addchoice':
-            app.tempPollList=ListOfPolls('temp')
-            poll=app.tempPollList.getPoll(pollquestion,creatorname)
+            current_app.tempPollList=ListOfPolls('temp')
+            poll=current_app.tempPollList.getPoll(pollquestion,creatorname)
             choiceinfo=request.form['choiceorquestion']
             poll.addChoice(choiceinfo)
             choices=poll.getChoices()
-            return render_template('poll.html',pollquestion=pollquestion,choices=choices)
+            isVoted=poll.isVoted(current_user.username)
+            return render_template('pollownerperspective.html',pollquestion=pollquestion,choices=choices,isVoted=isVoted)
+        elif request.form['submit']=='vote':
+            current_app.tempPollList=ListOfPolls('temp')
+            poll=current_app.tempPollList.getPoll(pollquestion,creatorname)
+            choiceContent=request.form['answer']
+            poll.voteforPoll(choiceContent)
+            choices=poll.getChoices()
+            isVoted=poll.isVoted(current_user.username)
+            if (creatorname==current_user.username):
+                return render_template('pollownerperspective.html',pollquestion=pollquestion,choices=choices,isVoted=isVoted)
+            else:
+                return render_template('pollvoterperspective.html',pollquestion=pollquestion,choices=choices,isVoted=isVoted)
+
+
+
 
     else:
-        app.templist=ListOfPolls('temp')
-        poll=app.templist.getPoll(pollquestion,creatorname)
+        current_app.templist=ListOfPolls('temp')
+        poll=current_app.templist.getPoll(pollquestion,creatorname)
         choices=poll.getChoices()
-        return render_template('poll.html',pollquestion=pollquestion,choices=choices)
+        isVoted=poll.isVoted(current_user.username)
+        if (creatorname==current_user.username):
+            return render_template('pollownerperspective.html',pollquestion=pollquestion,choices=choices,isVoted=isVoted)
+        else:
+            return render_template('pollvoterperspective.html',pollquestion=pollquestion,choices=choices,isVoted=isVoted)
 
 @app.route('/manageapps', methods = ['GET','POST'])
 @login_required

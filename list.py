@@ -33,23 +33,25 @@ class List:
         return
 
     def addInsider(self,membername):
-        connection = dbapi2.connect(current_app.config['dsn'])
-        cursor = connection.cursor()
-        cursor.execute("""SELECT LISTID FROM LISTS WHERE NAME=%s AND CreatorID=%s""",(self.name,self.creatorid))
-        temp=cursor.fetchone()
-        listid=temp[0]
-        cursor.close()
-        cursor=connection.cursor()
-        cursor.execute("""SELECT ID FROM USERS WHERE USERNAME=%s""",(membername,))
-        temp1=cursor.fetchone()
-        memberid=temp1[0]
-        cursor.execute("""INSERT INTO LISTMEMBERS (LISTID,USERID,USERTYPE) VALUES (%s, %s,%s)""", (listid,memberid,'Insider'))
-        cursor.execute("""UPDATE LISTS SET MEMBERS=MEMBERS+1 WHERE LISTID =%s""",(listid,))
-        connection.commit()
-        cursor.close()
-        connection.close()
-        return
-
+        try:
+            connection = dbapi2.connect(current_app.config['dsn'])
+            cursor = connection.cursor()
+            cursor.execute("""SELECT LISTID FROM LISTS WHERE NAME=%s AND CreatorID=%s""",(self.name,self.creatorid))
+            temp=cursor.fetchone()
+            listid=temp[0]
+            cursor.close()
+            cursor=connection.cursor()
+            cursor.execute("""SELECT ID FROM USERS WHERE USERNAME=%s""",(membername,))
+            temp1=cursor.fetchone()
+            memberid=temp1[0]
+            cursor.execute("""INSERT INTO LISTMEMBERS (LISTID,USERID,USERTYPE) VALUES (%s, %s,%s)""", (listid,memberid,'Insider'))
+            cursor.execute("""UPDATE LISTS SET MEMBERS=MEMBERS+1 WHERE LISTID =%s""",(listid,))
+            connection.commit()
+            cursor.close()
+            connection.close()
+            return 1
+        except:
+            return 0
     def deleteSubscriber(self, membername):
         connection=dbapi2.connect(current_app.config['dsn'])
         cursor=connection.cursor()
@@ -93,12 +95,21 @@ class List:
         cursor.close()
         connection.close()
 
-    def getPosts(self):
+    def getTweets(self):
         connection=dbapi2.connect(current_app.config['dsn'])
         cursor=connection.cursor()
+        cursor.execute("""SELECT LISTID FROM LISTS WHERE NAME=%s AND CreatorID=%s""",(self.name,self.creatorid))
+        temp=cursor.fetchone()
+        listid=temp[0]
+        cursor.close()
+        cursor=connection.cursor()
+        cursor.execute("""SELECT USERNAME,CONTEXT,TITLE,TWEETID FROM (SELECT USERNAME,USERID FROM USERS JOIN LISTMEMBERS ON USERS.ID=LISTMEMBERS.USERID
+        WHERE USERTYPE='Insider' AND LISTID=%s) AS T JOIN TWEETS ON TWEETS.USERID=T.USERID ORDER BY TWEETID DESC""",(listid,))
+        tweets=[(temp[0],temp[1],temp[2]) for temp in cursor]
         cursor.close()
         connection.close()
-        #eksik
+        return tweets
+
 
     def getSubscribers(self):
         connection=dbapi2.connect(current_app.config['dsn'])

@@ -21,7 +21,6 @@ class ListOfLists:
         temp2=cursor.fetchone()
         listid=temp2[0]
         cursor.execute("""INSERT INTO LISTMEMBERS (LISTID,USERID,USERTYPE) VALUES (%s,%s,%s)""",(listid,userid,'Owner'))
-        cursor.execute("""UPDATE LISTS SET MEMBERS=MEMBERS+1 WHERE LISTID =%s""",(listid,))
         connection.commit()
         cursor.close()
         connection.close()
