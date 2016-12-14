@@ -246,7 +246,8 @@ def twit_add_page():
         title = request.form['title']
         content = request.form['content']
         twitid=0
-        twit = Twit(title, content, twitid)
+        userh="NONE"
+        twit = Twit(title, content, twitid, userh)
         current_app.Twitlist.add_twit(twit)
         return redirect(url_for('twit_page'))
 
