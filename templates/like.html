@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+{% block title %} Likes -{{current_user.username}}{% endblock %}
+{% block content %}
+  <body>
+	<br>
+	<br>
+
+<p align="middle">
+		{%if likedTweets %}
+		{% for likername,tweetownername,tweettitle,tweetcontext,liketime,tweetid in likedTweets %}
+      	<p align="left">
+       	<p align="left">
+       	<h4>
+       	<a id="twittit"; style="color: black" style="text-decoration: none" href="{{ url_for('twits_page', twit_id=tweetid ) }}">
+		{{ tweettitle }}</a>-<font size="1">-{{tweetownername }}</font> </h4>
+		<h4 style="color: grey">
+		<p id="twitcon"> {{ tweetcontext }}</p>
+		</h4>
+		</p>
+		<br>
+		{% endfor %}
+		{%else %}
+         <p align="middle">You haven't liked any tweets yet.</p>
+         {%endif%}
+     </p>
+
+<br>
+<br>
+</div>
+
+  </body>
+  {% endblock %}

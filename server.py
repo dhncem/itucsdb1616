@@ -27,6 +27,7 @@ from usersettings import *
 from notifications import *
 from poll import Poll
 from listofpolls import ListOfPolls
+from likeoperations import *
 
 
 lm = LoginManager()
@@ -191,7 +192,8 @@ def twits_page(twit_id):
 
     if request.method == 'GET':
         twit = current_app.Twitlist.get_twit(twit_id)
-        return render_template('twit.html', twits=twit)
+        isTweetLiked=isLiked(current_user.username,twit_id)
+        return render_template('twit.html', twits=twit,isTweetLiked=isTweetLiked)
 
     else:
 
@@ -229,6 +231,30 @@ def twits_page(twit_id):
         elif request.form['submit'] == 'deletelink':
             current_app.Twitlist.delete_link(id_twit)
             return redirect(url_for('home_page'))
+        elif request.form['submit']=='liketweet':
+            isTweetLiked=like(twit_id)
+            if isTweetLiked:
+                flash("Tweet is liked")
+            else:
+                flash("Tweet can not be liked")
+
+            twit = current_app.Twitlist.get_twit(twit_id)
+            return render_template('twit.html',twits=twit,isTweetLiked=isTweetLiked)
+        elif request.form['submit']=='unliketweet':
+
+            isTweetUnliked=unlike(twit_id)
+            if isTweetUnliked:
+                flash("Tweet is unliked")
+            else:
+                flash("Tweet can not be unliked")
+
+            twit = current_app.Twitlist.get_twit(twit_id)
+            isTweetLiked=isLiked(current_user.username,twit_id)
+            return render_template('twit.html',twits=twit,isTweetLiked=isTweetLiked)
+
+
+
+
 
 @app.route('/twits')
 @login_required
@@ -574,6 +600,13 @@ def poll_page(pollquestion,creatorname):
             return render_template('pollownerperspective.html',pollquestion=pollquestion,choices=choices,isVoted=isVoted)
         else:
             return render_template('pollvoterperspective.html',pollquestion=pollquestion,choices=choices,isVoted=isVoted)
+
+@app.route('/Likes/<string:username>')
+@login_required
+def likes_page(username):
+        likedTweets=getLikedTweets(username)
+        return render_template('like.html',likedTweets=likedTweets)
+
 
 @app.route('/manageapps', methods = ['GET','POST'])
 @login_required
