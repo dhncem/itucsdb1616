@@ -121,3 +121,19 @@ class Twitlist:
         twit = [(Twit(title, context, twitid, userhandle))
                     for title, context, twitid, userhandle  in cursor]
         return twit
+
+    def get_elsetwits(self, usrhandle):
+        connection = dbapi2.connect(current_app.config['dsn'])
+        cursor = connection.cursor()
+        cursor.execute("""SELECT ID FROM USERS WHERE USERNAME=%s""", (usrhandle,))
+        userid=cursor.fetchone()
+        cursor.execute("""SELECT tweets.title,
+                            tweets.context,
+                            tweets.tweetid,
+                            users.username
+                            FROM tweets
+                            RIGHT JOIN users ON users.id=tweets.userid
+                            WHERE tweets.userid = %s ORDER BY TWEETID DESC""", (userid,))
+        twit = [(Twit(title, context, twitid, userhandle))
+                    for title, context, twitid, userhandle  in cursor]
+        return twit

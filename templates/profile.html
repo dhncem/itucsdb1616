@@ -1,0 +1,40 @@
+  {% extends "layout.html" %}
+  {% block title %}Profile Page{% endblock %}
+    {% block content %}
+
+<style>
+#twittit{
+	padding-top: 15px;
+	padding-bottom: 10px;
+	width: 250px;
+	height: 20px;
+	size="3";
+}
+
+#twitcon{
+	width: 425px;
+	height: 10px;
+	size="2";
+	word-wrap: break-word;
+}
+</style>
+
+
+  <body>
+		<h3 style="padding-bottom: 15px;">Welcome to {{ userhandle }} Profile</h3>
+		{% for twit in twits %}
+      	<p>
+       	<p>
+       	<h4>
+       	<font size="1">{{ twit.twitid }}</font>
+       	<a d="twittit"; style="color: black" style="text-decoration: none" href="{{ url_for('twits_page', twit_id=twit.twitid ) }}">
+		{{ twit.title }}</a>-<font size="1">-{{ twit.userhandle }}</font> </h4>
+		<h4 style="color: grey">
+		<p id="twitcon"> {{ twit.context }}</p>
+		</h4>
+		</p>
+		<br>
+		{% endfor %}
+
+  </body>
+  {% endblock %}

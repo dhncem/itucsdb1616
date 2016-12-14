@@ -30,7 +30,7 @@
        	<h4>
        	<font size="1" align="middle">{{ twit.twitid }}</font>
        	<a d="twittit"; style="color: black" style="text-decoration: none" href="{{ url_for('twits_page', twit_id=twit.twitid ) }}">
-		{{ twit.title }}</a><font size="1">-{{ twit.userhandle }}</font></h4>
+		{{ twit.title }}</a><a style="color: black" style="text-decoration: none" href="{{ url_for('profile_page', usrhandle=twit.userhandle ) }}"><font size="1">-{{ twit.userhandle }}</font></a></h4>
 		<h4 style="color: grey">
 		<p id="twitcon"> {{ twit.context }}</p>
 		</h4>

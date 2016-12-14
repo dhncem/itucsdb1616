@@ -104,6 +104,13 @@ def register_page():
 
     return render_template('register.html', form=form)
 
+@app.route('/profile/<usrhandle>', methods=['GET'])
+@login_required
+def profile_page(usrhandle):
+    if    request.method == 'GET':
+        twits = current_app.Twitlist.get_elsetwits(usrhandle)
+
+    return render_template('profile.html', twits=twits)
 
 @app.route('/home', methods=['GET'])
 @login_required
