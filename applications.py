@@ -1,6 +1,7 @@
 from flask import current_app
 import psycopg2 as dbapi2
 from flask_login import current_user
+from user import get_userid
 
 def getapplications():
         with dbapi2.connect(current_app.config['dsn']) as connection:
@@ -18,7 +19,7 @@ def updateapps(activeapps):
             cursor.execute("""SELECT ID FROM USERS WHERE USERNAME = %s""", (current_user.username,))
             values=cursor.fetchone()
             userid=values[0]
-            cursor.execute("""DELETE FROM APPUSERS WHERE USERID=1""")
+            cursor.execute("""DELETE FROM APPUSERS WHERE USERID=%s""",(get_userid(current_user.username),))
             appids=[]
             for value in activeapps:
                 print(value)
