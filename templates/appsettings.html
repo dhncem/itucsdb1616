@@ -9,19 +9,23 @@
 	{% for (value,) in values %}
 		<div>
 			<h5> {{ value }} </h5>
+			<div class="checkbox">
 			<label>
 			    <input type="checkbox" {% if value in apps %} checked="true" {% endif %} name="selections" value="{{value}}">
 			    Enabled/Disabled
 			</label>
+			</div>
 			<hr>
 		</div>
 	{% endfor %}
+	{% if values %}
 	<div class="form-group">
           <div class="col-sm-2">
             <button type="submit" name="btn" value="add"
-                    class="btn btn-primary">Apply changes</button>
+                    class="btn btn-success">Apply changes</button>
           </div>
     </div>
+    {% endif %}
 	</form>
 
 {% endblock %}

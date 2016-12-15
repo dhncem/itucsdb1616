@@ -11,16 +11,22 @@
         <h4 class="form-signin-heading">Follow/Unfollow a user</h4>
 		<hr></hr>
         <div class="form-group">
-          <label for="follow-username" class=class="control-label col-sm-1">Username:</label>
-          <input type="text" name="follow-username" size="15" required autofocus/>
+        <select class="form-control" name="selecteduser" style="font-family: Georgia; width:auto">
+        	<option value=""> - Select user - </option>
+        	{%for (username,) in users%}
+				<option value={{username}} {% if ((username,) in followedusers) %}style="font-weight: bold; font-style: italic"{% endif %}>{{username}}</option>
+			{% endfor %}
+		</select>
+		<br>
+		<label style="font-weight: normal; font-style: italic; size:8px">Followed users are written in bold and italic</label>
         </div>
 
-        <div class="form-group">
-          <input type="radio" name="followbutton" value="Follow" id="follow" checked="true"><label for="follow">Follow</label>
-          <input type="radio" name="followbutton" value="Unfollow" id="unfollow"><label for="unfollow">Unfollow</label>
+		<div class="btn-group">
+	        <button type="submit"
+	                class="btn btn-primary btn-success" name="followbutton" value="Follow">Follow</button>
+	        <button type="submit"
+	        		class="btn btn-primary btn-danger" name="followbutton" value="Unfollow">Unfollow</button>
         </div>
-
-        <button type="submit"
-                class="btn btn-lg btn-primary btn-block">Submit</button>
+        </div>
       </form>
 {% endblock %}

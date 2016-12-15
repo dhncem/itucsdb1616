@@ -53,12 +53,14 @@
 			  		<li><a href="{{ url_for('settings_page') }}">Settings</a></li>
 			  		<li><a href="{{ url_for('notifs_page') }}">Notifications</a></li>
 			  		<li><a href="{{ url_for('polls_page') }}">Polls</a></li>
-			  		<li><a href="{{ url_for('likes_page',username=current_user.username) }}">MyLikes</a></li>
-
 			  		{% if current_user.is_admin %}
 			  		<li><a href="{{ url_for('admin_manageapps') }}">Manage applications</a></li>
 			  		{% endif %}
 			  		<li><a href="{{ url_for('user_manageapps') }}">Application settings</a></li>
+			  		{% if current_user.is_admin %}
+			  		<li><a href="{{ url_for('admin_managegifts') }}">Manage gifts</a></li>
+			  		{% endif %}
+			  		<li><a href="{{ url_for('gifts') }}">Gifts</a></li>
 			  		{% if current_user.is_authenticated %}
 			  		<li><a href="{{ url_for('logout_page') }}">Logout</a></li>
 			  		{% else %}

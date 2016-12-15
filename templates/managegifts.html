@@ -1,0 +1,81 @@
+{% extends "layout.html" %}
+{% block title %}Manage Gifts{% endblock %}
+{% block content %}
+      <div class="page-header">
+        <h1>Manage Gifts</h1>
+      </div>
+
+
+		<h4>Add Gift</h4>
+      <form role="form" action="/managegifts" method="POST" name="add_gift"
+            class="form-horizontal">
+      {{ addform.csrf_token }}
+
+        <div class="form-group">
+          <div class="col-sm-2">
+          {{ addform.giftname(autofocus=True,
+                           id='giftname', class='form-control',
+                           placeholder='Gift Name') }}
+          </div>
+
+        </div>
+        {% for error in addform.giftname.errors %}
+            <span class="error">{{ error }}</span>
+          {% endfor %}
+       	<div class="form-group">
+          <div class="col-sm-2">
+          {{ addform.description(id='description', class='form-control',
+                           placeholder='Description', value='') }}
+          </div>
+
+        </div>
+        {% for error in addform.description.errors %}
+            <span class="error">{{ error }}</span>
+          {% endfor %}
+
+        <div class="form-group">
+          <div class="col-sm-2">
+            <button type="submit" name="btn" value="add"
+                    class="btn btn-primary">Add</button>
+          </div>
+        </div>
+      </form>
+
+	<hr/>
+
+	<h4>Update/delete gifts</h4>
+		<form role="form" action="/managegifts" method="POST" name="update_app"
+            class="form-horizontal">
+      {{ updateform.csrf_token }}
+        <div class="form-group">
+          <div class="col-sm-2">
+          {{ updateform.gifts(class="form-control", style="width: auto", id='gifts') }}
+          <br>
+          <button type="submit" name="btn" value="getinfo"
+                    class="btn btn-warning btn-sm">Get info &#x2193;</button>
+          </div>
+       </div>
+       <div class="form-group">
+          <div class="col-sm-2">
+          {{ updateform.description(class='form-control', id='description', value=description) }}
+          </div>
+       </div>
+		{% for error in updateform.description.errors %}
+            <span class="error">{{ error }}</span>
+          {% endfor %}
+
+        <div class="form-group">
+        <div class="col-sm-2">
+        <div class="btn-group">
+            <button type="submit" name="btn" value="update"
+                    class="btn btn-success">Update</button>
+
+            <button type="submit" name="btn" value="delete"
+                    class="btn btn-danger">Delete</button>
+          </div>
+          </div>
+        </div>
+      </form>
+
+
+{% endblock %}

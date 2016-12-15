@@ -1,0 +1,57 @@
+{% extends "layout.html" %}
+{% block title %}Manage Gifts{% endblock %}
+{% block content %}
+      <div class="page-header">
+        <h1>Gifts</h1>
+      </div>
+
+
+		<h4>Send Gift</h4>
+      <form role="form" action="/gifts" method="POST" name="add_gift"
+            class="form-horizontal">
+      {{ sendform.csrf_token }}
+
+        <div class="form-group">
+          <div class="col-sm-2">
+          {{ sendform.gifts(class='form-control', style='width:auto',id='gifts') }}
+          </div>
+
+        </div>
+       	<div class="form-group">
+          <div class="col-sm-2">
+          {{ sendform.sendto(class='form-control', style='width:auto', id='description') }}
+          </div>
+
+        </div>
+
+        <div class="form-group">
+          <div class="col-sm-2">
+            <button type="submit" name="btn" value="send"
+                    class="btn btn-success">Send Gift</button>
+          </div>
+        </div>
+      </form>
+
+	<hr/>
+
+	<form role="form" action="/gifts" method="POST" name="gifts"
+            class="form-horizontal">
+	<h4>My gifts</h4>
+	{% for sendername, giftname, description, time in sentgifts %}
+	<p>Sent by: {{sendername}}<br>Gift: {{giftname}}<br>Description: {{description}}<br>Sent: {{time}}</p>
+	<br>
+	{%endfor%}
+
+	{%if sentgifts%}
+	<div class="form-group">
+          <div class="col-sm-2">
+            <button type="submit" name="btn" value="delete"
+                    class="btn btn-danger">Delete all gifts</button>
+          </div>
+    </div>
+    {%endif%}
+    </form>
+
+
+
+{% endblock %}
