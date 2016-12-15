@@ -25,3 +25,15 @@ class UpdateAppForm(Form):
     activeradio = RadioField('ActiveRadio', choices=[('Delete', 'Delete'),('Deactivate', 'Deactivate')], default='Delete')
     deactiveapps = SelectField('DeactiveApps')
     deactiveradio = RadioField('DeactiveRadio', choices=[('Delete', 'Delete'),('Activate', 'Activate')], default='Delete')
+
+class AddGiftForm(Form):
+    giftname = StringField('Gift', [validators.Length(min=1, max=30), validators.DataRequired()])
+    description = StringField('Context', [validators.Length(max=100)])
+
+class UpdateGiftForm(Form):
+    gifts = SelectField('Gifts')
+    description = StringField('Description', [validators.Length(max=100)])
+
+class SendGiftForm(Form):
+    gifts = SelectField('Gifts')
+    sendto = SelectField('Users')

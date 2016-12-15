@@ -281,8 +281,10 @@ def twit_add_page():
 @login_required
 def follow_page():
     if request.method == 'POST':
-        username = request.form['follow-username']
-        if request.form['followbutton']=='Follow':
+        username = request.form['selecteduser']
+        if username == '':
+            flash('Please select a user')
+        elif request.form['followbutton']=='Follow':
             if follow(username):
                 flash('%s is followed. %s is followed by %s user(s). You are following %s user(s).'
                       % (username, username, get_followercount(username), get_followingcount(current_user.username)))
@@ -294,9 +296,16 @@ def follow_page():
                       % (username, username, get_followercount(username), get_followingcount(current_user.username)))
             else:
                 flash('%s cannot be unfollowed' % username)
-        return render_template('followuser.html')
+        return redirect(url_for('follow_page'))
     else:
-        return render_template('followuser.html')
+        with dbapi2.connect(app.config['dsn']) as connection:
+            with connection.cursor() as cursor:
+                cursor.execute("""SELECT USERNAME FROM USERS""")
+                users=cursor.fetchall()
+            with connection.cursor() as cursor2:
+                cursor2.execute("""SELECT USERNAME FROM FOLLOWS INNER JOIN USERS ON FOLLOWEDUSER=ID WHERE FOLLOWERID=%s""",(get_userid(current_user.username),))
+                followedusers = cursor2.fetchall()
+        return render_template('followuser.html', users=users, followedusers=followedusers)
 
 @app.route('/messages', methods=['GET', 'POST'])
 @login_required
@@ -607,6 +616,92 @@ def likes_page(username):
         likedTweets=getLikedTweets(username)
         return render_template('like.html',likedTweets=likedTweets)
 
+@app.route('/managegifts', methods=['GET','POST'])
+@login_required
+def admin_managegifts():
+    if not current_user.is_admin:
+        abort(401)
+    addform = AddGiftForm(request.form)
+    updateform = UpdateGiftForm(request.form)
+    updateform.gifts.choices=[]
+    description = ''
+    if request.method == 'POST':
+        if request.form['btn'] == 'add':
+            if addform.validate():
+                giftname = addform.giftname.data
+                description = addform.description.data
+                with dbapi2.connect(app.config['dsn']) as connection:
+                    with connection.cursor() as cursor:
+                        cursor.execute("""INSERT INTO GIFTS (GIFTNAME, DESCRIPTION) VALUES (%s,%s)""", (giftname,description))
+                return redirect(url_for('admin_managegifts'))
+        elif request.form['btn'] == 'delete':
+            giftname = updateform.gifts.data
+            with dbapi2.connect(app.config['dsn']) as connection:
+                    with connection.cursor() as cursor:
+                        cursor.execute("""DELETE FROM GIFTS WHERE GIFTNAME=%s""",(giftname,))
+            return redirect(url_for('admin_managegifts'))
+        elif request.form['btn'] == 'update':
+            giftname = updateform.gifts.data
+            description = updateform.description.data
+            with dbapi2.connect(app.config['dsn']) as connection:
+                with connection.cursor() as cursor:
+                    cursor.execute("""UPDATE GIFTS SET DESCRIPTION=%s WHERE GIFTNAME=%s""",(description,giftname))
+            return redirect(url_for('admin_managegifts'))
+        elif request.form['btn'] == 'getinfo':
+            giftname = updateform.gifts.data
+            with dbapi2.connect(app.config['dsn']) as connection:
+                with connection.cursor() as cursor:
+                    cursor.execute("""SELECT DESCRIPTION FROM GIFTS WHERE GIFTNAME=%s""",(giftname,))
+                    description = cursor.fetchone()[0]
+
+    with dbapi2.connect(app.config['dsn']) as connection:
+        with connection.cursor() as cursor:
+            cursor.execute("""SELECT GIFTNAME FROM GIFTS""")
+            gifts=cursor.fetchall()
+    for (giftname,) in gifts:
+        updateform.gifts.choices+=[(giftname,giftname)]
+    return render_template('managegifts.html', addform=addform, updateform=updateform, description=description)
+
+@app.route('/gifts', methods=['GET','POST'])
+@login_required
+def gifts():
+    sendform = SendGiftForm(request.form)
+    sendform.gifts.choices=[]
+    sendform.sendto.choices=[]
+    sentgifts = []
+    if request.method == 'POST':
+        if request.form['btn'] == 'delete':
+            with dbapi2.connect(app.config['dsn']) as connection:
+                with connection.cursor() as cursor:
+                    cursor.execute("""DELETE FROM SENTGIFTS WHERE RECEIVER = %s""",(get_userid(current_user.username),))
+            flash('All gifts deleted.')
+        else:
+            try:
+                with dbapi2.connect(app.config['dsn']) as connection:
+                    with connection.cursor() as cursor:
+                        cursor.execute("""INSERT INTO SENTGIFTS VALUES(%s,%s,%s)""",(get_userid(current_user.username),sendform.sendto.data,sendform.gifts.data))
+            except:
+                flash('You cannot send the same gift to the same person more than once')
+        return redirect(url_for('gifts'))
+    else:
+        with dbapi2.connect(app.config['dsn']) as connection:
+            with connection.cursor() as cursor:
+                cursor.execute("""SELECT ID, GIFTNAME FROM GIFTS""")
+                gifts=cursor.fetchall()
+            with connection.cursor() as cursor2:
+                cursor2.execute("""SELECT ID, USERNAME FROM USERS""")
+                users=cursor2.fetchall()
+            with connection.cursor() as cursor3:
+                cursor3.execute("""SELECT USERNAME, GIFTNAME,
+                DESCRIPTION, TO_CHAR(S_TIME, 'DD Mon YYYY, HH24:MI') FROM SENTGIFTS INNER JOIN GIFTS ON GIFTID=ID
+                INNER JOIN USERS ON SENDER=USERS.ID WHERE (RECEIVER=%s) ORDER BY S_TIME DESC""",(get_userid(current_user.username),))
+                sentgifts = cursor3.fetchall()
+        for (id,giftname) in gifts:
+            sendform.gifts.choices+=[(id,giftname)]
+        for (id,username) in users:
+            sendform.sendto.choices+=[(id,username)]
+
+    return render_template('gifts.html', sendform = sendform, sentgifts=sentgifts)
 
 @app.route('/manageapps', methods = ['GET','POST'])
 @login_required
@@ -707,17 +802,9 @@ def main():
 def initialize_database():
     if not current_user.is_admin:
         abort(401)
-    try:
-        connection = dbapi2.connect(app.config['dsn'])
-        cursor = connection.cursor()
-
-        cursor.execute(open("script.sql", "r").read())
-        cursor.close()
-
-        connection.commit()
-        connection.close()
-    except:
-        pass
+    with dbapi2.connect(app.config['dsn']) as connection:
+            with connection.cursor() as cursor:
+                cursor.execute(open("script.sql", "r").read())
     return redirect(url_for('home_page'))
 
 if __name__ == '__main__':
