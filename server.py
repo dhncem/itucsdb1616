@@ -794,6 +794,37 @@ def user_manageapps():
         return redirect(url_for('user_manageapps'))
     return render_template('appsettings.html', values=values, apps=apps)
 
+@app.route('/updateprofile', methods= ['GET', 'POST'])
+@login_required
+def updateprofile_page():
+    passForm=ChangePassForm(request.form)
+    updateForm=UpdateProfileForm(request.form)
+    if request.method=='POST':
+        if request.form['btn'] == 'Change Password':
+            if passForm.validate():
+                password = pwd_context.encrypt(passForm.password.data)
+                with dbapi2.connect(app.config['dsn']) as connection:
+                    with connection.cursor() as cursor:
+                        cursor.execute("""UPDATE USERS SET PASSWORD=%s WHERE USERNAME=%s""", (password,current_user.username))
+            flash('Your password has been changed.')
+        else:
+            if updateForm.validate():
+                with dbapi2.connect(app.config['dsn']) as connection:
+                    with connection.cursor() as cursor:
+                        cursor.execute("""UPDATE USERPROFILE SET NICKNAME=%s, BIO=%s WHERE USERNAME=%s""", (updateForm.nickname.data,updateForm.bio.data,current_user.username))
+                flash('Your profile has been updated.')
+        return redirect(url_for('updateprofile_page'))
+    else:
+        with dbapi2.connect(app.config['dsn']) as connection:
+            with connection.cursor() as cursor:
+                cursor.execute("""SELECT NICKNAME, BIO FROM USERPROFILE WHERE USERNAME=%s""", (current_user.username,))
+                values = cursor.fetchall()
+                for i,j in values:
+                    updateForm.nickname.data = i
+                    updateForm.bio.data = j
+
+    return render_template('updateprofile.html', passForm=passForm, updateForm=updateForm)
+
 @app.route('/logout')
 def logout_page():
     logout_user()
