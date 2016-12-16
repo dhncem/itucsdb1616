@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+{% block title %}Tweet{% endblock %}
+{% block content %}
+
+		<body>
+
+		{% for link in links %}
+      	<p align="left">
+       	<p align="left">
+       	<h4>
+       	<a style="color: black" style="text-decoration: none" href="{{link.contextl}}">
+		{{ link.contextl }}</a>
+		</h4>
+		</p>
+		<br>
+		{% endfor %}
+
+        </body>
+{% endblock %}

@@ -31,12 +31,5 @@
       <input type="text" formnovalidate name="context" size ="20" placeholder="Context"/><br>
         <br><button type="submit" name="submit" class="btn btn-success" value="update">Update Tweet</button>
             <button type="submit" name="submit" class="btn btn-danger" value="delete">Delete Tweet!</button>
-			<button type="submit" name="submit" class="btn btn-success" value="retweet">ReTweet</button>
-			{%if isTweetLiked==1%}
-			<button type="submit" name="submit" class="btn btn-primary" value="unliketweet">Unlike</button>
-			{%else%}
-			<button type="submit" name="submit" class="btn btn-primary" value="liketweet">Like</button>
-			{%endif%}
-        </form>
         </body>
 {% endblock %}

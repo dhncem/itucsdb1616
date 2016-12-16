@@ -4,26 +4,20 @@
 
 <style>
 #twittit{
-	padding-top: 15px;
-	padding-bottom: 10px;
-	width: 250px;
-	height: 20px;
-	size="3";
+	padding-top: 10px;
 }
 
 #twitcon{
-	width: 425px;
-	height: 10px;
-	size="2";
+	width: 300px;
 	word-wrap: break-word;
 }
 
 #twitwrapper{
-	border-radius: 25px;
+	display:inline-block;
+	border-radius: 35px;
+    padding: 10px;
     background: #3d3d5c;
-    padding: 20px;
-    width: 400px;
-    height: 130px;
+    width: 350px;
 }
 </style>
 
@@ -40,14 +34,14 @@
         <div class="form-group">
           <label for="title" class="control-label col-sm-1">Title:</label>
           <div class="col-sm-10">
-            <input type="text" name="title" size="15" required autofocus />
+            <input type="text" maxlength="20" name="title" size="20" required autofocus />
           </div>
         </div>
 
         <div class="form-group">
           <label for="content" class="control-label col-sm-1">Content:</label>
           <div class="col-sm-10">
-            <input type="text" name="content" maxlength="140" />
+            <input type="text" name="content" maxlength="45" />
           </div>
         </div>
 
@@ -65,19 +59,16 @@
 
 		{% for twit in twits %}
 		<div id="twitwrapper">
-      	<p align="left">
-       	<p align="left">
-       	<h4>
-       	<font size="1">{{ twit.twitid }}</font>
-       	<a id="twittit"; style="color: black" style="text-decoration: none" href="{{ url_for('twits_page', twit_id=twit.twitid ) }}">
-		{{ twit.title }}</a>-<font size="1">-{{ twit.userhandle }}</font> </h4>
-		<h4 style="color: grey">
-		<p id="twitcon"> {{ twit.context }}</p>
+		<h4>
+		<a d="twittit"; style="color: black" style="text-decoration: none" href="{{ url_for('twits_page', twit_id=twit.twitid ) }}">
+		{{ twit.title }}</a>
+		<a style="color: black" style="text-decoration: none" href="{{ url_for('profile_page', usrhandle=twit.userhandle ) }}">
+		<font size="1">-{{ twit.userhandle }}</font></a><br>
+		<font size="4" style="color: grey" id="twitcon"> {{ twit.context }}</font><br>
+		<font size="2">Likes({{ twit.numberoflikes }})</font>&nbsp&nbsp<font size="2">RT({{ twit.numberofrts }})</font>
 		</h4>
-		</p>
-		<br>
-		 </div>
-		 <br>
+		</div>
+		<br><br>
 		{% endfor %}
   </body>
   {% endblock %}

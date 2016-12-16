@@ -14,9 +14,18 @@ class Creditlist:
         cursor.execute("""SELECT ID FROM USERS WHERE USERNAME=%s""", (current_user.username,))
         userid=cursor.fetchone()
         cursor.execute("""SELECT CASH FROM SITECR WHERE USERID=%s""", (userid,))
-        [cash] = cursor.fetchone()
-        credits=GETcredit(cash)
-        return credits
+        cash = cursor.fetchone()
+        return GETcredit(cash)
+
+    def upd_credit(self, credit):
+        connection = dbapi2.connect(current_app.config['dsn'])
+        cursor = connection.cursor()
+        cursor.execute("""SELECT ID FROM USERS WHERE USERNAME=%s""", (current_user.username,))
+        userid=cursor.fetchone()
+        cursor.execute("""UPDATE SITECR SET CASH=%s WHERE USERID=%s""", (credit, userid))
+        connection.commit()
+        connection.close()
+
 
     def add_credit(self, credit):
         connection = dbapi2.connect(current_app.config['dsn'])

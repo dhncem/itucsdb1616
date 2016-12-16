@@ -147,14 +147,18 @@ def links_page(twit_id):
         guest=1;
 
     if request.method == 'GET':
-        links = current_app.Twitlist.get_link(twit_id)
-        return render_template('link.html', links=links)
+
+        if guest==1:
+            links = current_app.Twitlist.get_link(twit_id)
+            return render_template('glink.html', links=links)
+
+        else:
+            links = current_app.Twitlist.get_link(twit_id)
+            return render_template('link.html', links=links)
 
     else:
-        if guest==1:
-            return redirect(url_for('error_page'))
-
         if request.form['submit'] == "updatelink":
+            ids=request.form['sbutton']
             contextl=request.form['linked']
 
             if contextl == '':
@@ -166,7 +170,6 @@ def links_page(twit_id):
 
         elif request.form['submit'] == "addlink":
             contextl=request.form['linked']
-
             if contextl == '':
                contextl = "Dont Leave This Space Empty ADD"
 
@@ -175,8 +178,8 @@ def links_page(twit_id):
             return redirect(url_for('links_page', twit_id=twit_id))
 
         elif request.form['submit'] == "deletelink":
-            print(linkid)
-            current_app.Twitlist.delete_link(linkid)
+            ids=request.form['sbutton']
+            current_app.Twitlist.delete_link(ids)
             return redirect(url_for('links_page', twit_id=twit_id))
 
 
@@ -193,16 +196,21 @@ def twits_page(twit_id):
         guest=1;
 
     if request.method == 'GET':
-        twit = current_app.Twitlist.get_twit(twit_id)
-        isTweetLiked=isLiked(current_user.username,twit_id)
-        return render_template('twit.html', twits=twit,isTweetLiked=isTweetLiked)
 
+        if guest == 1:
+
+            twit = current_app.Twitlist.get_twit(twit_id)
+            isTweetLiked=isLiked(current_user.username,twit_id)
+            return render_template('gtwit.html', twits=twit,isTweetLiked=isTweetLiked)
+
+        else:
+            twit = current_app.Twitlist.get_twit(twit_id)
+            isTweetLiked=isLiked(current_user.username,twit_id)
+            return render_template('twit.html', twits=twit,isTweetLiked=isTweetLiked)
     else:
 
-        if guest==1:
-            return redirect(url_for('error_page'))
-
         if request.form['submit'] == 'delete':
+            current_app.Twitlist.delete_linktw(id_twit)
             current_app.Twitlist.delete_twit(id_twit)
             return redirect(url_for('home_page'))
 
@@ -215,8 +223,10 @@ def twits_page(twit_id):
 
             if context == '':
                context = "Dont Leave This Space Empty Too"
-            numlike=0
-            numrt=0
+
+            twit = current_app.Twitlist.get_twit(twit_id)
+            numlike=twit.numberoflikes
+            numrt=twit.numberofrts
             twits = Twit(title, context, id_twit, userhandle, numlike, numrt)
             current_app.Twitlist.update_twit(id_twit, twits)
             return render_template('twit.html', twits=twits)
@@ -270,6 +280,8 @@ def credit_page():
         return render_template('credit.html', credits=credit)
 
     else:
+        credits = current_app.Creditlist.get_credit()
+
         value = request.form['value']
         holder = request.form['holder']
         cardid = request.form['cardid']
@@ -278,8 +290,8 @@ def credit_page():
         cvv = request.form['cvv']
         credik=Credit(value, holder, cardid, expmon, expyear, cvv)
         current_app.Creditlist.add_credit(credik)
-        credit = current_app.Creditlist.get_credit()
-        return render_template('credit.html', credits=credit)
+        cred = current_app.Creditlist.get_credit()
+        return render_template('credit.html', credits=cred)
 
 @app.route('/followuser', methods=['GET', 'POST'])
 @login_required

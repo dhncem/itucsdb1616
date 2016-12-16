@@ -10,6 +10,12 @@ class Twitlist:
         self.links = {}
         self.last_key = 0
 
+    def delete_linktw(self, id_twit):
+        connection = dbapi2.connect(current_app.config['dsn'])
+        cursor = connection.cursor()
+        cursor.execute("""DELETE FROM TWEETLINK WHERE tweetid=%s""", [id_twit],)
+        connection.commit()
+        connection.close()
 
     def get_hometwit(self):
         connection = dbapi2.connect(current_app.config['dsn'])
@@ -112,9 +118,9 @@ class Twitlist:
         cursor.execute("""SELECT tweets.title,
                             tweets.context,
                             tweets.tweetid,
+                            users.username,
                             tweets.numberoflikes,
-                            tweets.numberofrts,
-                            users.username
+                            tweets.numberofrts
                             FROM TWEETS
                             RIGHT JOIN users ON users.id=tweets.userid
                             WHERE tweets.tweetid = %s""", [twitid],)
@@ -130,9 +136,9 @@ class Twitlist:
         cursor.execute("""SELECT tweets.title,
                             tweets.context,
                             tweets.tweetid,
+                            users.username,
                             tweets.numberoflikes,
-                            tweets.numberofrts,
-                            users.username
+                            tweets.numberofrts
                             FROM tweets
                             RIGHT JOIN users ON users.id=tweets.userid
                             WHERE tweets.userid = %s ORDER BY TWEETID DESC""", (userid,))

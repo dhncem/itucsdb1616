@@ -1,0 +1,34 @@
+{% extends "layout.html" %}
+{% block title %}Tweet{% endblock %}
+{% block content %}
+<style>
+#twittit{
+	padding-bottom: 10px;
+	width: 150px;
+	height: 20px;
+}
+
+#twitcon{
+	padding-bottom: 24px;
+	width: 425px;
+	height: 20px;
+	word-wrap: break-word;
+}
+
+</style>
+<body>
+		<font size="1">{{ twits.twitid }}</font>
+       	<id="twittit"> <font size="5"> {{ twits.title }}</font>
+       	<a style="color: black" style="text-decoration: none" href="{{ url_for('profile_page', usrhandle=twits.userhandle ) }}"><font size="1">-{{ twits.userhandle }}</font></a><br>
+		<id="twitcon"> <font size="3">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp{{ twits.context }}</font><br><br>
+		<a style="color: black" style="text-decoration: none" href="{{ url_for('links_page', twit_id=twits.twitid ) }}"> Tweet Links </a>
+		<br>
+			<button type="submit" name="submit" class="btn btn-success" value="retweet">ReTweet</button>
+			{%if isTweetLiked==1%}
+			<button type="submit" name="submit" class="btn btn-primary" value="unliketweet">Unlike</button>
+			{%else%}
+			<button type="submit" name="submit" class="btn btn-primary" value="liketweet">Like</button>
+			{%endif%}
+        </form>
+        </body>
+{% endblock %}
