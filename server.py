@@ -677,13 +677,23 @@ def gifts():
         if request.form['btn'] == 'delete':
             with dbapi2.connect(app.config['dsn']) as connection:
                 with connection.cursor() as cursor:
-                    cursor.execute("""DELETE FROM SENTGIFTS WHERE RECEIVER = %s""",(get_userid(current_user.username),))
+                    cursor.execute("""DELETE FROM SENTGIFTS WHERE RECEIVER = %s OR SENDER = %s""",(get_userid(current_user.username),get_userid(current_user.username)))
             flash('All gifts deleted.')
         else:
             try:
                 with dbapi2.connect(app.config['dsn']) as connection:
                     with connection.cursor() as cursor:
                         cursor.execute("""INSERT INTO SENTGIFTS VALUES(%s,%s,%s)""",(get_userid(current_user.username),sendform.sendto.data,sendform.gifts.data))
+                        cursor.execute("""SELECT USERNAME FROM USERS WHERE ID=%s""",sendform.sendto.data)
+                        sentto = cursor.fetchone()[0]
+                        cursor.execute("""SELECT GIFTNAME, DESCRIPTION FROM GIFTS WHERE ID=%s""",(sendform.gifts.data,))
+                        values = cursor.fetchall()
+                        sentgift = None
+                        description = None
+                        for i,j in values:
+                            sentgift = i
+                            description = j
+                        flash("Gift '%s' has sent to '%s'. Gift description: %s" % (sentgift, sentto, description))
             except:
                 flash('You cannot send the same gift to the same person more than once')
         return redirect(url_for('gifts'))
@@ -699,13 +709,18 @@ def gifts():
                 cursor3.execute("""SELECT USERNAME, GIFTNAME,
                 DESCRIPTION, TO_CHAR(S_TIME, 'DD Mon YYYY, HH24:MI') FROM SENTGIFTS INNER JOIN GIFTS ON GIFTID=ID
                 INNER JOIN USERS ON SENDER=USERS.ID WHERE (RECEIVER=%s) ORDER BY S_TIME DESC""",(get_userid(current_user.username),))
-                sentgifts = cursor3.fetchall()
+                receivedgifts = cursor3.fetchall()
+            with connection.cursor() as cursor4:
+                cursor4.execute("""SELECT USERNAME, GIFTNAME,
+                DESCRIPTION, TO_CHAR(S_TIME, 'DD Mon YYYY, HH24:MI') FROM SENTGIFTS INNER JOIN GIFTS ON GIFTID=ID
+                INNER JOIN USERS ON RECEIVER=USERS.ID WHERE (SENDER=%s) ORDER BY S_TIME DESC""",(get_userid(current_user.username),))
+                sentgifts = cursor4.fetchall()
         for (id,giftname) in gifts:
             sendform.gifts.choices+=[(id,giftname)]
         for (id,username) in users:
             sendform.sendto.choices+=[(id,username)]
 
-    return render_template('gifts.html', sendform = sendform, sentgifts=sentgifts)
+    return render_template('gifts.html', sendform = sendform, receivedgifts=receivedgifts, sentgifts=sentgifts)
 
 @app.route('/manageapps', methods = ['GET','POST'])
 @login_required
