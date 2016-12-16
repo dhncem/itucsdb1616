@@ -19,7 +19,9 @@ class Twitlist:
         cursor.execute("""  SELECT tweets.title,
                             tweets.context,
                             tweets.tweetid,
-                            users.username
+                            users.username,
+                            tweets.numberofrts,
+                            tweets.numberoflikes
                             FROM tweets
                             RIGHT JOIN follows ON follows.followeduser = tweets.userid
                             RIGHT JOIN users ON users.id=tweets.userid
@@ -28,12 +30,14 @@ class Twitlist:
                             SELECT tweets.title,
                             tweets.context,
                             tweets.tweetid,
-                            users.username
+                            users.username,
+                            tweets.numberofrts,
+                            tweets.numberoflikes
                             FROM tweets
                             RIGHT JOIN users ON users.id=tweets.userid
                             WHERE tweets.userid = %s ORDER BY TWEETID DESC""", (userid, userid))
-        twit = [(Twit(title, context, twitid, userhandle))
-                    for title, context, twitid, userhandle  in cursor]
+        twit = [(Twit(title, context, twitid, userhandle, numberoflikes, numberofrts))
+                    for title, context, twitid, userhandle, numberoflikes, numberofrts  in cursor]
         return twit
 
     def getid(self):
@@ -108,12 +112,14 @@ class Twitlist:
         cursor.execute("""SELECT tweets.title,
                             tweets.context,
                             tweets.tweetid,
+                            tweets.numberoflikes,
+                            tweets.numberofrts,
                             users.username
                             FROM TWEETS
                             RIGHT JOIN users ON users.id=tweets.userid
                             WHERE tweets.tweetid = %s""", [twitid],)
-        title, context, twitid, userhandle = cursor.fetchone()
-        twits=Twit(title, context, twitid, userhandle)
+        title, context, twitid, userhandle, numberoflikes, numberofrts = cursor.fetchone()
+        twits=Twit(title, context, twitid, userhandle, numberoflikes, numberofrts)
         return twits
 
     def get_twits(self):
@@ -124,12 +130,14 @@ class Twitlist:
         cursor.execute("""SELECT tweets.title,
                             tweets.context,
                             tweets.tweetid,
+                            tweets.numberoflikes,
+                            tweets.numberofrts,
                             users.username
                             FROM tweets
                             RIGHT JOIN users ON users.id=tweets.userid
                             WHERE tweets.userid = %s ORDER BY TWEETID DESC""", (userid,))
-        twit = [(Twit(title, context, twitid, userhandle))
-                    for title, context, twitid, userhandle  in cursor]
+        twit = [(Twit(title, context, twitid, userhandle, numberoflikes, numberofrts))
+                    for title, context, twitid, userhandle, numberoflikes, numberofrts  in cursor]
         return twit
 
     def get_elsetwits(self, usrhandle):
@@ -137,13 +145,16 @@ class Twitlist:
         cursor = connection.cursor()
         cursor.execute("""SELECT ID FROM USERS WHERE USERNAME=%s""", (usrhandle,))
         userid=cursor.fetchone()
-        cursor.execute("""SELECT tweets.title,
+        cursor.execute("""SELECT
+                            tweets.title,
                             tweets.context,
                             tweets.tweetid,
-                            users.username
+                            users.username,
+                            tweets.numberoflikes,
+                            tweets.numberofrts
                             FROM tweets
                             RIGHT JOIN users ON users.id=tweets.userid
                             WHERE tweets.userid = %s ORDER BY TWEETID DESC""", (userid,))
-        twit = [(Twit(title, context, twitid, userhandle))
-                    for title, context, twitid, userhandle  in cursor]
+        twit = [(Twit(title, context, twitid, userhandle, numberoflikes, numberofrts))
+                    for title, context, twitid, userhandle, numberoflikes, numberofrts  in cursor]
         return twit

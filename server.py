@@ -9,9 +9,8 @@ from flask import Flask, abort, flash, redirect, render_template, url_for
 from flask_login import LoginManager
 from flask_login import current_user, login_required, login_user, logout_user
 from passlib.apps import custom_app_context as pwd_context
-from twitlist import Twitlist
-from twit import Twit
-from twit import Link
+from twitlist import *
+from twit import *
 from message import Message
 from media import Media
 from messageList import MessageList
@@ -28,7 +27,8 @@ from notifications import *
 from poll import Poll
 from listofpolls import ListOfPolls
 from likeoperations import *
-
+from credit import *
+from creditlist import *
 
 lm = LoginManager()
 app = Flask(__name__)
@@ -51,6 +51,8 @@ def create_app():
     app.config.from_object('settings')
 
     app.Twitlist = Twitlist()
+
+    app.Creditlist = Creditlist()
 
     app.messageList = MessageList()
 
@@ -213,24 +215,12 @@ def twits_page(twit_id):
 
             if context == '':
                context = "Dont Leave This Space Empty Too"
-
-            twits = Twit(title, context, id_twit)
+            numlike=0
+            numrt=0
+            twits = Twit(title, context, id_twit, userhandle, numlike, numrt)
             current_app.Twitlist.update_twit(id_twit, twits)
             return render_template('twit.html', twits=twits)
 
-        elif request.form['submit'] == 'addlink':
-            linked=request.form['linked']
-            current_app.Twitlist.add_link(id_twit, linked)
-            return redirect(url_for('home_page'))
-
-        elif request.form['submit'] == 'updatelink':
-            linked=request.form['linked']
-            current_app.Twitlist.update_link(id_twit, linked)
-            return redirect(url_for('home_page'))
-
-        elif request.form['submit'] == 'deletelink':
-            current_app.Twitlist.delete_link(id_twit)
-            return redirect(url_for('home_page'))
         elif request.form['submit']=='liketweet':
             isTweetLiked=like(twit_id)
             if isTweetLiked:
@@ -252,30 +242,44 @@ def twits_page(twit_id):
             isTweetLiked=isLiked(current_user.username,twit_id)
             return render_template('twit.html',twits=twit,isTweetLiked=isTweetLiked)
 
-
-
-
-
-@app.route('/twits')
+@app.route('/twits', methods=['GET', 'POST'])
 @login_required
 def twit_page():
-    now = datetime.datetime.now()
-    twits = current_app.Twitlist.get_twits()
-    return render_template('twits.html', twits=twits)
-
-@app.route('/twits/add', methods=['GET', 'POST'])
-@login_required
-def twit_add_page():
     if request.method == 'GET':
-        return render_template('add_twit.html')
+        now = datetime.datetime.now()
+        twits = current_app.Twitlist.get_twits()
+        return render_template('twits.html', twits=twits)
+
     else:
         title = request.form['title']
         content = request.form['content']
         twitid=0
         userh="NONE"
-        twit = Twit(title, content, twitid, userh)
+        numlike=0
+        numrt=0
+        twit = Twit(title, content, twitid, userh, numlike, numrt)
         current_app.Twitlist.add_twit(twit)
         return redirect(url_for('twit_page'))
+
+@app.route('/credits', methods=['GET', 'POST'])
+@login_required
+def credit_page():
+    if request.method == 'GET':
+        now = datetime.datetime.now()
+        credit = current_app.Creditlist.get_credit()
+        return render_template('credit.html', credits=credit)
+
+    else:
+        value = request.form['value']
+        holder = request.form['holder']
+        cardid = request.form['cardid']
+        expmon = request.form['expmon']
+        expyear = request.form['expyear']
+        cvv = request.form['cvv']
+        credik=Credit(value, holder, cardid, expmon, expyear, cvv)
+        current_app.Creditlist.add_credit(credik)
+        credit = current_app.Creditlist.get_credit()
+        return render_template('credit.html', credits=credit)
 
 @app.route('/followuser', methods=['GET', 'POST'])
 @login_required

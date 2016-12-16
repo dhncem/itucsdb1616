@@ -45,7 +45,6 @@
                 <ul class="nav masthead-nav">
 			  		<li><a class="active" href="{{ url_for('home_page') }}">Home{%if current_user.is_authenticated %}-{{ current_user.username }}{%else%}{%endif%}</a></li>
 			  		<li><a href="{{ url_for('twit_page') }}">My Tweets</a></li>
-			  		<li><a href="{{ url_for('twit_add_page') }}">Post a Tweet</a></li>
 			  		<li><a href="{{ url_for('follow_page') }}">Follow/Unfollow</a></li>
 			  		<li><a href="{{ url_for('messages_page') }}">Messages</a></li>
 			  		<li><a href="{{ url_for('media_page') }}">Media</a></li>
@@ -61,6 +60,7 @@
 			  		<li><a href="{{ url_for('admin_managegifts') }}">Manage gifts</a></li>
 			  		{% endif %}
 			  		<li><a href="{{ url_for('gifts') }}">Gifts</a></li>
+			  		<li><a href="{{ url_for('credit_page') }}">Manage Credit</a></li>
 			  		{% if current_user.is_authenticated %}
 			  		<li><a href="{{ url_for('logout_page') }}">Logout</a></li>
 			  		{% else %}

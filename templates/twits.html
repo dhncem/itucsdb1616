@@ -17,13 +17,54 @@
 	size="2";
 	word-wrap: break-word;
 }
+
+#twitwrapper{
+	border-radius: 25px;
+    background: #3d3d5c;
+    padding: 20px;
+    width: 400px;
+    height: 130px;
+}
 </style>
 
 
   <body>
-    <h1	style="padding-bottom: 15px;">Welcome to Your Tweets</h1>
+    <h2	style="padding-bottom: 15px;">Welcome to Your Tweets</h2>
+
+    <div class="page-header">
+        <h3>Post A Tweet</h3>
+      </div>
+
+      <form role="form" action="" method="post" name="add_twit"
+            class="form-horizontal">
+        <div class="form-group">
+          <label for="title" class="control-label col-sm-1">Title:</label>
+          <div class="col-sm-10">
+            <input type="text" name="title" size="15" required autofocus />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="content" class="control-label col-sm-1">Content:</label>
+          <div class="col-sm-10">
+            <input type="text" name="content" maxlength="140" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="col-sm-offset-1 col-sm-10">
+            <button type="submit" name="save"
+                    class="btn btn-primary">Add Tweet</button>
+          </div>
+        </div>
+      </form>
+
+	<div class="page-header">
+        <h3>Here is Your Tweets</h3>
+      </div>
 
 		{% for twit in twits %}
+		<div id="twitwrapper">
       	<p align="left">
        	<p align="left">
        	<h4>
@@ -35,6 +76,8 @@
 		</h4>
 		</p>
 		<br>
+		 </div>
+		 <br>
 		{% endfor %}
   </body>
   {% endblock %}

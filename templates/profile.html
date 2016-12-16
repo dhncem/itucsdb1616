@@ -12,10 +12,18 @@
 }
 
 #twitcon{
-	width: 425px;
+	width: 350px;
 	height: 10px;
 	size="2";
 	word-wrap: break-word;
+}
+
+#twitwrapper{
+	border-radius: 25px;
+    background: #3d3d5c;
+    padding: 20px;
+    width: 400px;
+    height: 250px;
 }
 </style>
 
@@ -23,16 +31,24 @@
   <body>
 		<h3 style="padding-bottom: 15px;">Welcome to {{ userhandle }} Profile</h3>
 		{% for twit in twits %}
-      	<p>
-       	<p>
+		<div id="twitwrapper">
+      	<p align="middle">
+       	<p align="middle">
        	<h4>
-       	<font size="1">{{ twit.twitid }}</font>
+       	<font size="1" align="middle">{{ twit.twitid }}</font>
        	<a d="twittit"; style="color: black" style="text-decoration: none" href="{{ url_for('twits_page', twit_id=twit.twitid ) }}">
-		{{ twit.title }}</a>-<font size="1">-{{ twit.userhandle }}</font> </h4>
+		{{ twit.title }}</a><a style="color: black" style="text-decoration: none" href="{{ url_for('profile_page', usrhandle=twit.userhandle ) }}"><font size="1">-{{ twit.userhandle }}</font></a></h4>
 		<h4 style="color: grey">
 		<p id="twitcon"> {{ twit.context }}</p>
 		</h4>
 		</p>
+		<br><br><br><br><br><br>
+		&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+		&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+		&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+		<button type="submit" name="like" class="btn btn-primary" value="{{ twit.twitid }}">Like</button>
+		<button type="submit" name="rt" class="btn btn-primary" value="{{ twit.twitid }}">ReTweet</button>
+		</div>
 		<br>
 		{% endfor %}
 

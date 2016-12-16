@@ -12,19 +12,28 @@
 }
 
 #twitcon{
-	width: 425px;
+	width: 350px;
 	height: 10px;
 	size="2";
 	word-wrap: break-word;
+}
+
+#twitwrapper{
+	border-radius: 25px;
+    background: #3d3d5c;
+    padding: 20px;
+    width: 400px;
+    height: 250px;
 }
 </style>
 
 	<body>
 
-	<h2>Welcome, {% if username %}{{username}}{% else %}User{% endif %}</h2>
-    <h1>My Twitter Feed..</h1>
+	<h2>Welcome {% if username %},{{username}}{% else %}{% endif %}</h2>
+    <h3>My Twitter Feed...</h3>
 
         {% for twit in twits %}
+		<div id="twitwrapper">
       	<p align="middle">
        	<p align="middle">
        	<h4>
@@ -35,6 +44,21 @@
 		<p id="twitcon"> {{ twit.context }}</p>
 		</h4>
 		</p>
+		<br><br><br><br><br>
+		&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+		&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+		&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+		<font size="1" align="middle">{{ twit.numberoflikes }}</font>
+		&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+		&nbsp
+		<font size="1" align="middle">{{ twit.numberofrts }}</font>
+		<br>
+		&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+		&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+		&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+		<button type="submit" name="like" class="btn btn-primary" value="{{ twit.twitid }}">Like</button>
+		<button type="submit" name="rt" class="btn btn-primary" value="{{ twit.twitid }}">ReTweet</button>
+		</div>
 		<br>
 		{% endfor %}
 
