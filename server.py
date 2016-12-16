@@ -706,14 +706,14 @@ def gifts():
                 cursor2.execute("""SELECT ID, USERNAME FROM USERS""")
                 users=cursor2.fetchall()
             with connection.cursor() as cursor3:
-                cursor3.execute("""SELECT USERNAME, GIFTNAME,
+                cursor3.execute("""SELECT USERNAME, NICKNAME, GIFTNAME,
                 DESCRIPTION, TO_CHAR(S_TIME, 'DD Mon YYYY, HH24:MI') FROM SENTGIFTS INNER JOIN GIFTS ON GIFTID=ID
-                INNER JOIN USERS ON SENDER=USERS.ID WHERE (RECEIVER=%s) ORDER BY S_TIME DESC""",(get_userid(current_user.username),))
+                INNER JOIN USERPROFILE ON SENDER=USERPROFILE.ID WHERE (RECEIVER=%s) ORDER BY S_TIME DESC""",(get_userid(current_user.username),))
                 receivedgifts = cursor3.fetchall()
             with connection.cursor() as cursor4:
-                cursor4.execute("""SELECT USERNAME, GIFTNAME,
+                cursor4.execute("""SELECT USERNAME, NICKNAME, GIFTNAME,
                 DESCRIPTION, TO_CHAR(S_TIME, 'DD Mon YYYY, HH24:MI') FROM SENTGIFTS INNER JOIN GIFTS ON GIFTID=ID
-                INNER JOIN USERS ON RECEIVER=USERS.ID WHERE (SENDER=%s) ORDER BY S_TIME DESC""",(get_userid(current_user.username),))
+                INNER JOIN USERPROFILE ON RECEIVER=USERPROFILE.ID WHERE (SENDER=%s) ORDER BY S_TIME DESC""",(get_userid(current_user.username),))
                 sentgifts = cursor4.fetchall()
         for (id,giftname) in gifts:
             sendform.gifts.choices+=[(id,giftname)]
@@ -806,22 +806,22 @@ def updateprofile_page():
                 with dbapi2.connect(app.config['dsn']) as connection:
                     with connection.cursor() as cursor:
                         cursor.execute("""UPDATE USERS SET PASSWORD=%s WHERE USERNAME=%s""", (password,current_user.username))
-            flash('Your password has been changed.')
+                flash('Your password has been changed.')
         else:
             if updateForm.validate():
                 with dbapi2.connect(app.config['dsn']) as connection:
                     with connection.cursor() as cursor:
                         cursor.execute("""UPDATE USERPROFILE SET NICKNAME=%s, BIO=%s WHERE USERNAME=%s""", (updateForm.nickname.data,updateForm.bio.data,current_user.username))
                 flash('Your profile has been updated.')
-        return redirect(url_for('updateprofile_page'))
-    else:
-        with dbapi2.connect(app.config['dsn']) as connection:
-            with connection.cursor() as cursor:
-                cursor.execute("""SELECT NICKNAME, BIO FROM USERPROFILE WHERE USERNAME=%s""", (current_user.username,))
-                values = cursor.fetchall()
-                for i,j in values:
-                    updateForm.nickname.data = i
-                    updateForm.bio.data = j
+
+
+    with dbapi2.connect(app.config['dsn']) as connection:
+        with connection.cursor() as cursor:
+            cursor.execute("""SELECT NICKNAME, BIO FROM USERPROFILE WHERE USERNAME=%s""", (current_user.username,))
+            values = cursor.fetchall()
+            for nickname,bio in values:
+                updateForm.nickname.data = nickname
+                updateForm.bio.data = bio
 
     return render_template('updateprofile.html', passForm=passForm, updateForm=updateForm)
 

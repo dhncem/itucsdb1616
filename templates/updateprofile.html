@@ -14,11 +14,10 @@
         <div class="form-group">
           <div class="col-sm-2">
           {{ passForm.password(class='form-control', style='width:auto',id='password', placeholder='New Password') }}
-          {% for error in passForm.password.errors %}
-            <span class="error">{{ error }}</span>
-          {% endfor %}
           </div>
-
+			{% for error in passForm.password.errors %}
+            <span class="error">{{ error }}</span>
+          	{% endfor %}
         </div>
        	<div class="form-group">
           <div class="col-sm-2">
@@ -46,20 +45,19 @@
         <div class="form-group">
           <div class="col-sm-2">
           {{ updateForm.nickname(class='form-control', style='width:auto',id='nickname', placeholder='Nickname') }}
-          {% for error in updateForm.nickname.errors %}
+          </div>
+		{% for error in updateForm.nickname.errors %}
             <span class="error">{{ error }}</span>
           {% endfor %}
-          </div>
-
         </div>
        	<div class="form-group">
           <div class="col-sm-2">
           {{ updateForm.bio(class='form-control', style='width:auto', id='bio', placeholder='Bio') }}
-          {% for error in updateForm.bio.errors %}
+
+          </div>
+			{% for error in updateForm.bio.errors %}
             <span class="error">{{ error }}</span>
           {% endfor %}
-          </div>
-
         </div>
 
         <div class="form-group">
