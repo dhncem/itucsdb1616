@@ -34,14 +34,25 @@
 
 	<hr/>
 
-	<form role="form" action="/gifts" method="POST" name="gifts"
-            class="form-horizontal">
-	<h4>My gifts</h4>
-	{% for sendername, giftname, description, time in sentgifts %}
+	<div style="padding-top: 0px">
+	<div style="display: inline-block; width: auto; height: auto; vertical-align: top">
+	<h4>Received gifts</h4>
+	{% for sendername, giftname, description, time in receivedgifts %}
 	<p>Sent by: {{sendername}}<br>Gift: {{giftname}}<br>Description: {{description}}<br>Sent: {{time}}</p>
 	<br>
 	{%endfor%}
-
+	</div>
+	<div style="display: inline-block; width: auto; height: auto; vertical-align: top; margin-left: 15%">
+	<h4>Sent gifts</h4>
+	{% for sendername, giftname, description, time in sentgifts %}
+	<p>Sent to: {{sendername}}<br>Gift: {{giftname}}<br>Description: {{description}}<br>Sent: {{time}}</p>
+	<br>
+	{%endfor%}
+	</div>
+	</div>
+	<hr>
+	<form role="form" action="/gifts" method="POST" name="gifts"
+            class="form-horizontal">
 	{%if sentgifts%}
 	<div class="form-group">
           <div class="col-sm-2">
@@ -51,6 +62,7 @@
     </div>
     {%endif%}
     </form>
+
 
 
 
