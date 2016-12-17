@@ -228,7 +228,7 @@ def twits_page(twit_id):
             twit = current_app.Twitlist.get_twit(twit_id)
             numlike=twit.numberoflikes
             numrt=twit.numberofrts
-            twits = Twit(title, context, id_twit, userhandle, numlike, numrt)
+            twits = Twit(title, context, id_twit, userhandle, numlike, numrt, isRT, RTOwner)
             current_app.Twitlist.update_twit(id_twit, twits)
             return render_template('twit.html', twits=twits)
 
@@ -273,7 +273,7 @@ def twit_page():
         userh="NONE"
         numlike=0
         numrt=0
-        twit = Twit(title, content, twitid, userh, numlike, numrt)
+        twit = Twit(title, content, twitid, userh, numlike, numrt, isRT, RTOwner)
         current_app.Twitlist.add_twit(twit)
         return redirect(url_for('twit_page'))
 

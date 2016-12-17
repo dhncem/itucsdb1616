@@ -27,23 +27,58 @@ class Twitlist:
                             tweets.tweetid,
                             users.username,
                             tweets.numberoflikes,
-                            tweets.numberofrts
+                            tweets.numberofrts,
+                            tweets.isrt,
+                            userprofile.username AS rtowner
                             FROM tweets
                             RIGHT JOIN follows ON follows.followeduser = tweets.userid
-                            RIGHT JOIN users ON users.id=tweets.userid
-                            WHERE follows.followerid = %s
+                            RIGHT JOIN users ON users.id = tweets.userid
+                            RIGHT JOIN userprofile ON userprofile.id = tweets.rtownerid
+                            WHERE follows.followerid = %s AND tweets.isrt = %s
                             UNION
                             SELECT tweets.title,
                             tweets.context,
                             tweets.tweetid,
                             users.username,
+                            tweets.numberoflikes,
                             tweets.numberofrts,
-                            tweets.numberoflikes
+                            tweets.isrt,
+                            userprofile.username AS rtowner
                             FROM tweets
-                            RIGHT JOIN users ON users.id=tweets.userid
-                            WHERE tweets.userid = %s ORDER BY TWEETID DESC""", (userid, userid))
-        twit = [(Twit(title, context, twitid, userhandle, numberoflikes, numberofrts))
-                    for title, context, twitid, userhandle, numberoflikes, numberofrts  in cursor]
+                            RIGHT JOIN users ON users.id = tweets.userid
+                            RIGHT JOIN userprofile ON userprofile.id = tweets.rtownerid
+                            WHERE tweets.userid = %s AND tweets.isrt = %s
+                            UNION
+                            SELECT tweets.title,
+                            tweets.context,
+                            tweets.tweetid,
+                            users.username,
+                            tweets.numberoflikes,
+                            tweets.numberofrts,
+                            tweets.isrt,
+                            userprofile.username AS rtowner
+                            FROM tweets
+                            RIGHT JOIN follows ON follows.followeduser = tweets.userid
+                            RIGHT JOIN users ON users.id = tweets.userid
+                            RIGHT JOIN userprofile ON userprofile.id = tweets.rtownerid
+                            WHERE follows.followerid = %s AND tweets.isrt = %s
+                            UNION
+                            SELECT tweets.title,
+                            tweets.context,
+                            tweets.tweetid,
+                            users.username,
+                            tweets.numberoflikes,
+                            tweets.numberofrts,
+                            tweets.isrt,
+                            userprofile.username AS rtowner
+                            FROM tweets
+                            RIGHT JOIN users ON users.id = tweets.userid
+                            RIGHT JOIN userprofile ON userprofile.id = tweets.rtownerid
+                            WHERE tweets.userid = %s AND tweets.isrt = %s
+                            ORDER BY TWEETID DESC; """, (userid, 0, userid, 0, userid, 1, userid, 1))
+                            #title, context, id, userpostedthe tweet, like, trs, isrt, originalowner
+        twit = [(Twit(title, context, twitid, userhandle, numberoflikes, numberofrts, isrt, rtowner))
+                    for title, context, twitid, userhandle, numberoflikes, numberofrts, isrt, rtowner  in cursor]
         return twit
 
     def getid(self):
@@ -116,16 +151,19 @@ class Twitlist:
         connection = dbapi2.connect(current_app.config['dsn'])
         cursor = connection.cursor()
         cursor.execute("""SELECT tweets.title,
-                            tweets.context,
-                            tweets.tweetid,
-                            users.username,
-                            tweets.numberoflikes,
-                            tweets.numberofrts
-                            FROM TWEETS
-                            RIGHT JOIN users ON users.id=tweets.userid
-                            WHERE tweets.tweetid = %s""", [twitid],)
-        title, context, twitid, userhandle, numberoflikes, numberofrts = cursor.fetchone()
-        twits=Twit(title, context, twitid, userhandle, numberoflikes, numberofrts)
+                        tweets.context,
+                        tweets.tweetid,
+                        users.username,
+                        tweets.numberoflikes,
+                        tweets.numberofrts,
+                        tweets.isrt,
+                        userprofile.username AS rtowner
+                        FROM tweets
+                        RIGHT JOIN users ON users.id = tweets.userid
+                        RIGHT JOIN userprofile ON userprofile.id = tweets.rtownerid
+                        WHERE tweets.tweetid = %s""", [twitid],)
+        title, context, twitid, userhandle, numberoflikes, numberofrts, isrt, rtowner = cursor.fetchone()
+        twits=Twit(title, context, twitid, userhandle, numberoflikes, numberofrts, isrt, rtowner)
         return twits
 
     def get_twits(self):
@@ -134,16 +172,19 @@ class Twitlist:
         cursor.execute("""SELECT ID FROM USERS WHERE USERNAME=%s""", (current_user.username,))
         userid=cursor.fetchone()
         cursor.execute("""SELECT tweets.title,
-                            tweets.context,
-                            tweets.tweetid,
-                            users.username,
-                            tweets.numberoflikes,
-                            tweets.numberofrts
-                            FROM tweets
-                            RIGHT JOIN users ON users.id=tweets.userid
-                            WHERE tweets.userid = %s ORDER BY TWEETID DESC""", (userid,))
-        twit = [(Twit(title, context, twitid, userhandle, numberoflikes, numberofrts))
-                    for title, context, twitid, userhandle, numberoflikes, numberofrts  in cursor]
+                        tweets.context,
+                        tweets.tweetid,
+                        users.username,
+                        tweets.numberoflikes,
+                        tweets.numberofrts,
+                        tweets.isrt,
+                        userprofile.username AS rtowner
+                        FROM tweets
+                        RIGHT JOIN users ON users.id = tweets.userid
+                        RIGHT JOIN userprofile ON userprofile.id = tweets.rtownerid
+                        WHERE tweets.userid = %s ORDER BY TWEETID DESC""", (userid,))
+        twit = [(Twit(title, context, twitid, userhandle, numberoflikes, numberofrts, isrt, rtowner))
+                    for title, context, twitid, userhandle, numberoflikes, numberofrts, isrt, rtowner  in cursor]
         return twit
 
     def get_elsetwits(self, usrhandle):
@@ -151,16 +192,18 @@ class Twitlist:
         cursor = connection.cursor()
         cursor.execute("""SELECT ID FROM USERS WHERE USERNAME=%s""", (usrhandle,))
         userid=cursor.fetchone()
-        cursor.execute("""SELECT
-                            tweets.title,
-                            tweets.context,
-                            tweets.tweetid,
-                            users.username,
-                            tweets.numberoflikes,
-                            tweets.numberofrts
-                            FROM tweets
-                            RIGHT JOIN users ON users.id=tweets.userid
-                            WHERE tweets.userid = %s ORDER BY TWEETID DESC""", (userid,))
-        twit = [(Twit(title, context, twitid, userhandle, numberoflikes, numberofrts))
-                    for title, context, twitid, userhandle, numberoflikes, numberofrts  in cursor]
+        cursor.execute("""SELECT tweets.title,
+                        tweets.context,
+                        tweets.tweetid,
+                        users.username,
+                        tweets.numberoflikes,
+                        tweets.numberofrts,
+                        tweets.isrt,
+                        userprofile.username AS rtowner
+                        FROM tweets
+                        RIGHT JOIN users ON users.id = tweets.userid
+                        RIGHT JOIN userprofile ON userprofile.id = tweets.rtownerid
+                        WHERE tweets.userid = %s ORDER BY TWEETID DESC""", (userid,))
+        twit = [(Twit(title, context, twitid, userhandle, numberoflikes, numberofrts, isrt, rtowner))
+                    for title, context, twitid, userhandle, numberoflikes, numberofrts, isrt, rtowner  in cursor]
         return twit

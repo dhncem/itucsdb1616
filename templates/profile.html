@@ -19,13 +19,25 @@
     background: #3d3d5c;
     width: 350px;
 }
+
+#twitwrapperrt{
+	display:inline-block;
+	border-radius: 35px;
+    padding: 10px;
+    background: #29293d;
+    width: 350px;
+}
 </style>
 
 	<body>
 
 	<h2>Welcome {% if username %},{{username}}{% else %}{% endif %}</h2>
+    <h3>My Twitter Feed...</h3>
 
         {% for twit in twits %}
+
+        {% if twit.isrt == 0%}
+
 		<div id="twitwrapper">
 		<h4>
 		<a d="twittit"; style="color: black" style="text-decoration: none" href="{{ url_for('twits_page', twit_id=twit.twitid ) }}">
@@ -37,6 +49,24 @@
 		</h4>
 		</div>
 		<br><br>
+
+		{% else %}
+		<div id="twitwrapperrt">
+		<font size="2">This is a RT From
+		<a style="color: black" style="text-decoration: none" href="{{ url_for('profile_page', usrhandle=twit.username ) }}">
+	 	{{twit.userhandle}}</font></a>
+		<h4>
+		<a d="twittit"; style="color: black" style="text-decoration: none" href="{{ url_for('twits_page', twit_id=twit.twitid ) }}">
+		{{ twit.title }}</a>
+		<a style="color: black" style="text-decoration: none" href="{{ url_for('profile_page', usrhandle=twit.rtowner ) }}">
+		<font size="1">-{{ twit.rtowner }}</font></a><br>
+		<font size="4" style="color: grey" id="twitcon"> {{ twit.context }}</font><br>
+		<font size="2">Likes({{ twit.numberoflikes }})</font>&nbsp&nbsp<font size="2">RT({{ twit.numberofrts }})</font>
+		</h4>
+		</div>
+		<br><br>
+
+		{% endif %}
 		{% endfor %}
 
 	</body>
