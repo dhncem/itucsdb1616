@@ -18,7 +18,7 @@
         {% for message_id, message in messages %}
         <div>
        	<p align="left">
-       	<b><a href="{{ url_for('message_page') }}"style="text-decoration:none">
+       	<b>
 		{% if message.sender == current_user.username %}
 		<input type="checkbox" name="message" value="{{message_id}}"> {{message.reciever}} </a></b><br>
 		 &#x21E1;{% endif %}

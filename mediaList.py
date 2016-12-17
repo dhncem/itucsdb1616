@@ -33,7 +33,14 @@ class MediaList:
         cursor = connection.cursor()
         cursor.execute("""SELECT ID FROM USERS WHERE USERNAME=%s""", (current_user.username,))
         userid = cursor.fetchone()
-        cursor.execute("SELECT T1.*, T2.ID FROM MEDIA AS T1 INNER JOIN USERS AS T2 ON T1.OWNERID = T2.ID WHERE OWNERID = %s""",(userid,))
-        media = [(key, Media(ownerid, description, url))
+        cursor.close()
+        cursor = connection.cursor()
+        cursor.execute("SELECT DISTINCT * FROM ((SELECT DISTINCT PHOTOID FROM MEDIA WHERE OWNERID = %s) UNION (SELECT DISTINCT TAGEDPHOTOID FROM TAGS WHERE TAGEDUSERID = %s)) AS PHOTOS""",(userid,userid))
+        photosid=cursor.fetchall()
+        media = []
+        for id in photosid:
+            cursor.execute("SELECT T1.*, T2.ID FROM MEDIA AS T1 INNER JOIN USERS AS T2 ON T1.OWNERID = T2.ID WHERE T1.PHOTOID = %s""",(id,))
+            media += [(key, Media(ownerid, description, url))
                     for key, ownerid, description, url, id in cursor]
+        print (media)
         return media

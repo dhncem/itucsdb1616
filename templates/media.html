@@ -15,6 +15,13 @@
       <button type="submit" name ="operation" value="update"
                 class="btn btn-lg btn-primary btn-block">Update Photo</button>
       </div>
+
+      <div class ="col-sm-2" role="form" action="" method="post">
+      <a href="{{ url_for('tag_page') }}"style="text-decoration:none">
+      <button type="submit" name ="operation" value="tag"
+                class="btn btn-lg btn-primary btn-block">Tag!</button>
+      </div>
+
       <form role="form" action="/media" method="post">
       <div class ="col-sm-2" role="form" action="" method="post">
       <button type="submit" name ="operation" value="delete"
@@ -26,7 +33,15 @@
       <input type="checkbox" name="media" value="{{photo_id}}">
 		{{media.description}} <br>
 		<a href="{{media.url}}">
-		<img src="{{media.url}}" style="width:200px;height:200px;"></a>
+		<img src="{{media.url}}" style="width:200px;height:200px;"></a><br>
+		<p>Taged users:
+		{% for photoid, tag in tagList %}
+		{% if photoid == photo_id %}
+			{{ tag }}
+		{%endif%}
+		{% endfor %}
+		</p>
+
 
       {% endfor %}
       </form>

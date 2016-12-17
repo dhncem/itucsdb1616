@@ -13,6 +13,8 @@ from twitlist import *
 from twit import *
 from message import Message
 from media import Media
+from tag import Tag
+from tagList import TagList
 from messageList import MessageList
 from mediaList import MediaList
 from list import List
@@ -58,6 +60,8 @@ def create_app():
     app.messageList = MessageList()
 
     app.mediaList = MediaList()
+    
+    app.tagList = TagList()
 
     lm.init_app(app)
     lm.login_view='login_page'
@@ -340,21 +344,9 @@ def messages_page():
         value = request.form.getlist('message')
         for i in value:
             current_app.messageList.delete_message(i)
+        return redirect(url_for('messages_page'))
     return render_template('messages.html', messages=messages)
 
-
-@app.route('/message', methods=['GET', 'POST'])
-@login_required
-def message_page():
-    message = current_app.messageList.get_message()
-    if request.method == 'POST':
-        content = request.form['content']
-        sender = 1
-        reciever = current_user.username
-        sent = True
-        messagesend = Message(sender, reciever, content, sent)
-        current_app.messageList.add_message(messagesend)
-    return render_template('message.html', message=message)
 
 @app.route('/newmessage', methods=['GET', 'POST'])
 @login_required
@@ -366,12 +358,16 @@ def new_message_page():
         sent = True
         messagesend = Message(sender, reciever, content, sent)
         current_app.messageList.add_message(messagesend)
+        return redirect(url_for('messages_page'))
     return render_template('new_message.html')
 
 @app.route('/media', methods=['GET', 'POST'])
 @login_required
 def media_page():
     media = current_app.mediaList.get_photos()
+    tagList = []
+    for item in media:
+        tagList += TagList.get_tags(item[0])
     if request.method == 'POST':
         if request.form['operation'] == 'delete':
             value = request.form.getlist('media')
@@ -382,7 +378,7 @@ def media_page():
             print('avel')
             value = request.form.getlist('media')
             print(value)
-    return render_template('media.html', media = media)
+    return render_template('media.html', media = media, tagList=tagList)
 
 @app.route('/newphoto', methods=['GET', 'POST'])
 @login_required
@@ -409,6 +405,18 @@ def updatemedia_page():
                 current_app.mediaList.update_photo(description,i)
         return redirect(url_for('media_page'))
     return render_template('updatemedia.html', media = media)
+
+@app.route('/tagphoto', methods=['GET', 'POST'])
+@login_required
+def tag_page():
+    media = current_app.mediaList.get_photos()
+    if request.method == 'POST':
+        value = request.form.getlist('media')
+        tagname = request.form['tag']
+        for i in value:
+            current_app.tagList.add_tag(tagname, i)
+        return redirect(url_for('media_page'))
+    return render_template('tagphoto.html', media=media)
 
 @app.route('/settings', methods=['GET', 'POST'])
 @login_required
