@@ -29,6 +29,7 @@ from listofpolls import ListOfPolls
 from likeoperations import *
 from credit import *
 from creditlist import *
+from rtoperations import *
 
 lm = LoginManager()
 app = Flask(__name__)
@@ -232,6 +233,7 @@ def twits_page(twit_id):
             return render_template('twit.html', twits=twits)
 
         elif request.form['submit']=='liketweet':
+            print("asd")
             isTweetLiked=like(twit_id)
             if isTweetLiked:
                 flash("Tweet is liked")
@@ -239,7 +241,7 @@ def twits_page(twit_id):
                 flash("Tweet can not be liked")
 
             twit = current_app.Twitlist.get_twit(twit_id)
-            return render_template('twit.html',twits=twit,isTweetLiked=isTweetLiked)
+            return render_template('gtwit.html',twits=twit,isTweetLiked=isTweetLiked)
         elif request.form['submit']=='unliketweet':
 
             isTweetUnliked=unlike(twit_id)
@@ -250,8 +252,12 @@ def twits_page(twit_id):
 
             twit = current_app.Twitlist.get_twit(twit_id)
             isTweetLiked=isLiked(current_user.username,twit_id)
-            return render_template('twit.html',twits=twit,isTweetLiked=isTweetLiked)
-
+            return render_template('gtwit.html',twits=twit,isTweetLiked=isTweetLiked)
+        elif request.form['submit']=='retweet':
+            RT(twit_id)
+            twit = current_app.Twitlist.get_twit(twit_id)
+            isTweetLiked=isLiked(current_user.username,twit_id)
+            return render_template('gtwit.html',twits=twit,isTweetLiked=isTweetLiked)
 @app.route('/twits', methods=['GET', 'POST'])
 @login_required
 def twit_page():

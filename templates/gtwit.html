@@ -23,6 +23,8 @@
 		<id="twitcon"> <font size="3">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp{{ twits.context }}</font><br><br>
 		<a style="color: black" style="text-decoration: none" href="{{ url_for('links_page', twit_id=twits.twitid ) }}"> Tweet Links </a>
 		<br>
+		<form novalidate="novalidate" role="form" action="" method="post" name="twit-form">
+
 			<button type="submit" name="submit" class="btn btn-success" value="retweet">ReTweet</button>
 			{%if isTweetLiked==1%}
 			<button type="submit" name="submit" class="btn btn-primary" value="unliketweet">Unlike</button>

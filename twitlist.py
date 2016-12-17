@@ -26,8 +26,8 @@ class Twitlist:
                             tweets.context,
                             tweets.tweetid,
                             users.username,
-                            tweets.numberofrts,
-                            tweets.numberoflikes
+                            tweets.numberoflikes,
+                            tweets.numberofrts
                             FROM tweets
                             RIGHT JOIN follows ON follows.followeduser = tweets.userid
                             RIGHT JOIN users ON users.id=tweets.userid

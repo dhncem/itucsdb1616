@@ -53,6 +53,7 @@
 			  		<li><a href="{{ url_for('updateprofile_page') }}">Update Profile</a></li>
 			  		<li><a href="{{ url_for('notifs_page') }}">Notifications</a></li>
 			  		<li><a href="{{ url_for('polls_page') }}">Polls</a></li>
+			  		<li><a href="{{ url_for('likes_page',username=current_user.username) }}">My Likes</a></li>
 			  		{% if current_user.is_admin %}
 			  		<li><a href="{{ url_for('admin_manageapps') }}">Manage applications</a></li>
 			  		{% endif %}
