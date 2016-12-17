@@ -58,7 +58,7 @@ class Twitlist:
                             tweets.isrt,
                             userprofile.username AS rtowner
                             FROM tweets
-                            RIGHT JOIN follows ON follows.followeduser = tweets.userid
+                            RIGHT JOIN follows ON follows.followeduser = tweets.rtownerid
                             RIGHT JOIN users ON users.id = tweets.userid
                             RIGHT JOIN userprofile ON userprofile.id = tweets.rtownerid
                             WHERE follows.followerid = %s AND tweets.isrt = %s
@@ -74,9 +74,8 @@ class Twitlist:
                             FROM tweets
                             RIGHT JOIN users ON users.id = tweets.userid
                             RIGHT JOIN userprofile ON userprofile.id = tweets.rtownerid
-                            WHERE tweets.userid = %s AND tweets.isrt = %s
+                            WHERE tweets.rtownerid = %s AND tweets.isrt = %s
                             ORDER BY TWEETID DESC; """, (userid, 0, userid, 0, userid, 1, userid, 1))
-                            #title, context, id, userpostedthe tweet, like, trs, isrt, originalowner
         twit = [(Twit(title, context, twitid, userhandle, numberoflikes, numberofrts, isrt, rtowner))
                     for title, context, twitid, userhandle, numberoflikes, numberofrts, isrt, rtowner  in cursor]
         return twit
@@ -182,7 +181,21 @@ class Twitlist:
                         FROM tweets
                         RIGHT JOIN users ON users.id = tweets.userid
                         RIGHT JOIN userprofile ON userprofile.id = tweets.rtownerid
-                        WHERE tweets.userid = %s ORDER BY TWEETID DESC""", (userid,))
+                        WHERE tweets.userid = %s AND tweets.isrt = %s
+                        UNION
+                        SELECT tweets.title,
+                        tweets.context,
+                        tweets.tweetid,
+                        users.username,
+                        tweets.numberoflikes,
+                        tweets.numberofrts,
+                        tweets.isrt,
+                        userprofile.username AS rtowner
+                        FROM tweets
+                        RIGHT JOIN users ON users.id = tweets.userid
+                        RIGHT JOIN userprofile ON userprofile.id = tweets.rtownerid
+                        WHERE tweets.rtownerid = %s AND tweets.isrt = %s
+                        ORDER BY TWEETID DESC""", (userid, 0, userid, 1))
         twit = [(Twit(title, context, twitid, userhandle, numberoflikes, numberofrts, isrt, rtowner))
                     for title, context, twitid, userhandle, numberoflikes, numberofrts, isrt, rtowner  in cursor]
         return twit
@@ -203,7 +216,21 @@ class Twitlist:
                         FROM tweets
                         RIGHT JOIN users ON users.id = tweets.userid
                         RIGHT JOIN userprofile ON userprofile.id = tweets.rtownerid
-                        WHERE tweets.userid = %s ORDER BY TWEETID DESC""", (userid,))
+                        WHERE tweets.userid = %s AND tweets.isrt = %s
+                        UNION
+                        SELECT tweets.title,
+                        tweets.context,
+                        tweets.tweetid,
+                        users.username,
+                        tweets.numberoflikes,
+                        tweets.numberofrts,
+                        tweets.isrt,
+                        userprofile.username AS rtowner
+                        FROM tweets
+                        RIGHT JOIN users ON users.id = tweets.userid
+                        RIGHT JOIN userprofile ON userprofile.id = tweets.rtownerid
+                        WHERE tweets.rtownerid = %s AND tweets.isrt = %s
+                        ORDER BY TWEETID DESC""", (userid, 0, userid, 1))
         twit = [(Twit(title, context, twitid, userhandle, numberoflikes, numberofrts, isrt, rtowner))
                     for title, context, twitid, userhandle, numberoflikes, numberofrts, isrt, rtowner  in cursor]
         return twit

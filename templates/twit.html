@@ -32,14 +32,15 @@
         <br><button type="submit" name="submit" class="btn btn-success" value="update">Update Tweet</button>
             <button type="submit" name="submit" class="btn btn-danger" value="delete">Delete Tweet!</button>
             </form>
+
            {%else%}
-           <font size="2">This is a RT From
-		<a style="color: black" style="text-decoration: none" href="{{ url_for('profile_page', usrhandle=twits.userhandle ) }}">
-	 	{{twits.userhandle}}</a></font><br>
+           <font size="2">You ReTweeted This
+		<a style="color: black" style="text-decoration: none" href="{{ url_for('profile_page', usrhandle=twits.rtowner ) }}">
+	 	{{twits.rtowner}}</a></font><br>
            <font size="1">{{ twits.twitid }}</font>
        	<id="twittit"> <font size="5"> {{ twits.title }}</font><font size="1">-
-       	<a style="color: black" style="text-decoration: none" href="{{ url_for('profile_page', usrhandle=twits.rtowner ) }}">
-	 	{{ twits.rtowner }}
+       	<a style="color: black" style="text-decoration: none" href="{{ url_for('profile_page', usrhandle=twits.userhandle ) }}">
+	 	{{ twits.userhandle }}
        	</font></a><br>
 		<id="twitcon"> <font size="3">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp{{ twits.context }}</font><br><br>
 		<a style="color: black" style="text-decoration: none" href="{{ url_for('links_page', twit_id=twits.twitid ) }}"> Tweet Links </a>

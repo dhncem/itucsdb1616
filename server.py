@@ -197,16 +197,15 @@ def twits_page(twit_id):
         guest=1;
 
     if request.method == 'GET':
+        twit = current_app.Twitlist.get_twit(twit_id)
+        isTweetLiked=isLiked(current_user.username,twit_id)
+        if twit==None:
+            return(redirect(url_for('error_page')))
 
         if guest == 1:
-
-            twit = current_app.Twitlist.get_twit(twit_id)
-            isTweetLiked=isLiked(current_user.username,twit_id)
             return render_template('gtwit.html', twits=twit,isTweetLiked=isTweetLiked)
 
         else:
-            twit = current_app.Twitlist.get_twit(twit_id)
-            isTweetLiked=isLiked(current_user.username,twit_id)
             return render_template('twit.html', twits=twit,isTweetLiked=isTweetLiked)
     else:
 
@@ -228,9 +227,11 @@ def twits_page(twit_id):
             twit = current_app.Twitlist.get_twit(twit_id)
             numlike=twit.numberoflikes
             numrt=twit.numberofrts
-            twits = Twit(title, context, id_twit, userhandle, numlike, numrt, isRT, RTOwner)
+            isrt=0
+            rtowner=0
+            twits = Twit(title, context, id_twit, current_user.username, numlike, numrt, isrt, rtowner)
             current_app.Twitlist.update_twit(id_twit, twits)
-            return render_template('twit.html', twits=twits)
+            return redirect(url_for('twits_page', twit_id=id_twit))
 
         elif request.form['submit']=='liketweet':
             print("asd")
@@ -273,7 +274,9 @@ def twit_page():
         userh="NONE"
         numlike=0
         numrt=0
-        twit = Twit(title, content, twitid, userh, numlike, numrt, isRT, RTOwner)
+        isrt=0
+        rtowner=0
+        twit = Twit(title, content, twitid, userh, numlike, numrt, isrt, rtowner)
         current_app.Twitlist.add_twit(twit)
         return redirect(url_for('twit_page'))
 

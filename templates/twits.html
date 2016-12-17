@@ -1,5 +1,5 @@
   {% extends "layout.html" %}
-  {% block title %}My twits{% endblock %}
+  {% block title %}My twitss{% endblock %}
     {% block content %}
 
 <style>
@@ -37,7 +37,7 @@
         <h3>Post A Tweet</h3>
       </div>
 
-      <form role="form" action="" method="post" name="add_twit"
+      <form role="form" action="" method="post" name="add_twits"
             class="form-horizontal">
         <div class="form-group">
           <label for="title" class="control-label col-sm-1">Title:</label>
@@ -83,14 +83,14 @@
 
 		{% else %}
 		<div id="twitwrapperrt">
-		<font size="2">This is a RT From
+		<font size="2">You RT it From
 		<a style="color: black" style="text-decoration: none" href="{{ url_for('profile_page', usrhandle=twit.userhandle ) }}">
 	 	{{twit.userhandle}}</font></a>
 		<h4>
 		<a d="twittit"; style="color: black" style="text-decoration: none" href="{{ url_for('twits_page', twit_id=twit.twitid ) }}">
 		{{ twit.title }}</a>
-		<a style="color: black" style="text-decoration: none" href="{{ url_for('profile_page', usrhandle=twit.rtowner ) }}">
-		<font size="1">-{{ twit.rtowner }}</font></a><br>
+		<a style="color: black" style="text-decoration: none" href="{{ url_for('profile_page', usrhandle=twit.userhandle ) }}">
+		<font size="1">-{{ twit.userhandle }}</font></a><br>
 		<font size="4" style="color: grey" id="twitcon"> {{ twit.context }}</font><br>
 		<font size="2">Likes({{ twit.numberoflikes }})</font>&nbsp&nbsp<font size="2">RT({{ twit.numberofrts }})</font>
 		</h4>
