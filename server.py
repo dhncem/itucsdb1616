@@ -4,6 +4,7 @@ import os
 import json
 import re
 import psycopg2 as dbapi2
+import math
 
 from flask import Flask, abort, flash, redirect, render_template, url_for
 from flask_login import LoginManager
@@ -15,6 +16,7 @@ from message import Message
 from media import Media
 from tag import Tag
 from tagList import TagList
+from quizList import QuizList
 from messageList import MessageList
 from mediaList import MediaList
 from list import List
@@ -54,14 +56,11 @@ def create_app():
     app.config.from_object('settings')
 
     app.Twitlist = Twitlist()
-
     app.Creditlist = Creditlist()
-
     app.messageList = MessageList()
-
     app.mediaList = MediaList()
-    
     app.tagList = TagList()
+    app.quizList = QuizList()
 
     lm.init_app(app)
     lm.login_view='login_page'
@@ -106,6 +105,7 @@ def register_page():
                     cursor.execute("""INSERT INTO USERPROFILE (ID, NICKNAME, USERNAME, BIO) VALUES(%s, %s, %s, %s)""", (userid, username, username, 'bio'))
                     cursor.execute("""INSERT INTO USERINFO (USERID, NAME, SURNAME, NICKNAME, EMAIL, LANGUAGE) VALUES(%s, %s, %s, %s, %s, %s)""",
                                    (userid, '', '', '', '', ''))
+                    cursor.execute("""INSERT INTO POINTS (USERID) VALUES(%s)""", (userid,))
                     login_user(get_user(username))
                     return redirect(url_for('home_page'))
         except:
@@ -417,6 +417,51 @@ def tag_page():
             current_app.tagList.add_tag(tagname, i)
         return redirect(url_for('media_page'))
     return render_template('tagphoto.html', media=media)
+
+@app.route('/quiz', methods=['GET', 'POST'])
+@login_required
+def quiz_page():
+    quiz = current_app.quizList.get_quiz()
+    (points,) = current_app.quizList.get_points()
+    idList = []
+    answers = []
+    corList = []
+    if request.method == 'POST':
+        for id, content, isanswered, optionid, choice, correctness in quiz:
+            idList += [(id)]
+        print(idList)
+        for i in range(0, len(idList), 4):
+            print('denemedeneme')
+            choosen = request.form.getlist(str(idList[i]))
+            for j in choosen:
+                print(j)
+                (cor,) = current_app.quizList.check_correctness(j)
+                print(cor)
+                if cor:
+                    print('giriyo mu')
+                    if points == None:
+                        current_app.quizList.add_points()
+                    else:
+                        current_app.quizList.update_points()
+                current_app.quizList.update_quiz(str(int(math.ceil(int(j)/4))))
+        return redirect(url_for('quiz_page'))
+    return render_template('quiz.html', quiz = quiz, points = points)
+
+@app.route('/sendquestion', methods=['GET', 'POST'])
+@login_required
+def sendquestion_page():
+    if request.method == 'POST':
+        reciever = request.form['reciever']
+        content = request.form['question']
+        value = request.form.getlist('options')
+        options = []
+        options += [(request.form['option1'])]
+        options += [(request.form['option2'])]
+        options += [(request.form['option3'])]
+        options += [(request.form['option4'])]
+        for i in value:
+            current_app.quizList.add_quiz(reciever, options,content, i)
+    return render_template('sendquestion.html')
 
 @app.route('/settings', methods=['GET', 'POST'])
 @login_required

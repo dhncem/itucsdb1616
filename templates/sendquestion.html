@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+{% block title %}Send Question{% endblock %}
+{% block content %}
+	<div class="page-header">
+        <h1>Send Question</h1>
+      </div>
+      <form role="form" action="" method="post" name="reciever">
+      <input type="text" name="reciever" size ="25" placeholder="Send question to..." required autofocus/>
+		<br><br>
+      <form role="form" action="" method="post" name="ques">
+      <input type="text" name="question" size ="100" placeholder="Put your question here." required autofocus/>
+		<br><br>
+	  <input type="radio" name="options" value="1" id="1">
+      <input type="text" name="option1" size ="25" placeholder="Option1" required autofocus/><br><br>
+      <input type="radio" name="options" value="2" id="2">
+      <input type="text" name="option2" size ="25" placeholder="Option2" required/><br><br>
+      <input type="radio" name="options" value="3" id="3">
+      <input type="text" name="option3" size ="25" placeholder="Option3" required/><br><br>
+      <input type="radio" name="options" value="4" id="4">
+      <input type="text" name="option4" size ="25" placeholder="Option4" required/><br><br>
+      <div class ="col-sm-2" role="form" action="" method="post" name="option">
+      <button type="submit" name="send"
+                class="btn btn-lg btn-primary btn-block">Send</button>
+      </div>
+
+
+{% endblock %}

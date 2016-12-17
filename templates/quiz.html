@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+{% block title %}Quiz{% endblock %}
+{% block content %}
+	<div class="page-header">
+        <h1>Quiz</h1>
+        <h2>Total points: {{points}}</h2>
+      </div>
+
+      <form role="form" action="" method="post">
+      <div class ="col-sm-2">
+      <button type="submit" name ="sendanswers" value="send"
+                class="btn btn-lg btn-primary btn-block">Submit</button>
+      </div>
+      <br><br><br><hr>
+      <div>
+      {% for id, content, isanswered, optionid, choice, correctness in quiz %}
+      {%if isanswered==False%}
+      {%if optionid % 4 == 1%}
+      {{content}}<br>
+      {%endif%}
+      <input type="radio" name="{{id}}" value="{{optionid}}" id="{{optionid}}">
+      {{choice}}<br>
+      {%if optionid % 4 == 0%}
+      <br><br>
+      {%endif%}
+      {%endif%}
+      {% endfor %}
+
+      </div>
+      </form>
+
+      <div class ="col-sm-2" role="form" action="" method="post" name="sendquestion">
+       <a href="{{ url_for('sendquestion_page') }}"style="text-decoration:none">
+      <button type="submit" name="send"
+                class="btn btn-lg btn-primary btn-block">Send Question</button></a>
+      </div>
+      <br>
+
+
+{% endblock %}
