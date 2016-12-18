@@ -864,7 +864,7 @@ def gifts():
                         for i,j in values:
                             sentgift = i
                             description = j
-                        flash("Gift '%s' has sent to '%s'. Gift description: %s" % (sentgift, sentto, description))
+                        flash("Gift '%s' has sent to '%s'. Gift description: %s" % (sentgift, get_nickname(sentto), description))
             except:
                 flash('You cannot send the same gift to the same person more than once')
         return redirect(url_for('gifts'))
@@ -874,7 +874,7 @@ def gifts():
                 cursor.execute("""SELECT ID, GIFTNAME FROM GIFTS""")
                 gifts=cursor.fetchall()
             with connection.cursor() as cursor2:
-                cursor2.execute("""SELECT ID, USERNAME FROM USERS""")
+                cursor2.execute("""SELECT ID, NICKNAME FROM USERPROFILE""")
                 users=cursor2.fetchall()
             with connection.cursor() as cursor3:
                 cursor3.execute("""SELECT USERNAME, NICKNAME, GIFTNAME,
@@ -915,12 +915,12 @@ def deleteuser():
                     flash('Please select a user to delete')
                 else:
                     cursor.execute("""DELETE FROM USERS WHERE USERNAME=%s""",(username,))
-                    flash("User '%s' is deleted." % (username,))
+                    flash("User '%s' is deleted." % get_nickname(username))
         return redirect(url_for('deleteuser'))
     else:
         with dbapi2.connect(app.config['dsn']) as connection:
             with connection.cursor() as cursor:
-                cursor.execute("""SELECT USERNAME FROM USERS""")
+                cursor.execute("""SELECT USERNAME, NICKNAME FROM USERPROFILE""")
                 users=cursor.fetchall()
         return render_template('deleteuser.html', users=users)
 
@@ -995,6 +995,7 @@ def user_manageapps():
     else:
         activeapps = request.form.getlist('selections')
         updateapps(activeapps)
+        flash('Your application settings are updated.')
         return redirect(url_for('user_manageapps'))
     return render_template('appsettings.html', values=values, apps=apps)
 
