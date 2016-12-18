@@ -415,6 +415,7 @@ def messages_page():
 @app.route('/newmessage', methods=['GET', 'POST'])
 @login_required
 def new_message_page():
+    users = None
     if request.method == 'POST':
         content = request.form['content']
         sender = 1
@@ -423,7 +424,11 @@ def new_message_page():
         messagesend = Message(sender, reciever, content, sent)
         current_app.messageList.add_message(messagesend)
         return redirect(url_for('messages_page'))
-    return render_template('new_message.html')
+    with dbapi2.connect(app.config['dsn']) as connection:
+            with connection.cursor() as cursor:
+                cursor.execute("""SELECT USERNAME FROM USERS""")
+                users = cursor.fetchall()
+    return render_template('new_message.html', users = users)
 
 @app.route('/media', methods=['GET', 'POST'])
 @login_required
@@ -473,6 +478,7 @@ def updatemedia_page():
 @app.route('/tagphoto', methods=['GET', 'POST'])
 @login_required
 def tag_page():
+    users = None
     media = current_app.mediaList.get_photos()
     if request.method == 'POST':
         value = request.form.getlist('media')
@@ -480,7 +486,11 @@ def tag_page():
         for i in value:
             current_app.tagList.add_tag(tagname, i)
         return redirect(url_for('media_page'))
-    return render_template('tagphoto.html', media=media)
+    with dbapi2.connect(app.config['dsn']) as connection:
+            with connection.cursor() as cursor:
+                cursor.execute("""SELECT USERNAME FROM USERS""")
+                users = cursor.fetchall()
+    return render_template('tagphoto.html', media=media, users = users)
 
 @app.route('/quiz', methods=['GET', 'POST'])
 @login_required
@@ -491,29 +501,34 @@ def quiz_page():
     answers = []
     corList = []
     if request.method == 'POST':
-        for id, content, isanswered, optionid, choice, correctness in quiz:
-            idList += [(id)]
-        print(idList)
-        for i in range(0, len(idList), 4):
-            print('denemedeneme')
-            choosen = request.form.getlist(str(idList[i]))
-            for j in choosen:
-                print(j)
-                (cor,) = current_app.quizList.check_correctness(j)
-                print(cor)
-                if cor:
-                    print('giriyo mu')
-                    if points == None:
-                        current_app.quizList.add_points()
-                    else:
-                        current_app.quizList.update_points()
-                current_app.quizList.update_quiz(str(int(math.ceil(int(j)/4))))
-        return redirect(url_for('quiz_page'))
+        if request.form['operation'] == 'send':
+            for id, content, isanswered, optionid, choice, correctness in quiz:
+                idList += [(id)]
+            print(idList)
+            for i in range(0, len(idList), 4):
+                print('denemedeneme')
+                choosen = request.form.getlist(str(idList[i]))
+                for j in choosen:
+                    print(j)
+                    (cor,) = current_app.quizList.check_correctness(j)
+                    print(cor)
+                    if cor:
+                        print('giriyo mu')
+                        if points == None:
+                            current_app.quizList.add_points()
+                        else:
+                            current_app.quizList.update_points()
+                    current_app.quizList.update_quiz(str(int(math.ceil(int(j)/4))))
+            return redirect(url_for('quiz_page'))
+        elif request.form['operation'] == 'delete':
+            current_app.quizList.delete_quiz()
+            return redirect(url_for('quiz_page'))
     return render_template('quiz.html', quiz = quiz, points = points)
 
 @app.route('/sendquestion', methods=['GET', 'POST'])
 @login_required
 def sendquestion_page():
+    users = None
     if request.method == 'POST':
         reciever = request.form['reciever']
         content = request.form['question']
@@ -525,7 +540,11 @@ def sendquestion_page():
         options += [(request.form['option4'])]
         for i in value:
             current_app.quizList.add_quiz(reciever, options,content, i)
-    return render_template('sendquestion.html')
+    with dbapi2.connect(app.config['dsn']) as connection:
+            with connection.cursor() as cursor:
+                cursor.execute("""SELECT USERNAME FROM USERS""")
+                users = cursor.fetchall()
+    return render_template('sendquestion.html', users = users)
 
 @app.route('/settings', methods=['GET', 'POST'])
 @login_required

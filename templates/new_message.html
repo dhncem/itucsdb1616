@@ -3,10 +3,14 @@
 {% block content %}
 
 	<form role="form" action="" method="post" name="message-form">
-      <input type="text" name="reciever" size ="25" placeholder="send message to..." required autofocus/>
-		<br><br>
-      <input type="text" name="content" size ="25" placeholder="write your message here" required autofocus/>
+      <select class="form-control" name="reciever" style="font-family: Georgia; width:auto">
+        	{%for (username,) in users%}
+				<option value={{username}}>{{username}}</option>
+			{% endfor %}
+		</select><br>
+      <input class="form-control" type="text" name="content" size ="25" placeholder="write your message here" required autofocus/>
+            <br>
             <button type="submit" name="send"
-                    class="sendButton">Send</button>
+                    class="btn btn-primary btn-success">Send</button>
         </form>
 {% endblock %}

@@ -10,7 +10,12 @@
                 class="btn btn-lg btn-primary btn-block">Tag!</button>
       </div>
       <br><br><hr>
-<input type="text" name="tag" size ="25" placeholder="tag someone" autofocus/><br>
+<form role="form" action="" method="post" name="message-form">
+      <select class="form-control" name="tag" style="font-family: Georgia; width:auto">
+        	{%for (username,) in users%}
+				<option value={{username}}>{{username}}</option>
+			{% endfor %}
+		</select><br>
       {% for photo_id, media in media %}
        <br><br><hr>
       <input type="radio" name="media" value="{{photo_id}}" id="{{photo_id}}">

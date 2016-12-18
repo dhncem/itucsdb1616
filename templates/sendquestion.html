@@ -4,12 +4,15 @@
 	<div class="page-header">
         <h1>Send Question</h1>
       </div>
-      <form role="form" action="" method="post" name="reciever">
-      <input type="text" name="reciever" size ="25" placeholder="Send question to..." required autofocus/>
-		<br><br>
+      <form role="form" action="" method="post" name="message-form">
+      <select class="form-control" name="reciever" style="font-family: Georgia; width:auto">
+        	{%for (username,) in users%}
+				<option value={{username}}>{{username}}</option>
+			{% endfor %}
+		</select><br>
       <form role="form" action="" method="post" name="ques">
-      <input type="text" name="question" size ="100" placeholder="Put your question here." required autofocus/>
-		<br><br>
+      <input type="text" class="form-control"name="question" size ="100" placeholder="Put your question here." required autofocus/>
+		<br>
 	  <input type="radio" name="options" value="1" id="1">
       <input type="text" name="option1" size ="25" placeholder="Option1" required autofocus/><br><br>
       <input type="radio" name="options" value="2" id="2">
@@ -20,7 +23,7 @@
       <input type="text" name="option4" size ="25" placeholder="Option4" required/><br><br>
       <div class ="col-sm-2" role="form" action="" method="post" name="option">
       <button type="submit" name="send"
-                class="btn btn-lg btn-primary btn-block">Send</button>
+                class="btn btn-primary btn-success">Send</button>
       </div>
 
 

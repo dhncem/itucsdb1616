@@ -3,14 +3,13 @@
 {% block content %}
 
 	<form role="form" action="" method="post" name="photo">
-      <input type="text" name="content" size ="25" placeholder="write a description for photo" required autofocus/>
-		<br><br>
-      <input type="text" name="url" size ="25" placeholder="type url of your photo" required autofocus/>
-      <br><br>
-            <div class ="col-sm-1" role="form" action="" method="post" name="addphoto">
+      <input type="text" class="form-control" name="content" size ="25" placeholder="write a description for photo" required autofocus/>
+		<br>
+      <input type="text" class="form-control" name="url" size ="25" placeholder="type url of your photo" required autofocus/>
+      <br>
       <button type="submit"
-                class="btn btn-lg btn-primary btn-block">Add</button>
-      </div>
+                class="btn btn-primary btn-success">Add</button>
+
         </form>
         <br>
 {% endblock %}

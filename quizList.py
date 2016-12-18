@@ -69,7 +69,9 @@ class QuizList:
     def delete_quiz(self):
         connection = dbapi2.connect(current_app.config['dsn'])
         cursor = connection.cursor()
-        cursor.execute("DELETE FROM QUIZ")
+        cursor.execute("""SELECT ID FROM USERS WHERE USERNAME=%s""", (current_user.username,))
+        recieverid = cursor.fetchone()
+        cursor.execute("DELETE FROM QUIZ WHERE RECIEVERID = %s""", (recieverid,))
         connection.commit()
 
     def get_quiz(self):

@@ -4,32 +4,32 @@
       <div class="page-header">
         <h1>Media</h1>
       </div>
-      <div class ="col-sm-2" action="/media" role="form" action="" method="post" name="addmedia">
+      <div action="/media" role="form" action="" method="post" name="addmedia">
 	  <a href="{{ url_for('newphoto_page') }}"style="text-decoration:none">
       <button type="submit" name="add"
-                class="btn btn-lg btn-primary btn-block">Add Photo</button>
-      </div></a>
+                class="btn btn-primary btn-success">Add Photo</button>
+      </div></a><br>
 
-      <div class ="col-sm-2" role="form" action="" method="post">
+      <div role="form" action="" method="post">
       <a href="{{ url_for('updatemedia_page') }}"style="text-decoration:none">
       <button type="submit" name ="operation" value="update"
-                class="btn btn-lg btn-primary btn-block">Update Photo</button>
-      </div>
+                class="btn btn-primary">Update Photo</button>
+      </div><br>
 
-      <div class ="col-sm-2" role="form" action="" method="post">
+      <div role="form" action="" method="post">
       <a href="{{ url_for('tag_page') }}"style="text-decoration:none">
       <button type="submit" name ="operation" value="tag"
-                class="btn btn-lg btn-primary btn-block">Tag!</button>
-      </div>
+                class="btn btn-primary">Tag!</button>
+      </div><br>
 
       <form role="form" action="/media" method="post">
-      <div class ="col-sm-2" role="form" action="" method="post">
+      <div role="form" action="" method="post">
       <button type="submit" name ="operation" value="delete"
-                class="btn btn-lg btn-primary btn-block">Delete</button>
+                class="btn btn-primary btn-danger">Delete</button>
       </div>
 
       {% for photo_id, media in media %}
-       <br><br><hr>
+       <br><hr>
       <input type="checkbox" name="media" value="{{photo_id}}">
 		{{media.description}} <br>
 		<a href="{{media.url}}">

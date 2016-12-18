@@ -5,13 +5,13 @@
         <h1>Quiz</h1>
         <h2>Total points: {{points}}</h2>
       </div>
-
-      <form role="form" action="" method="post">
-      <div class ="col-sm-2">
-      <button type="submit" name ="sendanswers" value="send"
-                class="btn btn-lg btn-primary btn-block">Submit</button>
+      <div role="form" action="" method="post" name="sendquestion">
+       <a href="{{ url_for('sendquestion_page') }}"style="text-decoration:none">
+      <button type="submit" name="send"
+                 class="btn btn-primary">Send Question</button></a>
       </div>
-      <br><br><br><hr>
+      <br><br>
+      <form role="form" action="" method="post">
       <div>
       {% for id, content, isanswered, optionid, choice, correctness in quiz %}
       {%if isanswered==False%}
@@ -25,16 +25,15 @@
       {%endif%}
       {%endif%}
       {% endfor %}
-
       </div>
-      </form>
-
-      <div class ="col-sm-2" role="form" action="" method="post" name="sendquestion">
-       <a href="{{ url_for('sendquestion_page') }}"style="text-decoration:none">
-      <button type="submit" name="send"
-                class="btn btn-lg btn-primary btn-block">Send Question</button></a>
+      <div>
+      <button type="submit" name ="operation" value="send"
+                class="btn btn-primary btn-success">Submit</button>
+      <button type="submit" name ="operation" value="delete"
+                class="btn btn-primary btn-danger">Clear All Questions</button>
       </div>
       <br>
+      </form>
 
 
 {% endblock %}
