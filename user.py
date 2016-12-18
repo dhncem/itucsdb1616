@@ -9,6 +9,7 @@ class User(UserMixin):
         self.password = password
         self.active = True
         self.is_admin = False
+        self.activetab = 0
 
     def get_id(self):
         return self.username

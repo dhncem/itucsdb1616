@@ -119,7 +119,7 @@ def register_page():
 @app.route('/profile/<usrhandle>', methods=['GET'])
 @login_required
 def profile_page(usrhandle):
-    if    request.method == 'GET':
+    if request.method == 'GET':
         twits = current_app.Twitlist.get_elsetwits(usrhandle)
 
     return render_template('profile.html', twits=twits)
@@ -127,6 +127,7 @@ def profile_page(usrhandle):
 @app.route('/home', methods=['GET'])
 @login_required
 def home_page():
+    current_user.activetab = 0
     now = datetime.datetime.now()
     if    request.method == 'GET':
         now = datetime.datetime.now()
@@ -144,6 +145,7 @@ def error_page():
 @app.route('/twits/<int:twit_id>/link', methods=['GET', 'POST'])
 @login_required
 def links_page(twit_id):
+    current_user.activetab = 1
     ids=0;
     id_twit=twit_id
     holderid=current_app.Twitlist.getownerid(twit_id)
@@ -255,6 +257,7 @@ def bug_page(bug_id):
 @app.route('/twits/<int:twit_id>', methods=['GET', 'POST'])
 @login_required
 def twits_page(twit_id):
+    current_user.activetab = 1
     id_twit=twit_id
     holderid=current_app.Twitlist.getownerid(twit_id)
     cduserid=current_app.Twitlist.getid()
@@ -330,6 +333,7 @@ def twits_page(twit_id):
 @app.route('/twits', methods=['GET', 'POST'])
 @login_required
 def twit_page():
+    current_user.activetab = 1
     if request.method == 'GET':
         now = datetime.datetime.now()
         twits = current_app.Twitlist.get_twits()
@@ -351,6 +355,7 @@ def twit_page():
 @app.route('/credits', methods=['GET', 'POST'])
 @login_required
 def credit_page():
+    current_user.activetab = 14
     if request.method == 'GET':
         now = datetime.datetime.now()
         credit = current_app.Creditlist.get_credit()
@@ -373,6 +378,7 @@ def credit_page():
 @app.route('/followuser', methods=['GET', 'POST'])
 @login_required
 def follow_page():
+    current_user.activetab = 2
     if request.method == 'POST':
         username = request.form['selecteduser']
         if username == '':
@@ -403,6 +409,7 @@ def follow_page():
 @app.route('/messages', methods=['GET', 'POST'])
 @login_required
 def messages_page():
+    current_user.activetab = 3
     messages = current_app.messageList.get_messages()
     if request.method == 'POST':
         value = request.form.getlist('message')
@@ -415,6 +422,7 @@ def messages_page():
 @app.route('/newmessage', methods=['GET', 'POST'])
 @login_required
 def new_message_page():
+    current_user.activetab = 3
     users = None
     if request.method == 'POST':
         content = request.form['content']
@@ -433,6 +441,7 @@ def new_message_page():
 @app.route('/media', methods=['GET', 'POST'])
 @login_required
 def media_page():
+    current_user.activetab = 4
     media = current_app.mediaList.get_photos()
     tagList = []
     for item in media:
@@ -452,6 +461,7 @@ def media_page():
 @app.route('/newphoto', methods=['GET', 'POST'])
 @login_required
 def newphoto_page():
+    current_user.activetab = 4
     if request.method == 'POST':
         content = request.form['content']
         url = request.form['url']
@@ -464,6 +474,7 @@ def newphoto_page():
 @app.route('/updatemedia', methods=['GET', 'POST'])
 @login_required
 def updatemedia_page():
+    current_user.activetab = 4
     media = current_app.mediaList.get_photos()
     if request.method == 'POST':
         value = request.form.getlist('media')
@@ -478,6 +489,7 @@ def updatemedia_page():
 @app.route('/tagphoto', methods=['GET', 'POST'])
 @login_required
 def tag_page():
+    current_user.activetab = 4
     users = None
     media = current_app.mediaList.get_photos()
     if request.method == 'POST':
@@ -495,6 +507,7 @@ def tag_page():
 @app.route('/quiz', methods=['GET', 'POST'])
 @login_required
 def quiz_page():
+    current_user.activetab = 5
     quiz = current_app.quizList.get_quiz()
     (points,) = current_app.quizList.get_points()
     idList = []
@@ -528,6 +541,7 @@ def quiz_page():
 @app.route('/sendquestion', methods=['GET', 'POST'])
 @login_required
 def sendquestion_page():
+    current_user.activetab = 5
     users = None
     if request.method == 'POST':
         reciever = request.form['reciever']
@@ -549,6 +563,7 @@ def sendquestion_page():
 @app.route('/settings', methods=['GET', 'POST'])
 @login_required
 def settings_page():
+    current_user.activetab = 7
     try:
         if request.method == 'POST' and request.form['btn']=="update":
             name = request.form['name']
@@ -584,6 +599,7 @@ def settings_page():
 @app.route('/notifications',methods=['GET','POST'])
 @login_required
 def notifs_page():
+    current_user.activetab = 9
     if request.method=='POST' and request.form['btn']=="notif":
         username = current_user.username
         follower=show_set(username)
@@ -604,6 +620,7 @@ def notifs_page():
 @app.route('/list/owner/<string:listname>',methods=['GET','POST'])
 @login_required
 def list_page_of_creator(listname):
+    current_user.activetab = 6
     if request.method=='POST':
             if request.form['submit']=='update':
                 newlistname=request.form['listname']
@@ -635,6 +652,7 @@ def list_page_of_creator(listname):
 @app.route('/list/<string:listname>',methods=['GET','POST'])
 @login_required
 def list_page_of_subscriber(listname):
+    current_user.activetab = 6
     if request.method=='POST':
             if request.form['submit']=='unsubscribe':
                 app.templistoflist=ListOfLists('temp')
@@ -659,6 +677,7 @@ def list_page_of_subscriber(listname):
 @app.route('/subscribedlists',methods=['GET','POST'])
 @login_required
 def subscribelists_page():
+    current_user.activetab = 6
     if request.method=='POST':
         if request.form['submit']=='add':
             listname=request.form['listname']
@@ -674,6 +693,7 @@ def subscribelists_page():
 @app.route('/memberoflists',methods=['GET','POST'])
 @login_required
 def memberoflists_page():
+    current_user.activetab = 6
     if request.method=='POST':
         if request.form['submit']=='add':
             listname=request.form['listname']
@@ -688,6 +708,7 @@ def memberoflists_page():
 @app.route('/createdlists',methods=['GET','POST'])
 @login_required
 def createdlists_page():
+    current_user.activetab = 6
     if request.method=='POST':
         if request.form['submit']=='add':
             listname=request.form['listname']
@@ -702,6 +723,7 @@ def createdlists_page():
 @app.route('/polls',methods=['GET','POST'])
 @login_required
 def polls_page():
+    current_user.activetab = 10
     if request.method=='POST':
         if request.form['submit']=='add':
             pollquestion=request.form['pollname']
@@ -721,6 +743,7 @@ def polls_page():
 @app.route('/poll/<string:creatorname>/<string:pollquestion>',methods=['GET','POST'])
 @login_required
 def poll_page(pollquestion,creatorname):
+    current_user.activetab = 10
     if request.method=='POST':
         if request.form['submit']=='update':
             current_app.tempPollList=ListOfPolls('temp')
@@ -769,12 +792,14 @@ def poll_page(pollquestion,creatorname):
 @app.route('/Likes/<string:username>')
 @login_required
 def likes_page(username):
+        current_user.activetab = 11
         likedTweets=getLikedTweets(username)
         return render_template('like.html',likedTweets=likedTweets)
 
 @app.route('/managegifts', methods=['GET','POST'])
 @login_required
 def admin_managegifts():
+    current_user.activetab = 15
     if not current_user.is_admin:
         abort(401)
     addform = AddGiftForm(request.form)
@@ -821,6 +846,7 @@ def admin_managegifts():
 @app.route('/gifts', methods=['GET','POST'])
 @login_required
 def gifts():
+    current_user.activetab = 13
     sendform = SendGiftForm(request.form)
     sendform.gifts.choices=[]
     sendform.sendto.choices=[]
@@ -874,9 +900,41 @@ def gifts():
 
     return render_template('gifts.html', sendform = sendform, receivedgifts=receivedgifts, sentgifts=sentgifts)
 
+@app.route('/adminpanel')
+@login_required
+def adminpanel():
+    current_user.activetab = 15
+    if not current_user.is_admin:
+        abort(401)
+    return render_template('adminpanel.html')
+
+@app.route('/deleteuser', methods=['GET','POST'])
+@login_required
+def deleteuser():
+    current_user.activetab = 15
+    if not current_user.is_admin:
+        abort(401)
+    if request.method == 'POST':
+        with dbapi2.connect(app.config['dsn']) as connection:
+            with connection.cursor() as cursor:
+                username=request.form['selecteduser']
+                if username=='- Select user -':
+                    flash('Please select a user to delete')
+                else:
+                    cursor.execute("""DELETE FROM USERS WHERE USERNAME=%s""",(username,))
+                    flash("User '%s' is deleted." % (username,))
+        return redirect(url_for('deleteuser'))
+    else:
+        with dbapi2.connect(app.config['dsn']) as connection:
+            with connection.cursor() as cursor:
+                cursor.execute("""SELECT USERNAME FROM USERS""")
+                users=cursor.fetchall()
+        return render_template('deleteuser.html', users=users)
+
 @app.route('/manageapps', methods = ['GET','POST'])
 @login_required
 def admin_manageapps():
+    current_user.activetab = 15
     if not current_user.is_admin:
         abort(401)
     form = AddAppForm(request.form)
@@ -931,6 +989,7 @@ def admin_manageapps():
 @app.route('/appsettings', methods = ['GET', 'POST'])
 @login_required
 def user_manageapps():
+    current_user.activetab = 12
     if request.method=='GET':
         with dbapi2.connect(app.config['dsn']) as connection:
             with connection.cursor() as cursor:
@@ -949,6 +1008,7 @@ def user_manageapps():
 @app.route('/updateprofile', methods= ['GET', 'POST'])
 @login_required
 def updateprofile_page():
+    current_user.activetab = 8
     passForm=ChangePassForm(request.form)
     updateForm=UpdateProfileForm(request.form)
     if request.method=='POST':

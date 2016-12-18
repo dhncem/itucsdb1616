@@ -28,8 +28,8 @@
 
         <div class="form-group">
           <div class="col-sm-2">
-            <button type="submit" name="btn" value="Change Password"
-                    class="btn btn-success">Change Password</button>
+            <button {% if current_user.is_admin %} disabled {% endif %} type="submit" name="btn" value="Change Password"
+                    class="btn btn-success {% if current_user.is_admin %} disabled {% endif %}">{% if current_user.is_admin %} Not available for admin {% else %}Change Password {%endif%}</button>
           </div>
 
         </div>

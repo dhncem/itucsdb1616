@@ -41,9 +41,12 @@ def unfollow(followed):
         values=cursor.fetchone()
         followedid=values[0]
         if followerid and followedid:
-            cursor.execute("""DELETE FROM FOLLOWS WHERE (FOLLOWERID = %s) AND (FOLLOWEDUSER = %s)""",(followerid,followedid))
-            cursor.execute("""UPDATE USERPROFILE SET FOLLOWING = FOLLOWING -1 WHERE (ID = %s)""",(followerid,))
-            cursor.execute("""UPDATE USERPROFILE SET FOLLOWERS = FOLLOWERS -1 WHERE (ID = %s)""",(followedid,))
+            cursor.execute("""SELECT FOLLOWERID FROM FOLLOWS WHERE (FOLLOWERID = %s) AND (FOLLOWEDUSER = %s)""",(followerid,followedid))
+            flag = cursor.fetchone()
+            for i in flag:
+                cursor.execute("""DELETE FROM FOLLOWS WHERE (FOLLOWERID = %s) AND (FOLLOWEDUSER = %s)""",(followerid,followedid))
+                cursor.execute("""UPDATE USERPROFILE SET FOLLOWING = FOLLOWING -1 WHERE (ID = %s)""",(followerid,))
+                cursor.execute("""UPDATE USERPROFILE SET FOLLOWERS = FOLLOWERS -1 WHERE (ID = %s)""",(followedid,))
 
         else:
             connection.commit()

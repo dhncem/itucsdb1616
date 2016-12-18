@@ -11,9 +11,9 @@ class LoginForm(Form):
 
 class RegisterForm(Form):
     username = StringField('Username',
-                           [validators.Length(min=6, max=15), validators.DataRequired()])
+                           [validators.Length(min=4, max=15), validators.DataRequired()])
     password = PasswordField('Password',
-                             [validators.Length(min=6, max=15), validators.DataRequired(),
+                             [validators.Length(min=4, max=15), validators.DataRequired(),
                               validators.EqualTo('confirmPass', message="Passwords do not match!")])
     confirmPass = PasswordField('Confirm Password')
 
@@ -39,11 +39,11 @@ class SendGiftForm(Form):
     sendto = SelectField('Users')
 
 class UpdateProfileForm(Form):
-    nickname = StringField('Nickname', [validators.Length(min=6, max=20), validators.DataRequired()])
+    nickname = StringField('Nickname', [validators.Length(min=4, max=20), validators.DataRequired()])
     bio = TextAreaField('Bio', [validators.Length(max=100)])
 
 class ChangePassForm(Form):
     password = PasswordField('Password',
-                             [validators.Length(min=6, max=15), validators.DataRequired(),
+                             [validators.Length(min=4, max=15), validators.DataRequired(),
                               validators.EqualTo('confirmPass', message="Passwords do not match!")])
     confirmPass = PasswordField('Confirm Password')

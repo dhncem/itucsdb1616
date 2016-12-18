@@ -27,6 +27,22 @@
 	        <button type="submit"
 	        		class="btn btn-primary btn-danger" name="followbutton" value="Unfollow">Unfollow</button>
         </div>
-        </div>
+        <hr>
+        <div style="padding-top: 0px">
+		<div style="display: inline-block; width: auto; height: auto; vertical-align: top">
+		<h4>Your followers</h4>
+		{% for nickname, username in followers %}
+		<p>{{nickname}} (<a style="color: #666666; font-style:italic" href="../profile/{{username}}">@{{username}}</a>)</p>
+		<br>
+		{%endfor%}
+		</div>
+		<div style="display: inline-block; width: auto; height: auto; vertical-align: top; margin-left: 50px">
+		<h4>You are following</h4>
+		{% for nickname, username in followedusers %}
+		<p>{{nickname}} (<a style="color: #666666; font-style:italic" href="../profile/{{username}}">@{{username}}</a>)</p>
+		<br>
+		{%endfor%}
+		</div>
+		</div>
       </form>
 {% endblock %}
