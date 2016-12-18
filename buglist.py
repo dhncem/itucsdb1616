@@ -50,10 +50,9 @@ class Buglist:
                         FROM BUGS
                         RIGHT JOIN users ON users.id = bugs.userid
                         ORDER BY bugs.bugid DESC, focus DESC""")
-        bugid, bugcause, username, focus, fixed=cursor.fetchone()
-        bug = [(Bug(bugid, bugcause, username, focus, fixed))
+        bugs = [(Bug(bugid, bugcause, username, focus, fixed))
                     for bugid, bugcause, username, focus, fixed  in cursor]
-        return bug
+        return bugs
 
     def get_bug_user(self, userid):
         connection = dbapi2.connect(current_app.config['dsn'])

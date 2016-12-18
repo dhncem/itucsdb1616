@@ -58,7 +58,6 @@
       <div class="page-header">
         <h3>Reported Bugs</h3>
       </div>
-		{%if bugs %}
 		{% for bug in bugs %}
        	{% if bug.fixed==1%}
        	<p align="left">
@@ -102,6 +101,5 @@
 		{% endif %}
 		{% endif %}
 		{% endfor %}
-		{% endif %}
         </body>
 {% endblock %}

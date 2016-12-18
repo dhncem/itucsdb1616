@@ -60,7 +60,8 @@
 			  		<li style=" {% if current_user.activetab == 14 %} background-color: #ababab; padding-right:10px; padding-left: 10px{%endif%}"><a href="{{ url_for('credit_page') }}">Manage Credit</a></li>
 			  		{% if current_user.is_admin %}
 			  		<li style=" {% if current_user.activetab == 15 %} background-color: #ababab; padding-right:10px; padding-left: 10px{%endif%}"><a href="{{ url_for('adminpanel') }}">Admin panel</a></li>
-			  		{% endif %}
+			  		<li style=" {% if current_user.activetab == 16 %} background-color: #ababab; padding-right:10px; padding-left: 10px{%endif%}"><a href="{{ url_for('bugs_page') }}">Reported Bugs</a></li>
+			  					  		{% endif %}
 			  		{% if current_user.is_authenticated %}
 			  		<li><a href="{{ url_for('logout_page') }}">Logout</a></li>
 			  		{% else %}
