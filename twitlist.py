@@ -109,17 +109,20 @@ class Twitlist:
         connection.commit()
         connection.close()
 
-    def delete_link(self, tweetlid):
+    def delete_link(self, tweetid):
         connection = dbapi2.connect(current_app.config['dsn'])
         cursor = connection.cursor()
-        cursor.execute("""DELETE FROM TWEETLINK WHERE tweetlid=%s""", [tweetlid],)
+        cursor.execute("""DELETE FROM TWEETLINK WHERE tweetid=%s""", [tweetid],)
         connection.commit()
         connection.close()
 
-    def update_link(self, tweetlid, link):
+    def update_link(self, tweetid, contextl):
         connection = dbapi2.connect(current_app.config['dsn'])
         cursor = connection.cursor()
-        cursor.execute("""UPDATE TWEETLINK SET CONTEXTL=%s WHERE tweetlid=%s""", (link.contextl, tweetlid))
+        cursor.execute("""SELECT tweetlid FROM TWEETLINK WHERE TWEETID=%s
+                          ORDER BY TWEETLID DESC""", (tweetid,))
+        twitlid=cursor.fetchone()
+        cursor.execute("""UPDATE TWEETLINK SET contextl=%s WHERE tweetlid=%s""", (contextl, twitlid))
         connection.commit()
         connection.close()
 

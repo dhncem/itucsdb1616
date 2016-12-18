@@ -141,7 +141,6 @@ def error_page():
     if    request.method == 'GET':
         return render_template('error.html')
 
-
 @app.route('/twits/<int:twit_id>/link', methods=['GET', 'POST'])
 @login_required
 def links_page(twit_id):
@@ -168,14 +167,12 @@ def links_page(twit_id):
 
     else:
         if request.form['submit'] == "updatelink":
-            ids=request.form['sbutton']
             contextl=request.form['linked']
 
             if contextl == '':
                contextl = "Dont Leave This Space Empty UPD"
 
-            links= Link(ids, contextl, twit_id)
-            current_app.Twitlist.update_link(linkid, links)
+            current_app.Twitlist.update_link(twit_id, contextl)
             return redirect(url_for('links_page', twit_id=twit_id))
 
         elif request.form['submit'] == "addlink":
@@ -188,10 +185,8 @@ def links_page(twit_id):
             return redirect(url_for('links_page', twit_id=twit_id))
 
         elif request.form['submit'] == "deletelink":
-            ids=request.form['sbutton']
-            current_app.Twitlist.delete_link(ids)
+            current_app.Twitlist.delete_link(twit_id)
             return redirect(url_for('links_page', twit_id=twit_id))
-
 
 @app.route('/bugreport', methods=['GET', 'POST'])
 @login_required
@@ -220,7 +215,7 @@ def bugs_page():
         flash("Your Report Is Added To Our Issues Que")
         return redirect(url_for('bugs_page'))
 
-@app.route('/bugreport/adminonly/<int:bug_id>', methods=['GET', 'POST'])
+@app.route('/bug/<int:bug_id>', methods=['GET', 'POST'])
 @login_required
 def bug_page(bug_id):
     bugid=bug_id
