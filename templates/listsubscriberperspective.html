@@ -2,14 +2,14 @@
 {% block title %}List{% endblock %}
 {% block content %}
 <body>
-<p align="center"> {{listname}}  </p>
+<h2 align="center">Listname:<strong>{{listname}}</strong></h2>
 
 	<form align="center" role="form" action="" method="post" name="list-form">
 
 		{% if isSubscriber == 1%}
-       <button type="submit" name="submit" value="unsubscribe">Unsubscribe</button>
+       <button class="btn  btn-danger" type="submit" name="submit" value="unsubscribe">Unsubscribe</button>
         {%else %}
-        <button type="submit" name="submit" value="subscribe">Subscribe</button>
+        <button class="btn  btn-success" type="submit" name="submit" value="subscribe">Subscribe</button>
         {%endif%}
         </form>
         <br>

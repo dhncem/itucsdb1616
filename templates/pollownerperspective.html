@@ -2,20 +2,20 @@
 {% block title %}Poll{% endblock %}
 {% block content %}
 <body>
-<p align="center"><strong>{{pollquestion}} </strong></p>
+<h2 align="center">Question:<strong>{{pollquestion}}</strong></h2>
 
 <br>
 	<form align="center" role="form" action="" method="post" name="list-form">
 
-      <input type="text" name="choiceorquestion" size ="15" placeholder="Write new question or choice"required autofocus/>
-            <button type="submit" name="submit" value="update">Change Question</button>
-    		<button type="submit" name="submit" value="addchoice">Add Choice</button>
+      <input class="form-control" style="display:inline-block;width:300px;" type="text" name="choiceorquestion" size ="15" placeholder="Write new question or choice"required autofocus/>
+            <button class="btn  btn-success" type="submit" name="submit" value="update">Change Question</button>
+    		<button class="btn  btn-warning" type="submit" name="submit" value="addchoice">Add Choice</button>
 
      </form>
 	<br>
 
      <form align="center" role="form" action="" method="post" name="delete-form">
-	<button type="submit" value="delete" name="submit">Delete The Poll</button>
+	<button class="btn btn-danger" type="submit"  value="delete" name="submit">Delete The Poll</button>
      </form>
 
         <br>
@@ -27,7 +27,12 @@
 
         {% for choice,numberofvotes in choices %}
  {%if isVoted==0%}
+ {%if counter==0%}
+<input type="radio" name="answer" value="{{choice}}" checked="checked">
+{% set counter=counter+1%}
+{%else%}
 <input type="radio" name="answer" value="{{choice}}">
+{%endif%}
 <label>{{choice}}</label>
 </input>
 {%else%}
@@ -41,7 +46,7 @@
 <div style="clear:both;height:2px;"></div>
 <div align="center" style="padding:3px;">
  {%if isVoted==0%}
-<button type="submit" name="submit"value="vote">Vote</button>
+<button class="btn btn-primary" type="submit" name="submit"value="vote">Vote</button>
 {%else%}
 <label>You have voted for this poll</label>
 {%endif%}
