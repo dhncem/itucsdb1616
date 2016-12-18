@@ -879,7 +879,7 @@ def gifts():
                 cursor.execute("""SELECT ID, GIFTNAME FROM GIFTS""")
                 gifts=cursor.fetchall()
             with connection.cursor() as cursor2:
-                cursor2.execute("""SELECT ID, USERNAME FROM USERS""")
+                cursor2.execute("""SELECT ID, NICKNAME FROM USERPROFILE""")
                 users=cursor2.fetchall()
             with connection.cursor() as cursor3:
                 cursor3.execute("""SELECT USERNAME, NICKNAME, GIFTNAME,
@@ -925,7 +925,7 @@ def deleteuser():
     else:
         with dbapi2.connect(app.config['dsn']) as connection:
             with connection.cursor() as cursor:
-                cursor.execute("""SELECT USERNAME FROM USERS""")
+                cursor.execute("""SELECT USERNAME, NICKNAME FROM USERS""")
                 users=cursor.fetchall()
         return render_template('deleteuser.html', users=users)
 
