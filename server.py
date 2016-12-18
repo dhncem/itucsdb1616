@@ -22,7 +22,7 @@ from mediaList import MediaList
 from list import List
 from listoflist import ListOfLists
 from flask import current_app, request
-from user import get_user, get_userid
+from user import *
 from applications import *
 from forms import *
 from followoperations import *
@@ -196,6 +196,7 @@ def links_page(twit_id):
 @app.route('/bugreport', methods=['GET', 'POST'])
 @login_required
 def bugs_page():
+    current_user.activetab=16
     if request.method == 'GET':
         usrid=current_app.Buglist.getid()
         adminid=current_app.Buglist.getadmin()
@@ -230,7 +231,6 @@ def bug_page(bug_id):
 
         if usrid==adminid:
             bugs = current_app.Buglist.get_bug(bugid)
-            print(bugs)
             return render_template('bugpage.html', bug=bugs)
 
         else:
@@ -305,7 +305,6 @@ def twits_page(twit_id):
             return redirect(url_for('twits_page', twit_id=id_twit))
 
         elif request.form['submit']=='liketweet':
-            print("asd")
             isTweetLiked=like(twit_id)
             if isTweetLiked:
                 flash("Tweet is liked")
@@ -381,30 +380,38 @@ def follow_page():
     current_user.activetab = 2
     if request.method == 'POST':
         username = request.form['selecteduser']
+        nickname = get_nickname(username)
         if username == '':
             flash('Please select a user')
         elif request.form['followbutton']=='Follow':
             if follow(username):
                 flash('%s is followed. %s is followed by %s user(s). You are following %s user(s).'
-                      % (username, username, get_followercount(username), get_followingcount(current_user.username)))
+                      % (nickname, nickname, get_followercount(username), get_followingcount(current_user.username)))
             else:
-                flash('%s cannot be followed' % username)
+                flash('%s cannot be followed' % nickname)
         else:
             if unfollow(username):
                 flash('%s is unfollowed. %s is followed by %s user(s). You are following %s user(s).'
-                      % (username, username, get_followercount(username), get_followingcount(current_user.username)))
+                      % (nickname, nickname, get_followercount(username), get_followingcount(current_user.username)))
             else:
-                flash('%s cannot be unfollowed' % username)
+                flash('%s cannot be unfollowed' % nickname)
         return redirect(url_for('follow_page'))
     else:
         with dbapi2.connect(app.config['dsn']) as connection:
             with connection.cursor() as cursor:
-                cursor.execute("""SELECT USERNAME FROM USERS""")
+                cursor.execute("""SELECT USERNAME, NICKNAME FROM USERPROFILE""")
                 users=cursor.fetchall()
             with connection.cursor() as cursor2:
-                cursor2.execute("""SELECT USERNAME FROM FOLLOWS INNER JOIN USERS ON FOLLOWEDUSER=ID WHERE FOLLOWERID=%s""",(get_userid(current_user.username),))
+                cursor2.execute("""SELECT USERNAME, NICKNAME FROM FOLLOWS INNER JOIN USERPROFILE ON FOLLOWEDUSER=ID WHERE FOLLOWERID=%s""",(get_userid(current_user.username),))
                 followedusers = cursor2.fetchall()
-        return render_template('followuser.html', users=users, followedusers=followedusers)
+            with connection.cursor() as cursor3:
+                cursor3.execute("""SELECT USERNAME, NICKNAME FROM FOLLOWS INNER JOIN USERPROFILE ON FOLLOWERID=ID WHERE FOLLOWEDUSER=%s""",(get_userid(current_user.username),))
+                followers = cursor3.fetchall()
+            with connection.cursor() as cursor4:
+                cursor4.execute("""SELECT USERNAME FROM FOLLOWS INNER JOIN USERPROFILE ON FOLLOWEDUSER=ID WHERE FOLLOWERID=%s""",(get_userid(current_user.username),))
+                followedusernames = cursor4.fetchall()
+
+        return render_template('followuser.html', users=users, followedusers=followedusers, followers=followers, followedusernames=followedusernames)
 
 @app.route('/messages', methods=['GET', 'POST'])
 @login_required
@@ -453,9 +460,7 @@ def media_page():
                 current_app.mediaList.delete_photo(i)
             return redirect(url_for('media_page'))
         if request.form['operation'] == 'update':
-            print('avel')
             value = request.form.getlist('media')
-            print(value)
     return render_template('media.html', media = media, tagList=tagList)
 
 @app.route('/newphoto', methods=['GET', 'POST'])
@@ -479,8 +484,6 @@ def updatemedia_page():
     if request.method == 'POST':
         value = request.form.getlist('media')
         description = request.form['newdes']
-        print(value)
-        print(description)
         for i in value:
                 current_app.mediaList.update_photo(description,i)
         return redirect(url_for('media_page'))
@@ -517,16 +520,11 @@ def quiz_page():
         if request.form['operation'] == 'send':
             for id, content, isanswered, optionid, choice, correctness in quiz:
                 idList += [(id)]
-            print(idList)
             for i in range(0, len(idList), 4):
-                print('denemedeneme')
                 choosen = request.form.getlist(str(idList[i]))
                 for j in choosen:
-                    print(j)
                     (cor,) = current_app.quizList.check_correctness(j)
-                    print(cor)
                     if cor:
-                        print('giriyo mu')
                         if points == None:
                             current_app.quizList.add_points()
                         else:

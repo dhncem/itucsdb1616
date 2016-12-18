@@ -47,3 +47,9 @@ def get_userid(username):
             userid=values[0]
             print(userid)
             return userid
+     
+def get_nickname(username):
+    with dbapi2.connect(current_app.config['dsn']) as connection:
+        with connection.cursor() as cursor:
+            cursor.execute("""SELECT NICKNAME FROM USERPROFILE WHERE USERNAME=%s""", (username,))
+            return cursor.fetchone()[0]
