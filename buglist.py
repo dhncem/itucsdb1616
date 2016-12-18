@@ -13,6 +13,7 @@ class Buglist:
         cursor = connection.cursor()
         cursor.execute("""SELECT USERID FROM USERINFO WHERE NICKNAME=%s""", (current_user.username,))
         usernum=cursor.fetchone()
+        print(usernum)
         return usernum
 
     def getadmin(self):
@@ -21,6 +22,7 @@ class Buglist:
         name='admin'
         cursor.execute("""SELECT USERID FROM USERINFO WHERE NICKNAME=%s""", (name,))
         usernum=cursor.fetchone()
+        print(usernum)
         return usernum
 
     def get_bug(self, bugid):
