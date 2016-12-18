@@ -632,10 +632,7 @@ def polls_page():
     else:
         app.polls=ListOfPolls('polls')
         polllist=app.polls.getAllPolls()
-        if polllist is not None:
-            return render_template('polls.html',polllist=polllist)
-        else:
-            return render_template('polls.html',polllist=polllist)
+        return render_template('polls.html',polllist=polllist)
 
 
 @app.route('/poll/<string:creatorname>/<string:pollquestion>',methods=['GET','POST'])
@@ -649,9 +646,12 @@ def poll_page(pollquestion,creatorname):
             poll.updateQuestion(newquestion)
             choices=poll.getChoices()
             isVoted=poll.isVoted(current_user.username)
+            return redirect(url_for('poll_page',pollquestion=newquestion,creatorname=creatorname))
         elif request.form['submit']=='delete':
             app.polls=ListOfPolls('polls')
             polllist=app.polls.getAllPolls()
+            app.polls.deletePoll(pollquestion,creatorname)
+            return redirect(url_for('polls_page'))
         elif request.form['submit']=='addchoice':
             current_app.tempPollList=ListOfPolls('temp')
             poll=current_app.tempPollList.getPoll(pollquestion,creatorname)
