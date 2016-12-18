@@ -1,7 +1,7 @@
 from flask import current_app
 import psycopg2 as dbapi2
 from flask_login import current_user
-
+from twit import Twit
 class List:
     def __init__(self,name,creatorname):
         self.name=name
@@ -103,12 +103,33 @@ class List:
         listid=temp[0]
         cursor.close()
         cursor=connection.cursor()
-        cursor.execute("""SELECT USERNAME,CONTEXT,TITLE,TWEETID FROM (SELECT USERNAME,USERID FROM USERS JOIN LISTMEMBERS ON USERS.ID=LISTMEMBERS.USERID
-        WHERE USERTYPE='Insider' AND LISTID=%s) AS T JOIN TWEETS ON TWEETS.USERID=T.USERID ORDER BY TWEETID DESC""",(listid,))
-        tweets=[(temp[0],temp[1],temp[2]) for temp in cursor]
+        cursor.execute("""SELECT TWEETID,R.USERID,CONTEXT,TITLE,NUMBEROFLIKES,NUMBEROFRTS,isRT,RTOWNERID,
+        TWEETOWNERNAME,RTOWNERNAME FROM (SELECT USERNAME,USERID FROM USERS JOIN LISTMEMBERS ON USERS.ID=LISTMEMBERS.USERID
+        WHERE ((USERTYPE='Insider' OR USERTYPE='Owner') AND LISTID=%s )) AS R JOIN
+        (SELECT TWEETID,USERID,CONTEXT,TITLE,NUMBEROFLIKES,NUMBEROFRTS,isRT,RTOwnerID,U1.USERNAME AS TWEETOWNERNAME,
+        U2.USERNAME AS RTOWNERNAME FROM TWEETS
+        JOIN USERS AS U1 ON U1.ID=TWEETS.USERID JOIN USERS AS U2 ON U2.ID=TWEETS.RTOWNERID ) AS Y
+        ON R.USERID=Y.USERID
+
+        UNION
+
+        SELECT TWEETID,E.USERID,CONTEXT,TITLE,NUMBEROFLIKES,NUMBEROFRTS,isRT,RTOWNERID,
+        TWEETOWNERNAME,RTOWNERNAME
+        FROM
+        (SELECT USERNAME,USERID FROM USERS JOIN LISTMEMBERS ON USERS.ID=LISTMEMBERS.USERID
+        WHERE ((USERTYPE='Insider' OR USERTYPE='Owner') AND LISTID=%s )) AS E
+        JOIN
+        (SELECT TWEETID,USERID,CONTEXT,TITLE,NUMBEROFLIKES,NUMBEROFRTS,isRT,RTOwnerID,U3.USERNAME AS TWEETOWNERNAME,U4.USERNAME AS RTOWNERNAME FROM TWEETS
+        JOIN USERS AS U3 ON U3.ID=TWEETS.USERID JOIN USERS AS U4 ON U4.ID=TWEETS.RTOWNERID ) AS Z
+
+        ON E.USERID=Z.RTOwnerID
+
+        ORDER BY TWEETID DESC""",(listid,listid))
+        twit = [(Twit(title, context, twitid, userhandle, numberoflikes, numberofrts, isrt, rtowner))
+                    for twitid,userid,context,title, numberoflikes,numberofrts,isrt, rtownerid,userhandle,rtowner  in cursor]
         cursor.close()
         connection.close()
-        return tweets
+        return twit
 
 
     def getSubscribers(self):

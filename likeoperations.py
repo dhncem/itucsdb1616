@@ -2,6 +2,7 @@ from flask import current_app
 import psycopg2 as dbapi2
 from flask_login import current_user
 from like import Like
+from twit import Twit
 def like(tweetid):
     try:
 
@@ -68,8 +69,10 @@ def getLikedTweets(username):
     cursor.execute("""SELECT ID FROM USERS WHERE USERNAME=%s""",(username,))
     temp=cursor.fetchone()
     userid=temp[0]
-    cursor.execute("""SELECT TITLE,CONTEXT,USERNAME,LIKETIME,T.TWEETID FROM LIKES  JOIN
-    (SELECT TITLE,CONTEXT,USERNAME,TWEETID FROM TWEETS JOIN USERS ON USERS.ID=TWEETS.USERID)
-    AS T ON LIKES.TWEETID=T.TWEETID WHERE USERID=%s ORDER BY LIKETIME DESC""",(userid,))
-    likedTweets=[(username,tweetownername,tweettitle,tweetcontext,liketime,tweetid) for tweettitle,tweetcontext,tweetownername,liketime,tweetid in cursor]
+    cursor.execute("""SELECT T.TWEETID,T.USERID,CONTEXT,TITLE,NUMBEROFLIKES,NUMBEROFRTS,isRT,RTOwnerID,TWEETOWNERNAME,RTOWNERNAME,LIKETIME
+    FROM LIKES JOIN (SELECT TWEETID,USERID,CONTEXT,TITLE,NUMBEROFLIKES,NUMBEROFRTS,isRT,RTOwnerID,U1.USERNAME AS TWEETOWNERNAME,
+        U2.USERNAME AS RTOWNERNAME FROM TWEETS JOIN USERS AS U1 ON U1.ID=TWEETS.USERID JOIN USERS AS U2 ON U2.ID=TWEETS.RTOWNERID)
+        AS T ON LIKES.TWEETID=T.TWEETID WHERE LIKES.USERID=%s ORDER BY LIKETIME DESC""",(userid,))
+    likedTweets = [(Twit(title, context, twitid, userhandle, numberoflikes, numberofrts, isrt, rtowner))
+            for twitid,userid,context,title, numberoflikes,numberofrts,isrt, rtownerid,userhandle,rtowner,liketime  in cursor]
     return likedTweets

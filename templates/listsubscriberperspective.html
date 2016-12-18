@@ -1,6 +1,35 @@
 {% extends "layout.html" %}
 {% block title %}List{% endblock %}
 {% block content %}
+
+<style>
+#twittit{
+	padding-top: 10px;
+}
+
+#twitcon{
+	width: 300px;
+	word-wrap: break-word;
+}
+
+#twitwrapper{
+	display:inline-block;
+	border-radius: 35px;
+    padding: 10px;
+    background: #3d3d5c;
+    width: 350px;
+
+}
+
+#twitwrapperrt{
+	display:inline-block;
+	border-radius: 35px;
+    padding: 10px;
+    background: #29293d;
+    width: 350px;
+
+}
+</style>
 <body>
 <h2 align="center">Listname:<strong>{{listname}}</strong></h2>
 
@@ -15,14 +44,44 @@
         <br>
         <br>
         <br>
-              {%if tweets %}
-        {%for username,tweetcontent,tweettitle in tweets %}
-        <p align="center"> User:{{username}} Context:{{tweetcontent}} Title:{{tweettitle}}</p>
-        <hr>
-        {% endfor %}
-        {%else%}
-      <p align="center"> There are no tweets in this list. </p>
-      {%endif %}
+     {%if tweets %}
+  {% for twit in tweets %}
+
+        {% if twit.isrt == 0%}
+
+		<div id="twitwrapper">
+		<h4>
+		<a d="twittit"; style="color: black" style="text-decoration: none" href="{{ url_for('twits_page', twit_id=twit.twitid ) }}">
+		{{ twit.title }}</a>
+		<a style="color: black" style="text-decoration: none" href="{{ url_for('profile_page', usrhandle=twit.userhandle ) }}">
+		<font size="1">-{{ twit.userhandle }}</font></a><br>
+		<font size="4" style="color: grey" id="twitcon"> {{ twit.context }}</font><br>
+		<font size="2">Likes({{ twit.numberoflikes }})</font>&nbsp&nbsp<font size="2">RT({{ twit.numberofrts }})</font>
+		</h4>
+		</div>
+		<br><br>
+
+		{% else %}
+		<div id="twitwrapperrt">
+		<font size="2">This is a RT From
+		<a style="color: black" style="text-decoration: none" href="{{ url_for('profile_page', usrhandle=twit.rtowner ) }}">
+	 	{{twit.rtowner}}</font></a>
+		<h4>
+		<a d="twittit"; style="color: black" style="text-decoration: none" href="{{ url_for('twits_page', twit_id=twit.twitid ) }}">
+		{{ twit.title }}</a>
+		<a style="color: black" style="text-decoration: none" href="{{ url_for('profile_page', usrhandle=twit.userhandle ) }}">
+		<font size="1">-{{ twit.userhandle }}</font></a><br>
+		<font size="4" style="color: grey" id="twitcon"> {{ twit.context }}</font><br>
+		<font size="2">Likes({{ twit.numberoflikes }})</font>&nbsp&nbsp<font size="2">RT({{ twit.numberofrts }})</font>
+		</h4>
+		</div>
+		<br><br>
+
+		{% endif %}
+		{% endfor %}
+		{%else%}
+		<p align ="center"> There are no tweets in this list" </p>
+		{%endif%}
 </body>
 
  {% endblock %}
