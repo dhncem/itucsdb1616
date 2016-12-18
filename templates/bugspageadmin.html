@@ -59,38 +59,41 @@
         <h3>Reported Bugs</h3>
       </div>
 		{% for bug in bugs %}
+
        	{% if bug.fixed==1%}
+
        	<p align="left">
        	<p align="left">
        	<h4 id="bugfixed">
-		<font size="3">{{ bug.bugcause }}</font>
+       	<a style="color: black" style="text-decoration: none" href="{{ url_for('bug_page', bug_id=bug.bugid ) }}">
+		<font size="3">{{ bug.bugcause }}</font></a>
 		<a style="color: black" style="text-decoration: none" href="{{ url_for('profile_page', usrhandle=bug.userid ) }}">
 		<font size="1">-{{ bug.userid }}</font></a><br>
 		<font size="2">Fixed</font>
 		</h4>
 		</p>
-		<br>
 		{% elif bug.focus==1%}
 		<p align="left">
        	<p align="left">
 		<h4 id="bugfocus">
-		<font size="3">{{ bug.bugcause }}</font>
+       	<a style="color: black" style="text-decoration: none" href="{{ url_for('bug_page', bug_id=bug.bugid ) }}">
+		<font size="3">{{ bug.bugcause }}</font></a>
 		<a style="color: black" style="text-decoration: none" href="{{ url_for('profile_page', usrhandle=bug.userid ) }}">
 		<font size="1">-{{ bug.userid }}</font></a><br>
 		<font size="2">Focused</font>
 		</h4>
 		</p>
-		<br>
 		{% else %}
+
 		<p align="left">
        	<p align="left">
 		<h4 id="bugwrapper">
-		<font size="3">{{ bug.bugcause }}</font>
+       	<a style="color: black" style="text-decoration: none" href="{{ url_for('bug_page', bug_id=bug.bugid ) }}">
+		<font size="3">{{ bug.bugcause }}</font></a>
 		<a style="color: black" style="text-decoration: none" href="{{ url_for('profile_page', usrhandle=bug.userid ) }}">
 		<font size="1">-{{ bug.userid }}</font></a><br>
 		</h4>
 		</p>
-		<br>
 		{% endif %}
 		{% endfor %}
         </body>
