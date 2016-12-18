@@ -11,14 +11,15 @@ class Buglist:
     def getid(self):
         connection = dbapi2.connect(current_app.config['dsn'])
         cursor = connection.cursor()
-        cursor.execute("""SELECT ID FROM USERS WHERE USERNAME=%s""", (current_user.username,))
+        cursor.execute("""SELECT USERID FROM USERINFO WHERE NICKNAME=%s""", (current_user.username,))
         usernum=cursor.fetchone()
         return usernum
 
     def getadmin(self):
         connection = dbapi2.connect(current_app.config['dsn'])
         cursor = connection.cursor()
-        cursor.execute("""SELECT ID FROM USERS WHERE USERNAME='admin'""")
+        name='admin'
+        cursor.execute("""SELECT USERID FROM USERINFO WHERE NICKNAME=%s""", (name,))
         usernum=cursor.fetchone()
         return usernum
 
@@ -49,7 +50,7 @@ class Buglist:
                         bugs.fixed
                         FROM BUGS
                         RIGHT JOIN users ON users.id = bugs.userid
-                        ORDER BY bugs.bugid DESC, focus DESC""")
+                        ORDER BY focus DESC, bugs.bugid DESC """)
         bugs = [(Bug(bugid, bugcause, username, focus, fixed))
                     for bugid, bugcause, username, focus, fixed  in cursor]
         return bugs
@@ -72,10 +73,8 @@ class Buglist:
             bug = Bug(99, 'No Report', 'admin', 0, 0)
             return bug
 
-        bugid, bugcause, username, focus, fixed=cursor.fetchone()
         bug = [(Bug(bugid, bugcause, username, focus, fixed))
                     for bugid, bugcause, username, focus, fixed  in cursor]
-
         return bug
 
     def add_bug(self, bug):

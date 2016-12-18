@@ -48,8 +48,7 @@
         <button type="submit" name="submit" class="btn btn-danger" value="delete">Delete!</button>
         </form>
 		<br>
-		{% else %}
-		{% if bug.focus==1%}
+		{% elif bug.focus==1%}
 		<p align="left">
        	<p align="left">
 		<h4 id="bugfocus">
@@ -83,8 +82,6 @@
         <button type="submit" name="submit" class="btn btn-danger" value="delete">Delete!</button>
         </form>
 		<br>
-
-		{% endif %}
 		{% endif %}
         </body>
 		{% endblock %}
