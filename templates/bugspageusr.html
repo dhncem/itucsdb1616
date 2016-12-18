@@ -16,10 +16,8 @@
 	<body>
 
 
-	<h2	style="padding-bottom: 15px;">Welcome to Bug Report</h2>
-
-    <div class="page-header">
-        <h3>Post A Bug</h3>
+	<div class="page-header">
+        <h3>Report A Bug</h3>
       </div>
 
       <form role="form" action="" method="post" name="add_bug"
@@ -27,7 +25,7 @@
         <div class="form-group">
           <label for="title" class="control-label col-sm-1">Bug:</label>
           <div class="col-sm-10">
-            <input type="text" maxlength="40" name="bugcs" size="30" required autofocus />
+            <input type="text" maxlength="80" name="bugcs" size="30" required autofocus />
           </div>
         </div>
 
@@ -39,22 +37,7 @@
         </div>
       </form>
 
-	<div class="page-header">
-        <h3>Your Reported Bugs</h3>
-      </div>
-
 		<font size="4">Thanks For Helping Us Out</font>
 		<br>
-		{% for bug in bugs %}
-       	<p align="left">
-       	<p align="left">
-       	<h4 id="bugwrapper">
-		<font size="3">{{ bug.bugcause }}</font>
-		<a style="color: black" style="text-decoration: none" href="{{ url_for('profile_page', usrhandle=bug.userid ) }}">
-		<font size="1">-{{ bug.userid }}</font></a><br>
-		</h4>
-		</p>
-		<br>
-		{% endfor %}
         </body>
 {% endblock %}

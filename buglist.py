@@ -15,6 +15,13 @@ class Buglist:
         usernum=cursor.fetchone()
         return usernum
 
+    def getadmin(self):
+        connection = dbapi2.connect(current_app.config['dsn'])
+        cursor = connection.cursor()
+        cursor.execute("""SELECT ID FROM USERS WHERE USERNAME='admin'""")
+        usernum=cursor.fetchone()
+        return usernum
+
     def get_bug(self, bugid):
         connection = dbapi2.connect(current_app.config['dsn'])
         cursor = connection.cursor()
@@ -25,9 +32,9 @@ class Buglist:
                         bugs.focus,
                         bugs.fixed
                         FROM BUGS
-                        RIGHT JOIN users ON users.id = bug.userid
+                        RIGHT JOIN users ON users.id = bugs.userid
                         WHERE bugs.bugid=%s""", (bugid,))
-        bugid, bugcause, username, focus, fixed=cursor.fetcone()
+        bugid, bugcause, username, focus, fixed=cursor.fetchone()
         bugs=Bug(bugid, bugcause, username, focus, fixed)
         return bugs
 
@@ -41,9 +48,9 @@ class Buglist:
                         bugs.focus,
                         bugs.fixed
                         FROM BUGS
-                        RIGHT JOIN users ON users.id = bug.userid
+                        RIGHT JOIN users ON users.id = bugs.userid
                         ORDER BY bugs.bugid DESC, focus DESC""")
-        bugid, bugcause, username, focus, fixed=cursor.fetcone()
+        bugid, bugcause, username, focus, fixed=cursor.fetchone()
         bug = [(Bug(bugid, bugcause, username, focus, fixed))
                     for bugid, bugcause, username, focus, fixed  in cursor]
         return bug
@@ -57,20 +64,26 @@ class Buglist:
                         users.username,
                         bugs.focus,
                         bugs.fixed
-                        FROM BUGS
-                        RIGHT JOIN users ON users.id = bug.userid
-                        WHERE bug.userid=%s
-                        ORDER BY bugs.bugid DESC, focus DESC""", (userid,))
-        bugid, bugcause, username, focus, fixed=cursor.fetcone()
+                        FROM bugs
+                        RIGHT JOIN users ON users.id = bugs.userid
+                        WHERE bugs.userid=%s
+                        ORDER BY bugs.bugid DESC, bugs.focus DESC""", (userid,))
+
+        if cursor.rowcount==0:
+            bug = Bug(99, 'No Report', 'admin', 0, 0)
+            return bug
+
+        bugid, bugcause, username, focus, fixed=cursor.fetchone()
         bug = [(Bug(bugid, bugcause, username, focus, fixed))
                     for bugid, bugcause, username, focus, fixed  in cursor]
+
         return bug
 
     def add_bug(self, bug):
         connection = dbapi2.connect(current_app.config['dsn'])
         cursor = connection.cursor()
-        cursor.execute("""INSERT INTO BUGS (bugid, bugcause, userid)
-        VALUES    (%s, %s, %s)""", (bug.bugid, bug.bugcause, bug.userid))
+        cursor.execute("""INSERT INTO BUGS (bugcause, userid)
+        VALUES    (%s, %s)""",  (bug.bugcause, bug.userid))
         connection.commit()
         connection.close()
 
@@ -92,7 +105,7 @@ class Buglist:
         connection = dbapi2.connect(current_app.config['dsn'])
         cursor = connection.cursor()
         cursor.execute("""SELECT FOCUS FROM BUGS WHERE bugid=%s""", (bugid,))
-        focus=cursor.fetcone()
+        focus=cursor.fetchone()
         return focus
 
     def setfixed(self, bugid):
@@ -106,7 +119,7 @@ class Buglist:
         connection = dbapi2.connect(current_app.config['dsn'])
         cursor = connection.cursor()
         cursor.execute("""SELECT FIXED FROM BUGS WHERE bugid=%s""", (bugid,))
-        fixed=cursor.fetcone()
+        fixed=cursor.fetchone()
         return fixed
 
     def delete_bug(self, bugid):

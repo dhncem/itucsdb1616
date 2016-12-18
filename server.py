@@ -34,6 +34,8 @@ from likeoperations import *
 from credit import *
 from creditlist import *
 from rtoperations import *
+from bug import *
+from buglist import *
 
 lm = LoginManager()
 app = Flask(__name__)
@@ -55,6 +57,7 @@ def load_user(user_id):
 def create_app():
     app.config.from_object('settings')
 
+    app.Buglist = Buglist()
     app.Twitlist = Twitlist()
     app.Creditlist = Creditlist()
     app.messageList = MessageList()
@@ -186,6 +189,67 @@ def links_page(twit_id):
             ids=request.form['sbutton']
             current_app.Twitlist.delete_link(ids)
             return redirect(url_for('links_page', twit_id=twit_id))
+
+
+@app.route('/bugreport', methods=['GET', 'POST'])
+@login_required
+def bugs_page():
+    if request.method == 'GET':
+        usrid=current_app.Buglist.getid()
+        adminid=current_app.Buglist.getadmin()
+
+        if usrid==adminid:
+            bugs = current_app.Buglist.get_bugs()
+            return render_template('bugspageadmin.html', bugs=bugs)
+
+        else:
+            return render_template('bugspageusr.html')
+
+    else:
+        bugid = 0
+        bugcs = request.form['bugcs']
+        usrid=current_app.Buglist.getid()
+        focus = 0
+        fixed = 0
+        bug = Bug(bugid, bugcs, usrid, focus, fixed)
+        current_app.Buglist.add_bug(bug)
+        flash("Thanks For Helping Us")
+        flash("Your Report Is Added To Our Issues Que")
+        return redirect(url_for('bugs_page'))
+
+@app.route('/bugreport/adminonly/<int:bug_id>', methods=['GET', 'POST'])
+@login_required
+def bug_page(bug_id):
+    bugid=bug_id
+    usrid=current_app.Buglist.getid()
+    adminid=current_app.Buglist.getadmin()
+
+    if request.method == 'GET':
+
+        if usrid==adminid:
+            bugs = current_app.Buglist.get_bug(bugid)
+            print(bugs)
+            return render_template('bugpage.html', bug=bugs)
+
+        else:
+            return redirect(url_for('bugs_page'))
+
+    else:
+        postres=request.form['submit']
+
+        if postres == 'delete':
+            current_app.Buglist.delete_bug(bugid)
+
+        elif postres == 'setfocus':
+            current_app.Buglist.set_focus(bugid)
+
+        elif postres == 'defocus':
+            current_app.Buglist.defocus(bugid)
+
+        elif postres == 'setfixed':
+            current_app.Buglist.setfixed(bugid)
+
+        return redirect(url_for('bug_page', bug_id=bugid))
 
 
 @app.route('/twits/<int:twit_id>', methods=['GET', 'POST'])
