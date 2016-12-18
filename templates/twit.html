@@ -3,19 +3,31 @@
 {% block content %}
 <style>
 #twittit{
-	padding-bottom: 10px;
-	width: 150px;
-	height: 20px;
+	padding-top: 10px;
 }
 
 #twitcon{
-	padding-bottom: 24px;
-	width: 425px;
-	height: 20px;
+	width: 300px;
 	word-wrap: break-word;
 }
 
+#twitwrapper{
+	display:inline-block;
+	border-radius: 35px;
+    padding: 10px;
+    background: #659bf2;
+    width: 350px;
+}
+
+#twitwrapperrt{
+	display:inline-block;
+	border-radius: 35px;
+    padding: 10px;
+    background: #8ab3f2
+    width: 350px;
+}
 </style>
+
 <body>
 		{%if twits.isrt==0%}
 
