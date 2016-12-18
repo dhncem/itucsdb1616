@@ -33,33 +33,33 @@
 
   <body>
 
-    <div class="site-wrapper">
+    <div class="site-wrapper" >
 
-      <div class="site-wrapper-inner">
+      <div class="site-wrapper-inner" >
 
-        <div class="cover-container">
+        <div class="cover-container" >
 
-          <div class="masthead clearfix">
+          <div class="masthead clearfix" style="position:relative">
             <div class="inner">
               <nav>
                 <ul class="nav masthead-nav">
-			  		<li style=" {% if current_user.activetab == 0 %} background-color: #ababab; {%endif%}padding-right:10px; padding-left: 10px"><a class="active" href="{{ url_for('home_page') }}">Home{%if current_user.is_authenticated %}-{{ current_user.username }}{%else%}{%endif%}</a></li>
-			  		<li style=" {% if current_user.activetab == 1 %} background-color: #ababab; {%endif%}padding-right:10px; padding-left: 10px"><a href="{{ url_for('twit_page') }}">My Tweets</a></li>
-			  		<li style=" {% if current_user.activetab == 2 %} background-color: #ababab; {%endif%}padding-right:10px; padding-left: 10px"><a href="{{ url_for('follow_page') }}">Follow/Unfollow</a></li>
-			  		<li style=" {% if current_user.activetab == 3 %} background-color: #ababab; {%endif%}padding-right:10px; padding-left: 10px"><a href="{{ url_for('messages_page') }}">Messages</a></li>
-			  		<li style=" {% if current_user.activetab == 4 %} background-color: #ababab; {%endif%}padding-right:10px; padding-left: 10px"><a href="{{ url_for('media_page') }}">Media</a></li>
-			  		<li style=" {% if current_user.activetab == 5 %} background-color: #ababab; {%endif%}padding-right:10px; padding-left: 10px"><a href="{{ url_for('quiz_page') }}">Quiz</a></li>
-			  		<li style=" {% if current_user.activetab == 6 %} background-color: #ababab; {%endif%}padding-right:10px; padding-left: 10px"><a href="{{ url_for('subscribelists_page') }}">Lists</a></li>
-			  		<li style=" {% if current_user.activetab == 7 %} background-color: #ababab; {%endif%}padding-right:10px; padding-left: 10px"><a href="{{ url_for('settings_page') }}">Settings</a></li>
-			  		<li style=" {% if current_user.activetab == 8 %} background-color: #ababab; {%endif%}padding-right:10px; padding-left: 10px"><a href="{{ url_for('updateprofile_page') }}">Update Profile</a></li>
-			  		<li style=" {% if current_user.activetab == 9 %} background-color: #ababab; {%endif%}padding-right:10px; padding-left: 10px"><a href="{{ url_for('notifs_page') }}">Notifications</a></li>
-			  		<li style=" {% if current_user.activetab == 10 %} background-color: #ababab; {%endif%}padding-right:10px; padding-left: 10px"><a href="{{ url_for('polls_page') }}">Polls</a></li>
-			  		<li style=" {% if current_user.activetab == 11 %} background-color: #ababab; {%endif%}padding-right:10px; padding-left: 10px"><a href="{{ url_for('likes_page',username=current_user.username) }}">My Likes</a></li>
-			  		<li style=" {% if current_user.activetab == 12 %} background-color: #ababab; {%endif%}padding-right:10px; padding-left: 10px"><a href="{{ url_for('user_manageapps') }}">Application settings</a></li>
-			  		<li style=" {% if current_user.activetab == 13 %} background-color: #ababab; {%endif%}padding-right:10px; padding-left: 10px"><a href="{{ url_for('gifts') }}">Gifts</a></li>
-			  		<li style=" {% if current_user.activetab == 14 %} background-color: #ababab; {%endif%}padding-right:10px; padding-left: 10px"><a href="{{ url_for('credit_page') }}">Manage Credit</a></li>
+			  		<li style=" {% if current_user.activetab == 0 %} background-color: #ababab; padding-right:10px; padding-left: 10px{%endif%}"><a class="active" href="{{ url_for('home_page') }}">Home{%if current_user.is_authenticated %}-{{ current_user.username }}{%else%}{%endif%}</a></li>
+			  		<li style=" {% if current_user.activetab == 1 %} background-color: #ababab; padding-right:10px; padding-left: 10px{%endif%}"><a href="{{ url_for('twit_page') }}">My Tweets</a></li>
+			  		<li style=" {% if current_user.activetab == 2 %} background-color: #ababab; padding-right:10px; padding-left: 10px{%endif%}"><a href="{{ url_for('follow_page') }}">Follow/Unfollow</a></li>
+			  		<li style=" {% if current_user.activetab == 3 %} background-color: #ababab; padding-right:10px; padding-left: 10px{%endif%}"><a href="{{ url_for('messages_page') }}">Messages</a></li>
+			  		<li style=" {% if current_user.activetab == 4 %} background-color: #ababab; padding-right:10px; padding-left: 10px{%endif%}"><a href="{{ url_for('media_page') }}">Media</a></li>
+			  		<li style=" {% if current_user.activetab == 5 %} background-color: #ababab; padding-right:10px; padding-left: 10px{%endif%}"><a href="{{ url_for('quiz_page') }}">Quiz</a></li>
+			  		<li style=" {% if current_user.activetab == 6 %} background-color: #ababab; padding-right:10px; padding-left: 10px{%endif%}"><a href="{{ url_for('subscribelists_page') }}">Lists</a></li>
+			  		<li style=" {% if current_user.activetab == 7 %} background-color: #ababab; padding-right:10px; padding-left: 10px{%endif%}"><a href="{{ url_for('settings_page') }}">Settings</a></li>
+			  		<li style=" {% if current_user.activetab == 8 %} background-color: #ababab; padding-right:10px; padding-left: 10px{%endif%}"><a href="{{ url_for('updateprofile_page') }}">Update Profile</a></li>
+			  		<li style=" {% if current_user.activetab == 9 %} background-color: #ababab; padding-right:10px; padding-left: 10px{%endif%}"><a href="{{ url_for('notifs_page') }}">Notifications</a></li>
+			  		<li style=" {% if current_user.activetab == 10 %} background-color: #ababab; padding-right:10px; padding-left: 10px{%endif%}"><a href="{{ url_for('polls_page') }}">Polls</a></li>
+			  		<li style=" {% if current_user.activetab == 11 %} background-color: #ababab; padding-right:10px; padding-left: 10px{%endif%}"><a href="{{ url_for('likes_page',username=current_user.username) }}">My Likes</a></li>
+			  		<li style=" {% if current_user.activetab == 12 %} background-color: #ababab; padding-right:10px; padding-left: 10px{%endif%}"><a href="{{ url_for('user_manageapps') }}">Application settings</a></li>
+			  		<li style=" {% if current_user.activetab == 13 %} background-color: #ababab; padding-right:10px; padding-left: 10px{%endif%}"><a href="{{ url_for('gifts') }}">Gifts</a></li>
+			  		<li style=" {% if current_user.activetab == 14 %} background-color: #ababab; padding-right:10px; padding-left: 10px{%endif%}"><a href="{{ url_for('credit_page') }}">Manage Credit</a></li>
 			  		{% if current_user.is_admin %}
-			  		<li style=" {% if current_user.activetab == 15 %} background-color: #ababab; {%endif%}padding-right:10px; padding-left: 10px"><a href="{{ url_for('adminpanel') }}">Admin panel</a></li>
+			  		<li style=" {% if current_user.activetab == 15 %} background-color: #ababab; padding-right:10px; padding-left: 10px{%endif%}"><a href="{{ url_for('adminpanel') }}">Admin panel</a></li>
 			  		{% endif %}
 			  		{% if current_user.is_authenticated %}
 			  		<li><a href="{{ url_for('logout_page') }}">Logout</a></li>
@@ -94,13 +94,19 @@
     <script src="../static/ie10-viewport-bug-workaround.js"></script>
   </body>
 
-
-    <footer id="layout" align="middle">
+	<div style="height: 50px; width: 100%">
+	</div>
+    <div style="clear: both;
+    position: fixed;
+    width:100%;
+    padding:5px;
+    text-align: center;
+    background-color: #ececec;
+    bottom:0;">
 
       &copy; 2016, itucsdb1616 <br>
       <a style="color: black" style="text-decoration: none" href="{{ url_for('bugs_page') }}">
 		<font size="2">Report A  Bug</font></a>
-
-    </footer>
+    </div>
   </body>
 </html>
