@@ -1,0 +1,81 @@
+{% extends "layout.html" %}
+{% block title %}Reported Bugs{% endblock %}
+{% block content %}
+<style>
+#bugcon{
+	padding-bottom: 24px;
+	width: 425px;
+	height: 20px;
+	word-wrap: break-word;
+}
+
+#bugwrapper{
+	display:inline-block;
+	border-radius: 35px;
+    padding: 10px;
+    background: #3d3d5c;
+    width: 350px;
+}
+
+#bugfixed{
+	display:inline-block;
+	border-radius: 35px;
+    padding: 10px;
+    background: #29293d;
+    width: 350px;
+}
+
+#bugfocus{
+	display:inline-block;
+	border-radius: 35px;
+    padding: 10px;
+    background: #29293d;
+    width: 350px;
+}
+</style>
+
+	<body>
+
+		{% for bug in bugs %}
+       	{% if bug.fixed==1%}
+       	<p align="left">
+       	<p align="left">
+       	<h4 id="bugfixed">
+       	<a style="color: black" style="text-decoration: none" href="{{ url_for('bug_page', bug_id=bug.bugid ) }}">
+		{{ bug.bugid }}</a>
+		<font size="3">{{ bug.bugcause }}</font>
+		<a style="color: black" style="text-decoration: none" href="{{ url_for('profile_page', usrhandle=bug.userid ) }}">
+		<font size="1">-{{ bug.userid }}</font></a><br>
+		</h4>
+		</p>
+		<br>
+		{% else %}
+		{% if bug.focus==1%}
+		<p align="left">
+       	<p align="left">
+		<h4 id="bugfocus">
+       	<a style="color: black" style="text-decoration: none" href="{{ url_for('bug_page', bug_id=bug.bugid ) }}">
+		{{ bug.bugid }}</a>
+		<font size="3">{{ bug.bugcause }}</font>
+		<a style="color: black" style="text-decoration: none" href="{{ url_for('profile_page', usrhandle=bug.userid ) }}">
+		<font size="1">-{{ bug.userid }}</font></a><br>
+		</h4>
+		</p>
+		<br>
+		{% else %}
+		<p align="left">
+       	<p align="left">
+		<h4 id="bugwrapper">
+       	<a style="color: black" style="text-decoration: none" href="{{ url_for('bug_page', bug_id=bug.bugid ) }}">
+		{{ bug.bugid }}</a>
+		<font size="3">{{ bug.bugcause }}</font>
+		<a style="color: black" style="text-decoration: none" href="{{ url_for('profile_page', usrhandle=bug.userid ) }}">
+		<font size="1">-{{ bug.userid }}</font></a><br>
+		</h4>
+		</p>
+		<br>
+		{% endif %}
+		{% endif %}
+		{% endfor %}
+        </body>
+{% endblock %}
