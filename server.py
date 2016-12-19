@@ -5,6 +5,7 @@ import json
 import re
 import psycopg2 as dbapi2
 import math
+import time
 
 from flask import Flask, abort, flash, redirect, render_template, url_for
 from flask_login import LoginManager
@@ -85,6 +86,12 @@ def login_page():
             password = form.password.data
             if pwd_context.verify(password, user.password):
                 login_user(user)
+                try:
+                    with dbapi2.connect(app.config['dsn']) as connection:
+                        with connection.cursor() as cursor:
+                            cursor.execute("""SELECT * FROM USERS WHERE ID=1""")
+                except:
+                    return redirect(url_for('initialize_database'))
                 flash('You have logged in.')
                 next_page = request.args.get('next', url_for('home_page'))
                 return redirect(next_page)
@@ -1061,6 +1068,7 @@ def initialize_database():
     with dbapi2.connect(app.config['dsn']) as connection:
             with connection.cursor() as cursor:
                 cursor.execute(open("script.sql", "r").read())
+    time.sleep(5)
     return redirect(url_for('home_page'))
 
 if __name__ == '__main__':
