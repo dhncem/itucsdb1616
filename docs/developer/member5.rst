@@ -66,9 +66,10 @@ and get ownerid which returns tweets ownerid back.
 
 There is several functions for getting tweets:
 
-For a **single tweet**(get_twit(self, twitid)):
+For a **single tweet** (get_twit(self, twitid)):
 
 .. code-block::   sql
+
    cursor.execute("""SELECT tweets.title,
                         tweets.context,
                         tweets.tweetid,
