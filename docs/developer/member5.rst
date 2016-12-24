@@ -264,6 +264,7 @@ Every tweet can have it own link to the outsite of the site or inside.
 For getting links for tweet(get_link(self, twitid)):
 
 .. code-block::   sql
+
         cursor.execute("""SELECT tweetlid, CONTEXTL, TWEETID  FROM TWEETLINK WHERE TWEETID=%s""", (twitid,))
         link = [(Link(tweetlid, contextl, tweetid))
                     for tweetlid, contextl, tweetid in cursor]
@@ -272,14 +273,15 @@ For getting links for tweet(get_link(self, twitid)):
 For adding links for tweet(add_link(self, twitid, link):
 
 .. code-block::   sql
+
         cursor.execute("""INSERT INTO TWEETLINK (TWEETID, CONTEXTL)    VALUES    (%s, %s)""", (twitid, link.contextl))
 
 
 For deleting links for tweet(def delete_link(self, tweetid)):
 
 .. code-block::   sql
-    :
-        cursor.execute("""DELETE FROM TWEETLINK WHERE tweetid=%s""", [tweetid],)
+
+    cursor.execute("""DELETE FROM TWEETLINK WHERE tweetid=%s""", tweetid,)
 
 
 For updating links for tweet(update_link(self, tweetid, contextl)):
