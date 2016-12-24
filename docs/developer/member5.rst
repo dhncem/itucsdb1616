@@ -2,18 +2,21 @@ Parts Implemented by Cem Karagöz
 ================================
 In this project Tweet, TweetLink, and Bug entities are done by me.
 
-**Tweet Entity**
-   *TweetId (Primary Key)
-   *Userıd  (Foreign Key)
-   *Tıtle
-   *Context
-   *Twtime
-   *Numberoflikes
-   *NumberofRTs
-   *isRT
-   *RtownerID  (Foreign Key)
+**Tweet Entity:**
+
+   TweetId (Primary Key)
+   Userıd  (Foreign Key)
+   Tıtle
+   Context
+   Twtime
+   Numberoflikes
+   NumberofRTs
+   isRT
+   RtownerID  (Foreign Key)
+
 
 SQL Table:
+
 .. code-block::   sql
 
    CREATE TABLE TWEETS(
@@ -30,6 +33,7 @@ SQL Table:
 
 
 Pyton Class used to represent the tweet:
+
 .. code-block::   python
 
    class Twit:
