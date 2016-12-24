@@ -335,6 +335,7 @@ Bugs can only seen by admins but everyone can submit one.
 Getting current userid(getid(self)):
 
 .. code-block::   sql
+
         cursor.execute("""SELECT ID FROM USERS WHERE USERNAME=%s""", (current_user.username,))
         usernum=cursor.fetchone()
 
@@ -342,6 +343,7 @@ Getting current userid(getid(self)):
 Getting admin userid(getadmin(self)):
 
 .. code-block::   sql
+
         name='admin'
         cursor.execute("""SELECT ID FROM USERS WHERE USERNAME=%s""", (name,))
 
@@ -349,6 +351,7 @@ Getting admin userid(getadmin(self)):
 Function below is code for one bug(get_bug(self, bugid)):
 
 .. code-block::   sql
+
         cursor.execute("""SELECT
                         bugs.bugid,
                         bugs.bugcause,
@@ -365,6 +368,7 @@ Function below is code for one bug(get_bug(self, bugid)):
 Same function but gets all bugs(get_bugs(self)):
 
 .. code-block::   sql
+
         cursor.execute("""SELECT
                         bugs.bugid,
                         bugs.bugcause,
@@ -382,6 +386,7 @@ Same function but gets all bugs(get_bugs(self)):
 Adding bugs to the system(add_bug(self, bug)):
 
 .. code-block::   sql
+
         cursor.execute("""INSERT INTO BUGS (bugcause, userid)
         VALUES    (%s, %s)""",  (bug.bugcause, bug.userid))
 
@@ -391,16 +396,19 @@ Since ever bug has three stages Normal, Focused and fixed admin can set thoose s
 Setting Focus On a Bug(set_focus(self, bugid)):
 
 .. code-block::   sql
+
         cursor.execute("""UPDATE BUGS SET FOCUS=%s WHERE bugid=%s""", (1, bugid))
 
 
 DeFocus On a Bug(defocus(self, bugid)):
 
 .. code-block::   sql
+
         cursor.execute("""UPDATE BUGS SET FOCUS=%s WHERE bugid=%s""", (0, bugid))
 
 
 Setting Fixed a Bug(setfixed(self, bugid)):
+
 .. code-block::   sql
-    def :
+
         cursor.execute("""UPDATE BUGS SET FIXED=%s WHERE bugid=%s""", (1, bugid))
