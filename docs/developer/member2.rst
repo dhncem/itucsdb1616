@@ -164,7 +164,7 @@ After that it inserts the ownerid, description and url in the *MEDIA* table. Med
 
 
 In server.py file, content and url are taken from the html file and put in to the media object.Finally, **add_photo** function
- is called.
+is called.
 
 .. code-block:: python
 
@@ -274,7 +274,7 @@ ID of the user which is tagged that photo as references to ID of *USERPROFILE* t
    TAGID SERIAL PRIMARY KEY,
    TAGEDPHOTOID INTEGER REFERENCES MEDIA (PHOTOID) ON DELETE CASCADE,
    TAGEDUSERID INTEGER REFERENCES USERPROFILE (ID) ON DELETE CASCADE
-);
+   );
 
 
 Tag is added in this function below. It takes the username and photoid as parameter and insert it into the *TAGS* table.
@@ -351,7 +351,7 @@ Quiz table:
    RECIEVERID INTEGER REFERENCES USERPROFILE (ID) ON DELETE SET NULL,
    CONTENT VARCHAR(500),
    ISANSWERED BOOLEAN DEFAULT FALSE
-);
+   );
 
 Options table:
 
@@ -362,7 +362,7 @@ Options table:
    QUESTIONID INTEGER REFERENCES QUIZ (ID) ON DELETE CASCADE,
    CHOICE VARCHAR(100),
    CORRECTNESS BOOLEAN DEFAULT FALSE
-);
+   );
 
 Points table:
 
@@ -371,7 +371,7 @@ Points table:
    CREATE TABLE POINTS(
    USERID INTEGER PRIMARY KEY REFERENCES USERPROFILE (ID) ON DELETE CASCADE,
    POINT INTEGER DEFAULT 0
-);
+   );
 
 
 
