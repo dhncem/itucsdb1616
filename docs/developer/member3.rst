@@ -299,7 +299,7 @@ Finally it will execute **DELETE** SQL statement and UPDATES the number of membe
 POLLS Implementation
 --------------------
 Polls allow people to weigh in on questions posed by other people on this social media website. Users can also create their own polls and see the results instantly.
-3 tables are created in order to implement  polls. These tables' names are *POLLS*,*CHOICES* and *VOTES*.
+3 tables are created in order to implement  polls. These tables' names are *POLLS* *CHOICES* and *VOTES*.
 POLLS and CHOICES are entities. VOTES is an auxiliary table.
 
 POLLS Table and Operations (2nd ENTITY)
