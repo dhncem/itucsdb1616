@@ -3,7 +3,7 @@ Parts Implemented by İsmail Emre Çetiner
 
 Every user has to sign in to access any page in the website.
 
-   .. figure:: signin.png
+   .. figure:: member1images/signin.png
       :scale: 50 %
       :alt: sign in page
 
@@ -11,7 +11,7 @@ Every user has to sign in to access any page in the website.
 
 For non-users, there is a **Register** page.
 
-   .. figure:: register.png
+   .. figure:: member1images/register.png
       :scale: 50 %
       :alt: register page
 
@@ -19,13 +19,13 @@ For non-users, there is a **Register** page.
 
 Users can follow or unfollow each other using **Follow/Unfollow** page.
 
-   .. figure:: followoperation.png
+   .. figure:: member1images/followoperation.png
       :scale: 50 %
       :alt: follow operation
 
       User can be followed or unfollowed by selecting the nickname of the user and clicking one of the buttons, Follow or Unfollow.
 
-   .. figure:: followlist.png
+   .. figure:: member1images/followlist.png
       :scale: 50 %
       :alt: follow list
 
@@ -33,13 +33,13 @@ Users can follow or unfollow each other using **Follow/Unfollow** page.
 
 Users can update their basic profile info and passwords in **Update Profile** page.
 
-   .. figure:: changepass.png
+   .. figure:: member1images/changepass.png
       :scale: 50 %
       :alt: change password
 
       By entering the new password (4-15 characters long) and clicking "Change Password" button, password is updated.
 
-   .. figure:: updateprofile.png
+   .. figure:: member1images/updateprofile.png
       :scale: 50 %
       :alt: change bio nickname
 
@@ -47,13 +47,13 @@ Users can update their basic profile info and passwords in **Update Profile** pa
 
 It is possible for users to change their application settings under the **Application Settings** page.
 
-   .. figure:: appsettings.png
+   .. figure:: member1images/appsettings.png
       :scale: 50 %
       :alt: application settings
 
       In **Application Settings** page, all applications that are defined and activated by admin are displayed and user has the option to enable or disable them seperately.
 
-   .. figure:: appchanged.png
+   .. figure:: member1images/appchanged.png
       :scale: 50 %
       :alt: enabled applications
 
@@ -61,13 +61,13 @@ It is possible for users to change their application settings under the **Applic
 
 In **Gifts** page, users can send gifts (which are pre-defined by the admin) to the other users.
 
-   .. figure:: gifts.png
+   .. figure:: member1images/gifts.png
       :scale: 50 %
       :alt: gifts
 
       In **Gifts** page, all sent and received gifts are displayed and new gifts can be sent by selecting the nickname of the user and gift from related select fields.
 
-   .. figure:: giftsent.png
+   .. figure:: member1images/giftsent.png
       :scale: 50 %
       :alt: gift sent
 
@@ -75,7 +75,7 @@ In **Gifts** page, users can send gifts (which are pre-defined by the admin) to 
 
 For **admin**, there will be an additional page which is **Admin Panel**.
 
-   .. figure:: adminpanel.png
+   .. figure:: member1images/adminpanel.png
       :scale: 50 %
       :alt: admin panel
 
@@ -83,13 +83,13 @@ For **admin**, there will be an additional page which is **Admin Panel**.
 
 **Admin** can add, delete, activate or deactivate applications which can be used by all users.
 
-   .. figure:: addapplication.png
+   .. figure:: member1images/addapplication.png
       :scale: 50 %
       :alt: add application
 
       It is possible to add an application either in active or deactive mode by writing its name and clicking one of the buttons.
 
-   .. figure:: activateapp.png
+   .. figure:: member1images/activateapp.png
       :scale: 50 %
       :alt: activate application
 
@@ -97,13 +97,13 @@ For **admin**, there will be an additional page which is **Admin Panel**.
 
 For the **admin**, it is possible to add a gift, change its description and delete it in **Manage Gifts** page.
 
-   .. figure:: addgift.png
+   .. figure:: member1images/addgift.png
       :scale: 50 %
       :alt: add gift
 
       By writing a name and description for a gift and submitting the form, new gifts can be defined to the system.
 
-   .. figure:: updategift.png
+   .. figure:: member1images/updategift.png
       :scale: 50 %
       :alt: update gift
 
@@ -111,13 +111,13 @@ For the **admin**, it is possible to add a gift, change its description and dele
 
 Deleting a user is also possible for **admin**, under **Delete User** page.
 
-   .. figure:: deleteuser1.png
+   .. figure:: member1images/deleteuser1.png
       :scale: 50 %
       :alt: delete user
 
       **Admin** can select a user other than administrator and delete it by clicking Delete user button.
 
-   .. figure:: deleteuser2.png
+   .. figure:: member1images/deleteuser2.png
       :scale: 50 %
       :alt: after deleting user
 
