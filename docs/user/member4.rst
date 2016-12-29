@@ -10,7 +10,7 @@ As it is shown below.
 
       User can select language in dropdown menu and write the other data to textboxes.
 
-   .. figure:: member4images/updateSettings.png
+   .. figure:: member4images/updateSettings.PNG
       :scale: 50 %
       :alt: update informations
 
@@ -39,7 +39,7 @@ Users can **turn off** or **turn on** followers notifications.
 
       User can select notification "off" status in dropdown menu
 
-   .. figure:: member4images/updateprofile.PNG
+   .. figure:: member4images/turnonNotif.PNG
       :scale: 50 %
       :alt: turnon notifs
 
