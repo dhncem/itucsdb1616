@@ -15,7 +15,7 @@ When user clicks *MemberOf*,the lists  that current user has a insider role in i
 
 New list is created. It can be seen below.
 
-.. figure:: member3images/afteradded.png
+.. figure:: member3images/afteradd.png
       :scale: 50 %
       :alt: map to buried treasure
 
