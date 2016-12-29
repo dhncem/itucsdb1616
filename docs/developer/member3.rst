@@ -1,7 +1,15 @@
 Parts Implemented by Yusuf Ekiz
 ===============================
 
-I implemented **LISTS**,**POLLS**,**LIKES**,**LISTMEMBERS** and **VOTES** tables and their operations in this project
+I implemented 6 tables and their operations in this project. Tables can be seen below
+
+* **LISTS**
+* **LISTMEMBERS**
+* **POLLS**
+* **CHOICES**
+* **VOTES**
+* **LIKES**
+
 
 LISTS Implementation
 --------------------
@@ -533,6 +541,7 @@ VOTES Table and Operations (Auxiliary Table)
 VOTES Table holds the all the votes for the polls.
 
 This table has following columns
+
 * *CHOICEID* as integer and not null references choices table
       Holds the id of the chosen choice.
 * *POLLID* as integer and not null references polls table
@@ -540,7 +549,7 @@ This table has following columns
 * *USERID* as integer and not null references userprofile table
       Holds the id of the user.
 
-*POLLID* ,*CHOICEID*,*USERID* act as a primary key together.
+*POLLID* *CHOICEID* *USERID* act as a primary key together.
 
 Operations of VOTES table are implemented in poll.py file(Poll class).
 
@@ -581,6 +590,7 @@ In this application users can like each other's posts. This action is implemente
 LIKES Table holds the data of liked tweets.
 
 This table has following columns
+
 * *USERID* as integer and not null references userprofile table
       Holds the id of the user who liked the tweet
 * *TWEETID* as integer and not null references tweets table
