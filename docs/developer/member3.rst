@@ -28,6 +28,7 @@ This table has following columns
 SQL CODE:
 
 .. code-block:: sql
+
          CREATE TABLE LISTS(
             LISTID SERIAL PRIMARY KEY,
             SUBSCRIBERS INTEGER DEFAULT 0,
@@ -68,6 +69,7 @@ A list is created in a addList function which is implemented in listoflist.py fi
 This function will take a list object as an input. And inserts the new list to the LISTS table
 
 .. code-block:: python
+
       def addList(self,list):
         connection = dbapi2.connect(current_app.config['dsn'])
         cursor = connection.cursor()
@@ -93,6 +95,7 @@ A list is deleted in deleteList() function which is implemented in listoflist.py
 This function will take listname and creatorname as inputs. At first it will find the creatorid then it will execute a **DELETE** query with creatorid and listname.
 
 .. code-block:: python
+
     def deleteList(self, listname,creatorname):
         connection = dbapi2.connect(current_app.config['dsn'])
         cursor = connection.cursor()
@@ -111,7 +114,9 @@ This function will take listname and creatorname as inputs. At first it will fin
 ^^^^^^^^^^^^^
 Name of a list is updated in updateName function which is implemented in list.py file(List class). It has only one input which is newName.
 It executes a simple **UPDATE** SQL query.
+
 .. code-block:: python
+
      def updateName(self,newName):
         connection = dbapi2.connect(current_app.config['dsn'])
         cursor = connection.cursor()
@@ -126,7 +131,9 @@ It executes a simple **UPDATE** SQL query.
 ^^^^^^^^^^^^^
 A list can be selected with getList function which is implemented in listoflist.py file (ListofLists class).
 This function takes listname as an input. It executes a simple **SELECT** SQL statement.
+
 .. code-block:: python
+
      def getList(self, listname):
         connection = dbapi2.connect(current_app.config['dsn'])
         cursor = connection.cursor()
@@ -156,6 +163,7 @@ This table has following columns
 SQL CODE:
 
 .. code-block:: sql
+
          CREATE TABLE LISTMEMBERS(
             LISTID INTEGER NOT NULL REFERENCES LISTS(LISTID) ON DELETE CASCADE,
             USERID INTEGER NOT NULL REFERENCES USERPROFILE(ID) ON DELETE CASCADE,
@@ -174,6 +182,7 @@ Its code can be seen below. Function takes membername as a parameter. At first f
 Then it fetches member id from USERS Table. Finally it inserts the insider to the list.
 
 .. code-block:: python
+
      def addInsider(self,membername):
         try:
             connection = dbapi2.connect(current_app.config['dsn'])
@@ -200,7 +209,9 @@ Then it fetches member id from USERS Table. Finally it inserts the insider to th
 Finally members with subscriber role also can be added to the list with addSubscriber function which is in list.py file(List class).
 The only difference between addSubscriber and andMember function is USERTYPE value in the table. At first function fetch listid from database.
 Then it fetches member id from USERS Table. Finally it inserts the subscriber.
+
 .. code-block:: python
+
      def addSubscriber(self,membername):
         connection = dbapi2.connect(current_app.config['dsn'])
         cursor = connection.cursor()
@@ -298,6 +309,7 @@ This table has following columns
 SQL CODE:
 
 .. code-block:: sql
+
         CREATE TABLE POLLS(
            POLLID SERIAL PRIMARY KEY,
            CREATORID INTEGER NOT NULL REFERENCES USERPROFILE(ID) ON DELETE CASCADE,
@@ -311,6 +323,7 @@ In order to implement the polls. ListofPolls and Poll classes are created. They 
 *Poll class
 
 .. code-block:: python
+
    class Poll():
     def __init__(self,question,creatorname):
         self.votenumber=0
@@ -328,6 +341,7 @@ In order to implement the polls. ListofPolls and Poll classes are created. They 
 *ListOfPolls class
 
 .. code-block:: python
+
    class ListOfPolls:
     def __init__(self,name):
         self.name=name
@@ -339,6 +353,7 @@ A poll is created in a addPoll function which is implemented in listofpolls.py f
 This function will take a poll object as an input. And inserts the new poll to the POLLS table with **INSERT** SQL statement.
 
 .. code-block:: python
+
      def addPoll(self,poll):
         connection = dbapi2.connect(current_app.config['dsn'])
         cursor = connection.cursor()
@@ -359,6 +374,7 @@ This function will take pollquestion and pollcreatorname as parameters.
 After taking parameters it will find the creator id then executes a **DELETE** SQL query with pollquestion and creator id as parameters.
 
 .. code-block:: python
+
     def deletePoll(self,pollquestion,pollcreatorname):
         connection = dbapi2.connect(current_app.config['dsn'])
         cursor = connection.cursor()
@@ -375,7 +391,9 @@ After taking parameters it will find the creator id then executes a **DELETE** S
 ^^^^^^^^^^^^^
 Question of a poll can be updated in updateQuestion function which is implemented in poll.py(Poll Class) file. It has only one input which is newquestion.
 It will execute an **UPDATE** SQL statement with parameters such as newquestion,oldquestion(self.question) and creatorid(self.creatorid).
+
 .. code-block:: python
+
       def updateQuestion(self,newquestion):
         connection=dbapi2.connect(current_app.config['dsn'])
         cursor=connection.cursor()
@@ -390,7 +408,9 @@ It will execute an **UPDATE** SQL statement with parameters such as newquestion,
 ^^^^^^^^^^^^^
 A list can be selected with getList function which is implemented in listofpolls.py file(ListOfPolls class).
 This function takes listname as an input. It executes a simple SQL **SELECT** statement. Finally it returns a poll object.
+
 .. code-block:: python
+
       def getAPoll(self,pollquestion):
         connection=dbapi2.connect(current_app.config['dsn'])
         cursor=connection.cursor()
@@ -423,6 +443,7 @@ This table has following columns
 SQL CODE:
 
 .. code-block:: sql
+
          CREATE TABLE CHOICES(
             CHOICEID SERIAL UNIQUE,
             POLLID INTEGER NOT NULL REFERENCES POLLS(POLLID) ON DELETE CASCADE,
@@ -440,6 +461,7 @@ This function will take the choicecontent as an input. At first it will try to f
 Then it inserts the new choice to the CHOICES table with **INSERT** SQL statement. Finally it updates the NUMBEROFCHOICES column of current poll in POLLS table.
 
 .. code-block:: python
+
    def addChoice(self,choicecontent):
         try:
             connection=dbapi2.connect(current_app.config['dsn'])
@@ -464,6 +486,7 @@ This function will take choicecontent as an input. At first it will find current
 After finding the pollid from database it *DELETE** SQL statement will be executed with pollid and choicecontent parameters.
 
 .. code-block:: python
+
     def deleteChoice(self,choicecontent):
         connection=dbapi2.connect(current_app.config['dsn'])
         cursor=connection.cursor()
@@ -484,6 +507,7 @@ After finding the pollid from database it *DELETE** SQL statement will be execut
 We can get all the choices with getChoices function in poll.py file(Poll class)
 This function takes no additional parameters. It executes a simple SQL **SELECT** statement with current poll's id. And returns a choices array.
 .. code-block:: python
+
    def getChoices(self):
         connection=dbapi2.connect(current_app.config['dsn'])
         cursor=connection.cursor()
@@ -519,6 +543,7 @@ A user can use their vote with the voteforPoll function.
 This function takes choiceContent as a parameter.At first it tries to find pollid of current poll,choiceid of current choice and userid of voter.
 Then it executes a *INSERT* SQL command for inserting this vote to the VOTES tables.
 .. code-block:: python
+
      def voteforPoll(self,choiceContent):
         connection=dbapi2.connect(current_app.config['dsn'])
         cursor=connection.cursor()
@@ -562,7 +587,9 @@ Operations of LIKES table are implemented in likeoperations.py file.
 ^^^^^^^^^^^^^^
 A user can like someone's tweet with like function. This function will take only tweetid as a parameter. Firstly, it tries to find the id of current user.
 Then it executes a simple INSERT SQL command. Then it updates the TWEETS and USERPROFILE table for LIKE stats.
+
 .. code-block:: python
+
    def like(tweetid):
     try:
         connection=dbapi2.connect(current_app.config['dsn'])
@@ -584,7 +611,9 @@ Then it executes a simple INSERT SQL command. Then it updates the TWEETS and USE
 ^^^^^^^^^^^^^^^^
 Unliking a tweet is similar to liking a tweet. We can do this action with unlike function. It also takes only tweetid as a parameter.Then it tries to find
 the id of current user. Then it executes a DELETE SQL command and makes update for USERPROFILE and TWEETS table.
+
 .. code-block:: python
+
    def unlike(tweetid):
     try:
         connection=dbapi2.connect(current_app.config['dsn'])
