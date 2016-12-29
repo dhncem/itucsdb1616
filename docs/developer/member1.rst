@@ -5,8 +5,8 @@ Parts Implemented by İsmail Emre Çetiner
 
 User entity is the main entity of the application, which is referenced by most of the tables. User entity consists of two tables:
 
-   *Users
-   *Userprofile
+   * Users
+   * Userprofile
 
 Registeration information of all users are kept in **Users** table which has 4 columns. ID is the primary key of the table which is used nearly for all references to this table.
 
@@ -181,8 +181,8 @@ In unfollow operation, we use a flag and check the existance of the (follower-fo
 
 Application entity forms a base for possible implementations of extensions or external applications for the website. Application entity consists of 2 tables, which are:
 
-   *Apps
-   *Appusers
+   * Apps
+   * Appusers
 
 **Apps** table holds the basic information about the application in 4 columns and the creation of the table is as follows:
 
@@ -242,8 +242,8 @@ Since the table does not have an attribute which indicates the changes in applic
 
 Gift entity is created for improving the connection between users and users can send gifts to each other. Gifts are defined and managed by the **admin** and the entity consists of 2 tables.
 
-   *Gifts
-   *Sentgifts
+   * Gifts
+   * Sentgifts
 
 Basic information about the gifts are kept in **Gifts** table and it consists of 3 columns:
 
