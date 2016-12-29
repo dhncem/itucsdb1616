@@ -1,7 +1,7 @@
 Parts Implemented by Yusuf Ekiz
 ===============================
 
-**I implemented LISTS,POLLS,LIKES,LISTMEMBERS and VOTES tables and their operations in this project. RT operations are also implemented by me. **
+I implemented **LISTS**,**POLLS**,**LIKES**,**LISTMEMBERS** and **VOTES** tables and their operations in this project
 
 LISTS Implementation
 --------------------
@@ -14,6 +14,7 @@ LISTS Table and Operations (1st ENTITY)
 LISTS table holds the all lists in the application.It is referenced by *LISTMEMBERS* table.
 
 This table has following columns
+
 * *LISTID* as serial primary key
       Primary key of the table
 * *SUBSCRIBERS* as integer and default 0
@@ -40,9 +41,10 @@ SQL CODE:
 Also python classes listoflists and list are used for operations.
 These classes are implemented in listoflist.py and list.py files.
 
-*List class
+**List class**
 
 .. code-block:: python
+
    class List:
      def __init__(self,name,creatorname):
         self.name=name
@@ -55,9 +57,10 @@ These classes are implemented in listoflist.py and list.py files.
         cursor.close()
         connection.close()
 
-*ListofList class
+**ListofList class**
 
 .. code-block:: python
+
    class ListOfLists:
     def __init__(self,name):
         self.name=name
@@ -171,7 +174,8 @@ SQL CODE:
             PRIMARY KEY(LISTID,USERID,USERTYPE)
             );
 
- Some operations are also implemented for LISTMEMBERS table in list.py file.
+
+Some operations are also implemented for LISTMEMBERS table in list.py file.
 
 *Add Insider*
 ^^^^^^^^^^^^^
@@ -295,6 +299,7 @@ POLLS Table and Operations (2nd ENTITY)
 POLLS table holds all of the polls' data in application. It is referenced by *CHOICES* and *VOTES* tables.
 
 This table has following columns
+
 * *POLLID* as serial primary key
       Primary key of the table
 * *POLLQUESTION* as varchar and not null
@@ -320,7 +325,7 @@ SQL CODE:
 
 In order to implement the polls. ListofPolls and Poll classes are created. They are created in poll.py and listofpolls.py files.
 
-*Poll class
+**Poll class**
 
 .. code-block:: python
 
@@ -338,7 +343,7 @@ In order to implement the polls. ListofPolls and Poll classes are created. They 
         connection.close()
         return
 
-*ListOfPolls class
+**ListOfPolls class**
 
 .. code-block:: python
 
@@ -429,6 +434,7 @@ CHOICES Table and Operations (3rd ENTITY)
 CHOICES table holds the all of the choices for every poll in application. It is referenced by *VOTES* table.
 
 This table has following columns
+
 * *CHOICEID* as serial unique
       Serial number to represent choices
 * *POLLID* as integer and not null references polls table
@@ -438,7 +444,7 @@ This table has following columns
 * *NUMBEROFVOTES* as integer and default 0
       This columns shows how many votes are used for this choice.
 
-*POLLID*,*CHOICEID*,*CONTENT* act as a primary key together.
+*POLLID* , *CHOICEID* , *CONTENT* act as a primary key together.
 
 SQL CODE:
 
@@ -506,6 +512,7 @@ After finding the pollid from database it *DELETE** SQL statement will be execut
 ^^^^^^^^^^^^^^^^
 We can get all the choices with getChoices function in poll.py file(Poll class)
 This function takes no additional parameters. It executes a simple SQL **SELECT** statement with current poll's id. And returns a choices array.
+
 .. code-block:: python
 
    def getChoices(self):
@@ -533,7 +540,7 @@ This table has following columns
 * *USERID* as integer and not null references userprofile table
       Holds the id of the user.
 
-*POLLID*,*CHOICEID*,*USERID* act as a primary key together.
+*POLLID* ,*CHOICEID*,*USERID* act as a primary key together.
 
 Operations of VOTES table are implemented in poll.py file(Poll class).
 
@@ -542,6 +549,7 @@ Operations of VOTES table are implemented in poll.py file(Poll class).
 A user can use their vote with the voteforPoll function.
 This function takes choiceContent as a parameter.At first it tries to find pollid of current poll,choiceid of current choice and userid of voter.
 Then it executes a *INSERT* SQL command for inserting this vote to the VOTES tables.
+
 .. code-block:: python
 
      def voteforPoll(self,choiceContent):
@@ -580,7 +588,7 @@ This table has following columns
 * *LikeTime* as integer and not null default current_timestamp
       Holds the time of the like action.
 
-*USERID*,*TWEETID* act as a primary key together.
+*USERID* and *TWEETID* act as a primary key together.
 Operations of LIKES table are implemented in likeoperations.py file.
 
 *Like A Tweet*
