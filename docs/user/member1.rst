@@ -9,6 +9,7 @@ Every user has to sign in to access any page in the website.
 
       Users can sign in using the related page. After login, users will be redirected to the home page or the page they requested.
 
+
 For non-users, there is a **Register** page.
 
    .. figure:: member1images/register.png
@@ -16,6 +17,7 @@ For non-users, there is a **Register** page.
       :alt: register page
 
       Users can register using the related page. Username and password must be at least 4 characters long.
+
 
 Users can follow or unfollow each other using **Follow/Unfollow** page.
 
@@ -31,6 +33,7 @@ Users can follow or unfollow each other using **Follow/Unfollow** page.
 
       Following and follower lists are also displayed in this page. There is a link to the profile page of each user in the list.
 
+
 Users can update their basic profile info and passwords in **Update Profile** page.
 
    .. figure:: member1images/changepass.png
@@ -44,6 +47,7 @@ Users can update their basic profile info and passwords in **Update Profile** pa
       :alt: change bio nickname
 
       User nickname and bio can be updated under the same page using the related form. Nickname must be 4-20 characters long.
+
 
 It is possible for users to change their application settings under the **Application Settings** page.
 
@@ -59,6 +63,7 @@ It is possible for users to change their application settings under the **Applic
 
       After selecting or deselecting the checkboxes for each application, the form is submitted and changes are processed.
 
+
 In **Gifts** page, users can send gifts (which are pre-defined by the admin) to the other users.
 
    .. figure:: member1images/gifts.png
@@ -73,6 +78,7 @@ In **Gifts** page, users can send gifts (which are pre-defined by the admin) to 
 
       When the form is submitted, the gift is sent to the selected user, if the same gift has not been sent to the same person before.
 
+
 For **admin**, there will be an additional page which is **Admin Panel**.
 
    .. figure:: member1images/adminpanel.png
@@ -80,6 +86,7 @@ For **admin**, there will be an additional page which is **Admin Panel**.
       :alt: admin panel
 
       In **Admin Panel**, admin has the opportunity to manage applications and gifts, and delete users.
+
 
 **Admin** can add, delete, activate or deactivate applications which can be used by all users.
 
@@ -95,6 +102,7 @@ For **admin**, there will be an additional page which is **Admin Panel**.
 
       After selecting an application, it is possible to change its mode to active or deactive, or delete it. In this example, a deactive application is activated by admin.
 
+
 For the **admin**, it is possible to add a gift, change its description and delete it in **Manage Gifts** page.
 
    .. figure:: member1images/addgift.png
@@ -109,6 +117,7 @@ For the **admin**, it is possible to add a gift, change its description and dele
 
       After selecting a gift in **Update/delete gifts** form, it is possible to display its description, update and also delete it.
 
+
 Deleting a user is also possible for **admin**, under **Delete User** page.
 
    .. figure:: member1images/deleteuser1.png
@@ -122,11 +131,6 @@ Deleting a user is also possible for **admin**, under **Delete User** page.
       :alt: after deleting user
 
       User is deleted by **admin**.
-
-
-
-
-
 
 
 
