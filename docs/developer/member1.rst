@@ -48,7 +48,7 @@ Creation of the **Userprofile** table is shown above. For the simplicity of some
               self.is_admin = False
               self.activetab = 0
 
-Definition of the User class of shown above. It stores login information and the active tab which is used to indicate that tab to the user on the navigation bar. It also stores the user type which is either admin or a normal user. If it is admin, it has some privilages. User object is used nearly in all operations in the application. The first and basic usage of the class is register and login operations, which are explained below.
+Definition of the User class of shown above. It stores login information and the active tab which is used to indicate that tab to the user on the navigation bar. It also stores the user type which is either admin or a normal user. If it is admin, it has some privileges. User object is used nearly in all operations in the application. The first and basic usage of the class is register and login operations, which are explained below.
 
 **Register:**
 
@@ -106,13 +106,13 @@ If a user is not logged in yet, he is not allowed to access any of the pages and
 In this function, the username and password is got from the form and the user with the **username** is retrieved from the database. There is a special login prosedure for admin, which will be explained soon. If the username is found and a user is returned, its password is compared with the given one and if it is verified succesfully, user login is performed. That was the login prosedure for normal users. For admin users, there is a pre-defined password in the application, which is hashed value of the admin password:
 
    .. code-block:: python
-   
+
       ADMINPASS = '$6$rounds=603422$ZgQRx3Mm/YuUaION$b/Vwzuno1Q7e1KPWehLbRdmvdf/Bjj5.4a.fvcz3TNCl.Rn2CLbQPCsGSIBarDYHMzq3jjN8KDLkBtKJzBclf0'
 
 In **"get_user"** function, admin login is verified with this password:
 
    .. code-block:: python
-   
+
       def get_user(username):
           if (username=='admin'):
               user = User(username, current_app.config['ADMINPASS'])
@@ -126,7 +126,7 @@ If the given username is **admin"", the pre-defined password is returned in the 
 In addition, there is an automatic database initializtion for the first login of the admin user, which is implemented as follows:
 
    .. code-block:: python
-   
+
       try:
          with dbapi2.connect(app.config['dsn']) as connection:
               with connection.cursor() as cursor:
@@ -139,7 +139,7 @@ Here, after the successful login, we check the existance of the first user, whic
 The update operations for these two tables are implemented in the **Update Profile** page and the queries for these operations are below:
 
    .. code-block:: python
-   
+
       #form operations
       cursor.execute("""UPDATE USERS SET PASSWORD=%s WHERE USERNAME=%s""", (password,current_user.username))
       #form operations
@@ -148,14 +148,14 @@ The update operations for these two tables are implemented in the **Update Profi
 Delete operation for **Users** table can be done only by the administrator, and **Userprofile** table has "ON DELETE CASCADE" option on its foreign key to **Users** table, which is ID. The delete query is below:
 
    .. code-block:: python
-   
+
       #form operations
       cursor.execute("""DELETE FROM USERS WHERE USERNAME=%s""",(username,))
 
 In addition to these tables, **Follows** table which has 2 columns can be counted as a part of the **User** entity and its creation query is as follows:
 
    .. code-block:: sql
-   
+
       CREATE TABLE FOLLOWS(
          FOLLOWERID INTEGER REFERENCES USERS(ID) ON DELETE CASCADE,
          FOLLOWEDUSER INTEGER REFERENCES USERS(ID) ON DELETE CASCADE,
@@ -165,7 +165,7 @@ In addition to these tables, **Follows** table which has 2 columns can be counte
 Here, both of the columns reference to the **Users** table and they form a primary key together. By defining the couple as a primary key, we can prevent the table from duplicate follow operations. Insertion and delete operations for the table are implemented in **Follow/Unfollow** page and details are below:
 
    .. code-block:: python
-   
+
       ##insert/follow operation:
       if followerid and followedid:
             cursor.execute("""INSERT INTO FOLLOWS (FOLLOWERID, FOLLOWEDUSER) VALUES (%s, %s)""",(followerid,followedid))
@@ -194,7 +194,7 @@ Application entity forms a base for possible implementations of extensions or ex
 **Apps** table holds the basic information about the application in 4 columns and the creation of the table is as follows:
 
    .. code-block:: sql
-   
+
       CREATE TABLE APPS(
          ID SERIAL PRIMARY KEY,
          APPNAME VARCHAR(30) NOT NULL,
@@ -206,7 +206,7 @@ Application entity forms a base for possible implementations of extensions or ex
 ID is the serial primary key of the table and referenced from the other table of the entity, **Appusers**. Each application has a boolean attribute **Active** and keeps the status of the application. In application settings, only active apps will be available for users. Insertion function of the **Apps** table is given below:
 
    .. code-block:: python
-   
+
       with dbapi2.connect(app.config['dsn']) as connection:
            with connection.cursor() as cursor:
                 cursor.execute("""INSERT INTO APPS (APPNAME) VALUES (%s)""", (appname,))
@@ -218,7 +218,7 @@ Here, the application with the given name by **admin** is inserted into the **Ap
 After adding the application, it is possible to activate and deactivate it at any time. The query is the same as the last one. For delete operation, following query is used:
 
    .. code-block:: python
-   
+
       with dbapi2.connect(app.config['dsn']) as connection:
            with connection.cursor() as cursor:
                 if selection == 'Delete':
@@ -227,7 +227,7 @@ After adding the application, it is possible to activate and deactivate it at an
 **Appusers** table keeps the application usage information and has 3 columns. Creation query of the table is given:
 
    .. code-block:: sql
-   
+
       CREATE TABLE APPUSERS(
          USERID INTEGER REFERENCES USERS(ID) ON DELETE CASCADE,
          APPID INTEGER REFERENCES APPS(ID) ON DELETE CASCADE,
@@ -240,7 +240,7 @@ The table has two foreign keys. Userid is the reference to the **Users** table, 
 When a user changes the application settings, the **Appusers** table is affected from those changes. Related code block is as follows:
 
    .. code-block:: python
-   
+
       cursor.execute("""DELETE FROM APPUSERS WHERE USERID=%s""",(get_userid(current_user.username),))
             #getting selected applications
             for (appid,) in appids:
@@ -260,7 +260,7 @@ Gift entity is created for improving the connection between users and users can 
 Basic information about the gifts are kept in **Gifts** table and it consists of 3 columns:
 
    .. code-block:: sql
-   
+
       CREATE TABLE GIFTS(
          ID SERIAL PRIMARY KEY,
          GIFTNAME VARCHAR(30) NOT NULL,
@@ -270,7 +270,7 @@ Basic information about the gifts are kept in **Gifts** table and it consists of
 As it is seen, ID is the serial primary key and the table has two more attributes, which are giftname and description. All of the operations about the **Gifts** table done by the **admin** and it has the right to create, update, delete gifts. Under the admin panel, there is a link to **Manage Gifts** page and database operations for the table are done in this page. First of all, insertion is done by the following code:
 
    .. code-block:: python
-   
+
       giftname = addform.giftname.data
       description = addform.description.data
          with dbapi2.connect(app.config['dsn']) as connection:
@@ -280,7 +280,7 @@ As it is seen, ID is the serial primary key and the table has two more attribute
 Here, the new gift is created with the given name and description by the **admin**. After adding a gift, **admin** has the opportunity to update or delete the gift at any time. Update operation is done as follows:
 
    .. code-block:: python
-   
+
       giftname = updateform.gifts.data
       description = updateform.description.data
       with dbapi2.connect(app.config['dsn']) as connection:
@@ -290,7 +290,7 @@ Here, the new gift is created with the given name and description by the **admin
 It is not possible to change de name of the gift, but **admin** can change the description of a gift by entering a new value to the related text area and submitting the form. In this form, there is also a delete button which removes the gift from the database and the related code block is:
 
    .. code-block:: python
-   
+
       giftname = updateform.gifts.data
       with dbapi2.connect(app.config['dsn']) as connection:
            with connection.cursor() as cursor:
@@ -299,7 +299,7 @@ It is not possible to change de name of the gift, but **admin** can change the d
 The second table of the entity is **Sentgifts** which stores the gift exchange between users. It consists of 4 columns and created with the following query:
 
    .. code-block:: sql
-   
+
       CREATE TABLE SENTGIFTS(
          SENDER INTEGER REFERENCES USERS(ID) ON DELETE CASCADE,
          RECEIVER INTEGER REFERENCES USERS(ID) ON DELETE CASCADE,
@@ -313,7 +313,7 @@ Sender and receiver are the foreign keys to the user table and giftid holds the 
 The insertions to the table is done by following lines:
 
    .. code-block:: python
-   
+
       else:
          try:
              with dbapi2.connect(app.config['dsn']) as connection:
@@ -332,7 +332,7 @@ Here, the selected gift id and user id is given as the values to the query and t
 For displaying sent and received gifts, following queries are used:
 
    .. code-block:: python
-   
+
       with connection.cursor() as cursor3:
           cursor3.execute("""SELECT USERNAME, NICKNAME, GIFTNAME,
           DESCRIPTION, TO_CHAR(S_TIME, 'DD Mon YYYY, HH24:MI') FROM SENTGIFTS INNER JOIN GIFTS ON GIFTID=ID
@@ -349,7 +349,7 @@ Here, received gifts are fetched with the sender username and nickname, giftname
 If the user wants to delete the gifts, there is a "Delete all gifts" button at the end of the page and the following lines are executed after pressing the button:
 
    .. code-block:: python
-   
+
       if request.form['btn'] == 'delete':
          with dbapi2.connect(app.config['dsn']) as connection:
               with connection.cursor() as cursor:
