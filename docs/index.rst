@@ -1,17 +1,17 @@
-Welcome to itucsdb's documentation!
+Welcome to itucsdb1616's documentation!
 ===================================
 
-:Team: Team Name
+:Team: Twitter
 
 :Members:
 
-   * Member 1
-   * Member 2
-   * Member 3
-   * Member 4
-   * Member 5
+   * İsmail Emre Çetiner
+   * Serkan Bekir
+   * Yusuf Ekiz
+   * Mert Kurtcan
+   * Cem Karagöz
 
-**project description goes here (a few paragraphs)**
+In our project, our aim is to create a website which has similar functionality to the social media website Twitter. We have implemented some of the features which are present on Twitter, and also some additional features.
 
 Contents:
 
