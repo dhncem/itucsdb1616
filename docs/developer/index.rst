@@ -4,9 +4,13 @@ Developer Guide
 Database Design
 ---------------
 
-The database of the application consists of **27 tables** and the E/R diagram of the database is given below:
+The database of the application consists of **27 tables** and the E/R diagram is given below:
 
-**include the E/R diagram(s)**
+   .. figure:: final-diagram.png
+      :scale: 70 %
+      :alt: e/r diagram
+
+      Entity Relationship diagram of the project.
 
 Necessary explanation about each of the tables are given in individual parts of the document.
 
